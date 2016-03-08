@@ -1,4 +1,4 @@
-package zjut.jianlu.breakfast;
+package zjut.jianlu.breakfast.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.entity.Book;
 
 public class MainActivity extends AppCompatActivity {
