@@ -28,6 +28,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick({R.id.iv_back, R.id.btn_login})
     public void onClick(View view) {
+
         finish();
     }
 

@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,6 +37,8 @@ public class RegisterActivity extends BaseActivity {
     EditText mEtMobile;
     @Bind(R.id.et_captcha)
     EditText mEtCaptcha;
+    @Bind(R.id.btn_captcha)
+    Button mBtnCaptcha;
 
     @OnClick({R.id.iv_back, R.id.btn_captcha,R.id.btn_next})
     public void onClick(View view) {
@@ -91,6 +94,7 @@ public class RegisterActivity extends BaseActivity {
             public void done(Integer integer, BmobException e) {
                 if (e==null){
                     showToast("正在发送短信到您手机,请注意查收");
+
                 }else{
                     Log.d("jianlu",e.getMessage()+e.getErrorCode());
                 }
@@ -117,9 +121,19 @@ public class RegisterActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                Log.d("jianlu",s.length()+"");
+                if (s.length()==11){
+                    mBtnCaptcha.setBackgroundDrawable(getResources().getDrawable(R.drawable.index_login));
+                    mBtnCaptcha.setEnabled(true);
+                }else {
+                    mBtnCaptcha.setBackgroundDrawable(getResources().getDrawable(R.drawable.login_confirm_gray));
+                    mBtnCaptcha.setEnabled(false);
+                }
 
             }
         };
+        mEtMobile.addTextChangedListener(mEtListener);
+
 
     }
 }
