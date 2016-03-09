@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/register_text"
-            android:textColor="@color/index_login"
+            android:textColor="@color/color_loginBtn"
             android:textSize="@dimen/normal_textsize"
             android:background="@drawable/index_register"
             android:layout_marginRight="8dp"

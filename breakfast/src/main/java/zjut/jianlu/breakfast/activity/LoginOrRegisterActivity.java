@@ -1,5 +1,6 @@
 package zjut.jianlu.breakfast.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ public class LoginOrRegisterActivity extends BaseActivity {
         switch (view.getId()){
             case R.id.btn_login:
                 Toast.makeText(mContext,"LOGIN",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginOrRegisterActivity.this,LoginActivity.class));
                 break;
             case R.id.btn_register:
                 Toast.makeText(mContext,"REGISTER",Toast.LENGTH_SHORT).show();

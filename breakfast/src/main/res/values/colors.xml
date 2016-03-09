@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
     <color name="color_white">#FFFFFF</color>
-    <color name="index_login">#16a085</color>
+    <color name="color_loginBtn">#16a085</color>
+    <!--导航栏背景色-->
+    <color name="color_TopBar">#1abc9c</color>
+    <color name="color_topic_gray">#F5F4FA</color>
+    <!-- 分隔线 -->
+    <color name="divider_line_lightgray">#ededed</color>
+
+    <color name="btn_gray">#cccccc</color>
+
+    <color name="color_black">#000000</color>
+
+    <color name="text_blue">#3199E0</color>
+    
 </resources>

@@ -1,11 +1,58 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <!--顶部导航栏-->
+    <style name="topbar_layout_style">
+        <item name="android:background">@color/color_TopBar</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
+    <!--后退按钮-->
+    <style name="topbar_back_img_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@mipmap/title_back_botton_white</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+    <!--顶部导航栏字体-->
+    <style name="topbar_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/color_white</item>
+    </style>
+    <!--分割线-->
+    <style name="divider_style">
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/divider_line_lightgray</item>
+    </style>
+    <!--登录文本-->
+    <style name="login_textview_style">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginRight">@dimen/margin_large</item>
+        <item name="android:layout_marginLeft">@dimen/margin_large</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/meidum_textsize</item>
+        <item name="android:textColor">@color/color_black</item>
+    </style>
+    <!--登录输入框-->
+    <style name="login_editText_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/meidum_textsize</item>
+        <item name="android:textColorHint">@color/divider_line_lightgray</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@null</item>
+        <!--<item name="android:textColor">@color/color_black</item>-->
+    </style>
+
 
 </resources>

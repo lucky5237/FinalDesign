@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -16,7 +17,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@android:style/Theme.NoTitleBar"
+
         android:name="zjut.jianlu.breakfast.base.MyApplication">
         <activity android:name=".activity.LoginOrRegisterActivity" >
             <intent-filter>
@@ -35,6 +37,7 @@
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="false" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="zjut.jianlu.breakfast.entity" />
+        <activity android:name=".activity.LoginActivity"></activity>
 
     </application>
 

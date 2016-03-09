@@ -37,4 +37,7 @@ dependencies {
     compile name:'SMSSDK-2.0.2',ext:'aar'
     compile name:'SMSSDKGUI-2.0.2',ext:'aar'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
+    compile 'cn.bmob.android:bmob-sdk:3.4.5'
+    compile 'cn.bmob.android:bmob-push:0.6'
+
 }
