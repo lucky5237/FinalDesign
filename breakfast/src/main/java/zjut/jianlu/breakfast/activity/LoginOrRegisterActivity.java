@@ -25,6 +25,7 @@ public class LoginOrRegisterActivity extends BaseActivity {
                 break;
             case R.id.btn_register:
                 Toast.makeText(mContext,"REGISTER",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginOrRegisterActivity.this,RegisterActivity.class));
                 break;
         }
     }

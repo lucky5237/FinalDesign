@@ -37,7 +37,10 @@
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="false" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="zjut.jianlu.breakfast.entity" />
-        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait"></activity>
 
     </application>
 
