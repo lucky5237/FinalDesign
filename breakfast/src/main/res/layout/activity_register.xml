@@ -42,7 +42,6 @@
             <EditText
                 android:id="@+id/et_mobile"
                 style="@style/login_editText_style"
-                android:focusable="true"
                 android:hint="请输入手机号"
                 android:inputType="phone"
                 android:maxLength="11" />
@@ -77,8 +76,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/login_confirm_gray"
                 android:enabled="false"
+                android:background="@drawable/login_confirm_gray"
                 android:text="获取验证码"
                 android:textColor="@color/color_white" />
 

@@ -2,4 +2,12 @@
     <string name="app_name">Breakfast</string>
     <string name="login_text">登录</string>
     <string name="register_text">注册</string>
+    <string-array name="gender">
+        <item>我是妹子</item>
+        <item>我是纯爷们</item>
+    </string-array>
+    <string-array name="type">
+        <item>我是来送早餐的</item>
+        <item>我是来点早餐的</item>
+    </string-array>
 </resources>
