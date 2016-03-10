@@ -50,4 +50,15 @@ public class User extends BmobUser {
     public void setAddress(String address) {
         this.address = address;
     }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "type=" + type +
+                ", gender=" + gender +
+                ", brief='" + brief + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }
