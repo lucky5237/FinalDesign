@@ -8,4 +8,8 @@ import zjut.jianlu.breakfast.base.BaseActivity;
 public class ResetPasswordSucActivity extends BaseActivity {
 
 
+    @Override
+    public int getLayoutId() {
+        return 0;
+    }
 }

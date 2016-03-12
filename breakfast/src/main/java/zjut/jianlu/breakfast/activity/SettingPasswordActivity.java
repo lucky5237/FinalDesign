@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
@@ -83,8 +82,8 @@ public class SettingPasswordActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_password);
-        ButterKnife.bind(this);
+//        setContentView(R.layout.activity_setting_password);
+//        ButterKnife.bind(this);
         if (getIntent() != null) {
             mFromWhichActivity = getIntent().getStringExtra(BreakfastConstant.FROM_WHICH_ACTIVITTY_TAG);
             if (!TextUtils.isEmpty(mFromWhichActivity) && mFromWhichActivity.equals(FROM_RESET_PASSWORD_TAG)) {
@@ -96,5 +95,10 @@ public class SettingPasswordActivity extends BaseActivity {
             }
         }
 
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_setting_password;
     }
 }

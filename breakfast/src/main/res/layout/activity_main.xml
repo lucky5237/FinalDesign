@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout style="@style/topbar_layout_style">
+
+        <TextView
+            android:id="@+id/tv_topbar"
+            style="@style/topbar_text_style"
+            android:text="首页" />
+
+    </RelativeLayout>
+
+
+    <FrameLayout
+        android:id="@+id/flyt_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/btn_home"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:paddingLeft="0dp"
+                android:text="首页"
+
+                android:button="@null"
+                android:drawableTop="@mipmap/ic_launcher"/>
+            <RadioButton
+                android:id="@+id/btn_rank"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:paddingLeft="0dp"
+                android:layout_height="match_parent"
+                android:paddingBottom="2dp"
+                android:text="榜单"
+                android:button="@null"
+                android:drawableTop="@mipmap/ic_launcher"/>
+            <RadioButton
+                android:id="@+id/btn_order"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:paddingLeft="0dp"
+                android:text="订单"
+                android:button="@null"
+                android:drawableTop="@mipmap/ic_launcher"/>
+            <RadioButton
+                android:id="@+id/btn_me"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:paddingLeft="0dp"
+                android:text="我的"
+                android:button="@null"
+                android:drawableTop="@mipmap/ic_launcher"/>
+
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+</LinearLayout>

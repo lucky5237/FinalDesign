@@ -1,8 +1,8 @@
 package zjut.jianlu.breakfast.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -11,10 +11,12 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by jianlu on 16/3/8.
  */
-public class BaseActivity extends Activity {
+public  abstract class BaseActivity extends FragmentActivity {
 
     private String TAG;
     public Context mContext;
@@ -25,6 +27,8 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TAG = this.getClass().getSimpleName();
+        this.setContentView(getLayoutId());
+        ButterKnife.bind(this);
         mContext = this;
         Log.d(TAG, "onCreate() is called");
     }
@@ -39,6 +43,8 @@ public class BaseActivity extends Activity {
             mToast.show();
         }
     }
+
+    public abstract int getLayoutId();
 
     /**
      * 验证手机号是否合法

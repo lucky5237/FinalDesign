@@ -34,11 +34,12 @@
 
         android:theme="@android:style/Theme.NoTitleBar">
         <activity android:name=".activity.LoginOrRegisterActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
         </activity>
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -81,6 +82,17 @@
             android:name=".activity.UserInfoActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
+
+        <activity
+            android:name=".activity.MainActivicy"
+            android:screenOrientation="portrait"
+            android:theme="@style/StyledIndicators">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name="com.baidu.location.f"

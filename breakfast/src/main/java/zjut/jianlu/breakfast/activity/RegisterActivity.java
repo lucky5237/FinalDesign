@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
@@ -35,7 +34,7 @@ public class RegisterActivity extends BaseActivity {
 
     private TextWatcher mEtListener;
 
-    private boolean mHaveRequestCode=false;
+    private boolean mHaveRequestCode = false;
     @Bind(R.id.iv_back)
     ImageView mIvBack;
     @Bind(R.id.et_mobile)
@@ -60,8 +59,8 @@ public class RegisterActivity extends BaseActivity {
                 break;
             case R.id.btn_next:
 //               checkInput();
-                Intent intent=new Intent(RegisterActivity.this,SettingPasswordActivity.class);
-                intent.putExtra(BreakfastConstant.MOBILE_TAG,mEtMobile.getText().toString());
+                Intent intent = new Intent(RegisterActivity.this, SettingPasswordActivity.class);
+                intent.putExtra(BreakfastConstant.MOBILE_TAG, mEtMobile.getText().toString());
                 startActivity(intent);
 
         }
@@ -72,7 +71,7 @@ public class RegisterActivity extends BaseActivity {
             showToast("请输入合法的手机号");
             return;
         }
-        if (!mHaveRequestCode){
+        if (!mHaveRequestCode) {
             showToast("请先获取验证码");
             return;
         }
@@ -124,7 +123,7 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void done(Integer integer, BmobException e) {
                 if (e == null) {
-                    mHaveRequestCode=true;
+                    mHaveRequestCode = true;
                     showToast("正在发送短信到您手机,请注意查收");
                 } else {
                     Log.d("jianlu", e.getMessage() + e.getErrorCode());
@@ -137,9 +136,9 @@ public class RegisterActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+//        setContentView(R.layout.activity_register);
         mContext = this;
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
         mEtMobile.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -166,6 +165,11 @@ public class RegisterActivity extends BaseActivity {
 
     }
 
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_register;
+    }
+
     private class TimeCount extends CountDownTimer {
 
         public TimeCount() {
@@ -183,7 +187,7 @@ public class RegisterActivity extends BaseActivity {
         public void onTick(long millisUntilFinished) {
             mBtnCaptcha.setEnabled(false);
             mBtnCaptcha.setBackgroundResource(R.drawable.login_confirm_gray);
-            mBtnCaptcha.setText(millisUntilFinished / 1000 +"s后重新获取");
+            mBtnCaptcha.setText(millisUntilFinished / 1000 + "s后重新获取");
         }
     }
 

@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -35,6 +34,8 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.et_mobile)
     EditText mEtMobile;
     @Bind(R.id.et_password)
+
+
     EditText mEtPassword;
     @Bind(R.id.btn_login)
     Button mBtnLogin;
@@ -61,6 +62,7 @@ public class LoginActivity extends BaseActivity {
                             Log.d("jianlu","用户登陆成功"+user.toString());
                             // TODO: 3/10/2016 登陆成功
                         }else{
+
                             Log.d("jianlu","用户登陆失败"+e.getErrorCode()+e.getMessage());
                             // TODO: 3/10/2016 处理登录错误 
                         }
@@ -72,9 +74,14 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+//        setContentView(R.layout.activity_login);
+//        ButterKnife.bind(this);
         mContext = this;
         TAG = LoginActivity.this.getClass().getSimpleName();
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_login;
     }
 }

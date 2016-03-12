@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +22,6 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.listener.SaveListener;
 import zjut.jianlu.breakfast.R;
@@ -46,6 +47,19 @@ public class UserInfoActivity extends BaseActivity {
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private String mAddress;
+    private static final int LOCATION_RESULT_TAG = 1;
+
+    private class mHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case LOCATION_RESULT_TAG:
+                    address = (String) msg.obj;
+                    etAddress.setText(address);
+            }
+
+        }
+    }
 
 
     @Bind(R.id.iv_back)
@@ -73,11 +87,8 @@ public class UserInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_info);
-        ButterKnife.bind(this);
-//        mLocationClient = new LocationClient(getApplicationContext());
-
-
+//        setContentView(R.layout.activity_user_info);
+//        ButterKnife.bind(this);
         genders = getResources().getStringArray(R.array.gender);
         types = getResources().getStringArray(R.array.type);
         initView();
@@ -87,6 +98,11 @@ public class UserInfoActivity extends BaseActivity {
             password = intent.getStringExtra(BreakfastConstant.PASSWORD_TAG);
         }
 //        mLocationClient.start();
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_user_info;
     }
 
     private void initLoctaion() {
@@ -152,15 +168,19 @@ public class UserInfoActivity extends BaseActivity {
 //                showToast("点击下一个按钮");
                 break;
             case R.id.iv_location:
-//                mLocationClient.registerLocationListener(myListener);
-//                initLoctaion();
-//                if (!mLocationClient.isStarted()) {
-//                    mLocationClient.start();
-//                }
-//                if (!TextUtils.isEmpty(mAddress)) {
-//
-//                    etAddress.setText(mAddress);
-//                }
+                if (mLocationClient == null) {
+                    mLocationClient = new LocationClient(getApplicationContext());
+                    mLocationClient.registerLocationListener(myListener);
+                    initLoctaion();
+                    mLocationClient.start();
+                } else {
+                    if (mLocationClient.isStarted()) {
+                        mLocationClient.stop();
+                    }
+                    mLocationClient.start();
+                }
+
+
                 break;
         }
     }
@@ -185,6 +205,9 @@ public class UserInfoActivity extends BaseActivity {
                 showToast("请输入你的收货地址");
                 return;
             }
+        }
+        if (mLocationClient.isStarted()) {
+            mLocationClient.stop();
         }
         saveUserInfo();
     }
@@ -219,36 +242,38 @@ public class UserInfoActivity extends BaseActivity {
         public void onReceiveLocation(BDLocation location) {
             //Receive Location
             StringBuffer sb = new StringBuffer(256);
-            sb.append("time : ");
-            sb.append(location.getTime());
-            sb.append("\nerror code : ");
-            sb.append(location.getLocType());
-            sb.append("\nlatitude : ");
-            sb.append(location.getLatitude());
-            sb.append("\nlontitude : ");
-            sb.append(location.getLongitude());
-            sb.append("\nradius : ");
-            sb.append(location.getRadius());
             if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 网络定位结果
                 sb.append("\naddr : ");
-                mAddress = location.getAddrStr();
                 sb.append(location.getAddrStr());
+                if (!TextUtils.isEmpty(location.getAddrStr())) {
+                    showToast("定位成功");
+                    Message message = Message.obtain();
+                    message.obj = location.getAddrStr().substring(2);//去掉中国
+                    message.what = LOCATION_RESULT_TAG;
+                    new mHandler().sendMessage(message);
+                }
                 //运营商信息
                 sb.append("\noperationers : ");
                 sb.append(location.getOperators());
                 sb.append("\ndescribe : ");
                 sb.append("网络定位成功");
             } else {
-                showToast("定位失败请先打开定位");
+                showToast("网络异常,请先打开网络连接");
+                if (mLocationClient.isStarted()) {
+                    mLocationClient.stop();
+                }
             }
 
-            Log.i("BaiduLocationApiDem", sb.toString());
+            Log.d("jianlu", sb.toString());
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//       mLocationClient.stop();
+        if (mLocationClient.isStarted()) {
+            mLocationClient.stop();
+        }
+
     }
 }

@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
@@ -29,10 +28,15 @@ public class LoginOrRegisterActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_or_register);
-        ButterKnife.bind(this);
+//        setContentView(R.layout.activity_login_or_register);
+//        ButterKnife.bind(this);
 
 
 
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_login_or_register;
     }
 }
