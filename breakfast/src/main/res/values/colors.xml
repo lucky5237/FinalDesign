@@ -14,5 +14,37 @@
     <color name="color_black">#000000</color>
 
     <color name="text_blue">#3199E0</color>
-    
+    <color name="alertdialog_line">#c6c6c6</color>
+    <color name="actionsheet_gray">#8F8F8F</color>
+    <color name="actionsheet_blue">#037BFF</color>
+    <color name="top_menu_title_color">#F2501F</color>
+    <color name="tab_page_indicator_color">#666666</color>
+    <color name="page_backgroud_color">#E6E6E6</color>
+    <color name="white">#FFFFFF</color>
+    <color name="adapter_good_name_color">#696969</color>
+    <color name="adapter_good_produce_color">#777777</color>
+    <color name="adapter_good_price_color">#FE1C1C</color>
+
+    <!--  -->
+    <color name="black">#000000</color>
+    <color name="gray3">#333333</color>
+    <color name="orange">#FF5500</color>
+    <color name="red">#FE0000</color>
+    <color name="brown">#A05447</color>
+    <color name="gray">#696969</color>
+    <color name="green">#1AE0A4</color>
+    <color name="blue">#0000FF</color>
+    <color name="deep_blue">#5C6A84</color>
+    <color name="hint_gray">#E6E6E6</color>
+    <color name="activity_background_gray">#F5F5F5</color>
+    <color name="light_black">#C0000000</color>
+    <color name="light_blue">#00ACFF</color>
+    <color name="coupon_yellow">#FEBC41</color>
+    <color name="coupon_red">#FF5C5D</color>
+    <color name="coupon_gray">#CCCCCC</color>
+    <color name="coupon_dark_gray">#4C4C4C</color>
+    <color name="gray_show">#999999</color>
+
+
+
 </resources>

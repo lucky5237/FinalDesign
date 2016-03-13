@@ -35,9 +35,9 @@
         android:theme="@android:style/Theme.NoTitleBar">
         <activity android:name=".activity.LoginOrRegisterActivity">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
 
         </activity>
@@ -86,13 +86,20 @@
         <activity
             android:name=".activity.MainActivicy"
             android:screenOrientation="portrait"
-            android:theme="@style/StyledIndicators">
+            android:theme="@style/StyledIndicators"
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.MakeOrderActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.FoodShopActivity"
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name="com.baidu.location.f"

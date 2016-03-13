@@ -2,10 +2,9 @@ package zjut.jianlu.breakfast.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,8 +18,9 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindCallback;
 import zjut.jianlu.breakfast.R;
+import zjut.jianlu.breakfast.adapter.HotFoodAdapter;
 import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
-import zjut.jianlu.breakfast.entity.OrderInfo;
+import zjut.jianlu.breakfast.entity.Food;
 
 /**
  * Created by jianlu on 16/3/12.
@@ -29,9 +29,9 @@ public class HotFoodFragment extends BaseRefreshableFragment {
 //    @Bind(R.id.pull_to_refresh_listview)
 //    PullToRefreshListView listView;
 
-    private ArrayAdapter<String> adapter;
 
-    private List<String> mOrderList=new ArrayList<String>();
+    private List<Food> mFoodList=new ArrayList<Food>();
+    private HotFoodAdapter adapter ;
     @Override
     public int getLayoutId() {
         return R.layout.fragment_hot_food;
@@ -40,34 +40,35 @@ public class HotFoodFragment extends BaseRefreshableFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adapter=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,mOrderList);
+        View view =getActivity().findViewById(R.id.main_cotainer);
+        adapter=new HotFoodAdapter(getActivity(),mFoodList,view);
         mListView.setAdapter(adapter);
 
     }
 
-    private void getNewestOrder() {
-        BmobQuery query =new BmobQuery("order_info");
+    private void getHotFood() {
+        BmobQuery query=new BmobQuery("food").order("-sales");
         query.findObjects(getActivity(), new FindCallback() {
             @Override
             public void onSuccess(JSONArray jsonArray) {
-                String jsonString=jsonArray.toString();
-                mListView.onRefreshComplete();
-                List<OrderInfo> orderList=new Gson().fromJson(jsonString,new TypeToken<List<OrderInfo>>(){}.getType());
-                if (orderList!=null && orderList.size()>0){
-                    Log.d("jianlu","总共获取"+orderList.size()+"条订单");
-                    for (OrderInfo order : orderList){
-                        mOrderList.add(order.toString());
+                String jsonString = jsonArray.toString();
+                if (!TextUtils.isEmpty(jsonString)){
+                    List<Food> footList=new Gson().fromJson(jsonString,new TypeToken<List<Food>>(){}.getType());
+                    if (footList!=null && footList.size()>0){
+                        if (mFoodList!=null && mFoodList.size()>0){
+                            mFoodList.clear();
+                        }
+                        mFoodList.addAll(footList);
+                        adapter.notifyDataSetChanged();
+
+
                     }
-                    adapter.notifyDataSetChanged();
-
-
                 }
             }
 
             @Override
             public void onFailure(int i, String s) {
 
-                Log.d("jianlu","i is "+i+"s is "+ s);
             }
         });
 
@@ -76,8 +77,14 @@ public class HotFoodFragment extends BaseRefreshableFragment {
 
     @Override
     public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-        Toast.makeText(getActivity(),"正在刷新",Toast.LENGTH_SHORT).show();
-        getNewestOrder();
+//        Toast.makeText(getActivity(),"正在刷新",Toast.LENGTH_SHORT).show();
+        getHotFood();
+        mListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mListView.onRefreshComplete();
+            }
+        },1000);
 
 
     }

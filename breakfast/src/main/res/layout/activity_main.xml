@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_cotainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,6 +10,15 @@
             android:id="@+id/tv_topbar"
             style="@style/topbar_text_style"
             android:text="首页" />
+        <ImageView
+            android:id="@+id/iv_plus"
+            android:src="@mipmap/plus"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

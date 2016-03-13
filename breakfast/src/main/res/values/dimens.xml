@@ -3,4 +3,35 @@
     <dimen name="normal_textsize">16sp</dimen>
     <dimen name="margin_large">10dp</dimen>
     <dimen name="meidum_textsize">18sp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="adapter_good_name_size">14sp</dimen>
+    <dimen name="adapter_good_sales_size">10sp</dimen>
+    <dimen name="adapter_good_price_size">20sp</dimen>
+
+    <!-- 字体 -->
+    <dimen name="font_ss">10sp</dimen>
+    <dimen name="font_s">12sp</dimen>
+    <dimen name="font_m">14sp</dimen>
+    <dimen name="font_l">16sp</dimen>
+    <dimen name="font_xl">18sp</dimen>
+    <dimen name="font_xxl">22sp</dimen>
+    <dimen name="font_xxxl">40sp</dimen>
+
+    <!-- padding & margin -->
+    <dimen name="padding_normal">5dp</dimen>
+    <dimen name="padding_xlarge">15dp</dimen>
+    <dimen name="margin_normal">5dp</dimen>
+    <dimen name="margin_xlarge">15dp</dimen>
+    <dimen name="dp20">20dp</dimen>
+    <dimen name="dp25">25dp</dimen>
+    <dimen name="dp30">30dp</dimen>
+    <dimen name="dp35">35dp</dimen>
+    <dimen name="dp40">40dp</dimen>
+    <dimen name="dp50">50dp</dimen>
+    <dimen name="spacing">5dp</dimen>
+    <dimen name="view_small_padding">1dp</dimen>
+    <dimen name="view_padding">10dp</dimen>
+    <dimen name="size_cart">97dp</dimen>
 </resources>

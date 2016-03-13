@@ -1,9 +1,11 @@
 package zjut.jianlu.breakfast.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -31,28 +33,37 @@ public class MainActivicy extends BaseActivity {
     private static final int ME_INDEX = 3;
     @Bind(R.id.tv_topbar)
     TextView mTvTopBar;
+    @Bind(R.id.iv_plus)
+    ImageView mIvPlus;
 
     private FragmentTransaction mTransaction;
     private Fragment[] fragments;
 
-    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_me})
+    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_me,R.id.iv_plus})
     public void onclick(View view) {
         switch (view.getId()) {
             case R.id.btn_home:
-                mTvTopBar.setText("首页");
+                mTvTopBar.setText("实时订单");
+                mIvPlus.setVisibility(View.VISIBLE);
                 ShowFragment(HOME_INDEX);
                 break;
             case R.id.btn_rank:
                 mTvTopBar.setText("热门榜单");
+                mIvPlus.setVisibility(View.GONE);
                 ShowFragment(RANK_INDEX);
                 break;
             case R.id.btn_order:
                 mTvTopBar.setText("我的订单");
+                mIvPlus.setVisibility(View.GONE);
                 ShowFragment(ORDER_INDEX);
                 break;
             case R.id.btn_me:
-                mTvTopBar.setText("个人详情");
+                mTvTopBar.setText("个人设置");
+                mIvPlus.setVisibility(View.GONE);
                 ShowFragment(ME_INDEX);
+                break;
+            case R.id.iv_plus:
+                startActivity(new Intent(MainActivicy.this,FoodShopActivity.class));
                 break;
             default:
                 break;

@@ -22,12 +22,14 @@ public class HomePageFragment extends BaseRefreshableFragment {
     public void onRefresh(PullToRefreshBase<ListView> refreshView) {
         showToast(mPageName);
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-//        showToast(mPageName);
+        getNewestOrder();
         mListView.onRefreshComplete();
     }
+
+    private void getNewestOrder() {
+
+
+    }
+
+
 }
