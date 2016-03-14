@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobUser;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.entity.User;
 import zjut.jianlu.breakfast.fragment.HomePageFragment;
 import zjut.jianlu.breakfast.fragment.MeFragment;
 import zjut.jianlu.breakfast.fragment.OrderFragment;
@@ -31,6 +34,7 @@ public class MainActivicy extends BaseActivity {
     private static final int RANK_INDEX = 1;
     private static final int ORDER_INDEX = 2;
     private static final int ME_INDEX = 3;
+    public static User mCurrentUser ;
     @Bind(R.id.tv_topbar)
     TextView mTvTopBar;
     @Bind(R.id.iv_plus)
@@ -102,7 +106,12 @@ public class MainActivicy extends BaseActivity {
                 .add(R.id.flyt_container, mRankFragment).add(R.id.flyt_container, mOrderFragment)
                 .add(R.id.flyt_container, mMeFragment).hide(mRankFragment).hide(mOrderFragment).hide(mMeFragment).show(mHomePageFragment).commit();
 
-
+        User user = BmobUser.getCurrentUser(mContext,User.class);
+        if (user!=null){
+            mCurrentUser=user;
+        }else{
+            Log.d("jianlu","暂无当前用户");
+        }
     }
 
     @Override

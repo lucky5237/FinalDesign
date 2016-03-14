@@ -60,7 +60,7 @@ public class LoginActivity extends BaseActivity {
                     public void done(User user, BmobException e) {
                         if(user!=null){
                             Log.d("jianlu","用户登陆成功"+user.toString());
-                            // TODO: 3/10/2016 登陆成功
+                            startActivity(new Intent(LoginActivity.this,MainActivicy.class));
                         }else{
 
                             Log.d("jianlu","用户登陆失败"+e.getErrorCode()+e.getMessage());

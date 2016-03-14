@@ -1,6 +1,8 @@
 package zjut.jianlu.breakfast.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -23,6 +25,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
+import zjut.jianlu.breakfast.activity.MakeOrderActivity;
+import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.Food;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 
@@ -65,7 +69,7 @@ public class HotFoodAdapter extends BaseAdapter {
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         }
-        Food food = (Food) getItem(position);
+        final Food food = (Food) getItem(position);
         viewHolder.mTvName.setText(food.getName());
         viewHolder.mTvPlace.setText(food.getPlace());
         viewHolder.mTvPrice.setText(food.getPrice().toString());
@@ -86,9 +90,21 @@ public class HotFoodAdapter extends BaseAdapter {
         viewHolder.mBtnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"跳转购买界面",Toast.LENGTH_SHORT).show();
-            }
-        });
+                Toast.makeText(mContext, "跳转购买界面", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, MakeOrderActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putInt(BreakfastConstant.BUY_FOOD_NUM_TAG, Integer.valueOf(viewHolder.mEtQuantuty.getText().toString()));
+//                bundle.putFloat(BreakfastConstant.BUY_FOOD_PRICE, food.getPrice());
+//                bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, Float.valueOf(viewHolder.mTvPrice.getText().toString()));
+//                intent.putExtras(bundle);
+                Bundle bundle =new Bundle();
+                bundle.putSerializable("food",food);
+                bundle.putInt(BreakfastConstant.BUY_FOOD_NUM_TAG, Integer.valueOf(viewHolder.mEtQuantuty.getText().toString()));
+                bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, Float.valueOf(viewHolder.mTvPrice.getText().toString()));
+
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+            }});
         return convertView;
 
 

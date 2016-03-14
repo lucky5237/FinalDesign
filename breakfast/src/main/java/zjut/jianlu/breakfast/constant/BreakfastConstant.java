@@ -11,6 +11,10 @@ public class BreakfastConstant {
     public static final String FROM_WHICH_ACTIVITTY_TAG="TAG";
     public static final String PASSWORD_TAG = "password";
     public static final String MOBILE_TAG = "mobile";
+    public static final String BUY_FOOD_NUM_TAG = "foodnumber";
+    public static final String BUY_FOOD_PRICE = "foodprice";
+    public static final String BUY_FOOD_AMOUNT = "footamount";
+
 
 
 

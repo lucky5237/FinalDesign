@@ -7,8 +7,10 @@ import android.widget.Button;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobUser;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.entity.User;
 
 public class LoginOrRegisterActivity extends BaseActivity {
 
@@ -28,8 +30,10 @@ public class LoginOrRegisterActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_login_or_register);
-//        ButterKnife.bind(this);
+        if (BmobUser.getCurrentUser(LoginOrRegisterActivity.this, User.class)!=null){
+            //说明已经登录过了
+            startActivity(new Intent(LoginOrRegisterActivity.this,MainActivicy.class));
+        }
 
 
 

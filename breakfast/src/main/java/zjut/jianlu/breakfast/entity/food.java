@@ -1,12 +1,14 @@
 package zjut.jianlu.breakfast.entity;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by jianlu on 16/3/13.
  */
-public class Food extends BmobObject {
+public class Food extends BmobObject implements Serializable{
 
     private String name;
 
