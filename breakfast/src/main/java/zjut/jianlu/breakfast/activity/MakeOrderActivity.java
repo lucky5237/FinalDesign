@@ -12,19 +12,25 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.victor.loading.rotate.RotateLoading;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.SaveListener;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.adapter.ConfirmOrderAdapter;
 import zjut.jianlu.breakfast.base.BaseActivity;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.Food;
 import zjut.jianlu.breakfast.entity.OrderConfirmFoodList;
+import zjut.jianlu.breakfast.entity.OrderDetail;
+import zjut.jianlu.breakfast.entity.OrderInfo;
 import zjut.jianlu.breakfast.entity.User;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 
 /**
  * Created by jianlu on 16/3/12.
@@ -78,6 +84,8 @@ public class MakeOrderActivity extends BaseActivity {
     private ConfirmOrderAdapter adapter;
     private List<OrderConfirmFoodList> list=new ArrayList<OrderConfirmFoodList>();
 
+    private RotateLoading rotateLoading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +122,8 @@ public class MakeOrderActivity extends BaseActivity {
         tvContactPhone.setText(mCurrentUser.getMobilePhoneNumber());
         tvAddress.setText(mCurrentUser.getAddress());
         btnPayMoney.setText("实付金额：¥" + String.valueOf(mbuyFoodAmount));
+        rotateLoading= (RotateLoading) findViewById(R.id.rotateloading);
+
 
     }
 
@@ -131,7 +141,58 @@ public class MakeOrderActivity extends BaseActivity {
                 break;
             case R.id.btn_confirm:
                 showToast("点击了确认订单");
+                makeOrder(mfood,mbuyFoodNum,mbuyFoodAmount);
                 break;
         }
+    }
+
+    private void makeOrder(final Food food, final int num, float amount) {
+        rotateLoading.start();
+        final OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setOrderNumber(BreakfastUtils.genOrderNum());
+        orderInfo.setAmount(amount);
+        orderInfo.setClientUserId(BmobUser.getCurrentUser(mContext,User.class));
+        orderInfo.setBonus(0f);
+        orderInfo.setClientCommented(false);
+        orderInfo.setCourierCommented(false);
+        orderInfo.setStatus(0);
+        orderInfo.save(mContext, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                rotateLoading.stop();
+                showToast("订单生成成功");
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrderId(orderInfo);
+                Food food1 =new Food();
+                food1.setName(food.getName());
+                food1.setImage(food.getImage());
+                food1.setPlace(food.getPlace());
+                food1.setPrice(food.getPrice());
+                food1.setSales(food.getSales());
+                orderDetail.setFoodId(food1);
+                orderDetail.setNumber(num);
+                orderDetail.save(mContext, new SaveListener() {
+                    @Override
+                    public void onSuccess() {
+                        showToast("订单详情生成成功");
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                      //  showToast(s);
+                        Log.e("jianlu",s);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                showToast(s);
+
+            }
+        });
+
+
+
     }
 }

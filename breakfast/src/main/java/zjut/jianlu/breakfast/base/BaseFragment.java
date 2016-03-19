@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
+import cn.bmob.v3.BmobUser;
+import zjut.jianlu.breakfast.entity.User;
 
 /**
  * Created by jianlu on 16/3/12.
@@ -45,4 +47,21 @@ public abstract class BaseFragment extends Fragment {
     }
     public abstract int getLayoutId();
 
+    public String getCurrentUserMobile() {
+        User user = BmobUser.getCurrentUser(mContext, User.class);
+        if (user != null) {
+            return user.getMobilePhoneNumber();
+        }
+        return null;
+    }
+
+    public User getCurrentUser() {
+        return BmobUser.getCurrentUser(mContext, User.class);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 }

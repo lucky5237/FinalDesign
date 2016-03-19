@@ -6,7 +6,7 @@ import cn.bmob.v3.datatype.BmobDate;
 /**
  * Created by jianlu on 16/3/12.
  */
-public class OrderInfo extends BmobObject{
+public class OrderInfo extends BmobObject {
 
     private String orderNumber;
 
@@ -14,7 +14,7 @@ public class OrderInfo extends BmobObject{
 
     private User courierUserId;
 
-    private String status;
+    private Integer status;
 
     private Float amount;
 
@@ -24,7 +24,7 @@ public class OrderInfo extends BmobObject{
 
     private boolean isCourierCommented;
 
-    public OrderInfo(){
+    public OrderInfo() {
         setTableName("order_info");
     }
 
@@ -34,6 +34,14 @@ public class OrderInfo extends BmobObject{
 
     public void setOrderNumber(String orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public User getClientUserId() {
@@ -50,14 +58,6 @@ public class OrderInfo extends BmobObject{
 
     public void setCourierUserId(User courierUserId) {
         this.courierUserId = courierUserId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Float getAmount() {

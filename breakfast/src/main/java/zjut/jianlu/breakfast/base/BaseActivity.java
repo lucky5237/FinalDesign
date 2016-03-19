@@ -12,11 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
+import cn.bmob.v3.BmobUser;
+import zjut.jianlu.breakfast.entity.User;
 
 /**
  * Created by jianlu on 16/3/8.
  */
-public  abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity {
 
     private String TAG;
     public Context mContext;
@@ -48,6 +50,7 @@ public  abstract class BaseActivity extends FragmentActivity {
 
     /**
      * 验证手机号是否合法
+     *
      * @param phone
      * @return
      */
@@ -69,6 +72,18 @@ public  abstract class BaseActivity extends FragmentActivity {
             return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
         }
         return super.onTouchEvent(event);
+    }
+
+    public String getCurrentUserMobile() {
+        User user = BmobUser.getCurrentUser(mContext, User.class);
+        if (user != null) {
+            return user.getMobilePhoneNumber();
+        }
+        return null;
+    }
+
+    public User getCurrentUser() {
+        return BmobUser.getCurrentUser(mContext, User.class);
     }
 
 }
