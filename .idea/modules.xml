@@ -3,10 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FinalDesign.iml" filepath="$PROJECT_DIR$/FinalDesign.iml" />
-      <module fileurl="file://$PROJECT_DIR$/PullToRefresh/PullToRefresh.iml" filepath="$PROJECT_DIR$/PullToRefresh/PullToRefresh.iml" />
       <module fileurl="file://$PROJECT_DIR$/breakfast/breakfast.iml" filepath="$PROJECT_DIR$/breakfast/breakfast.iml" />
-      <module fileurl="file://$PROJECT_DIR$/flask_test/flask_test.iml" filepath="$PROJECT_DIR$/flask_test/flask_test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>
 </project>
