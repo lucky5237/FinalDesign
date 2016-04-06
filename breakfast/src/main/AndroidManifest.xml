@@ -58,7 +58,7 @@
             android:value="false" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="zjut.jianlu.breakfast.entity" />
+            android:value="zjut.jianlu.breakfast.entity.db" />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="h5SvnrrGYsxiVucr2N75qqnU" />
@@ -71,7 +71,7 @@
 
         </activity>
         <activity
-            android:name=".activity.RegisterActivity"
+            android:name=".activity.CheckMobileActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity

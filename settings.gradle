@@ -1,3 +1,4 @@
-include ':breakfast', ':flask_test'
-include ':library'
+include ':breakfast'
+
 include ':PullToRefresh'
+include ':TabViewPager'

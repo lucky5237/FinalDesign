@@ -1,15 +1,15 @@
-package zjut.jianlu.breakfast.entity;
+package zjut.jianlu.breakfast.entity.bean;
 
 /**
  * Created by jianlu on 16/3/14.
  */
-public class OrderConfirmFoodList {
+public class FoodCart {
 
     private int num;
 
     private Food food;
 
-    public OrderConfirmFoodList(int num, Food food) {
+    public FoodCart(int num, Food food) {
         this.num = num;
         this.food = food;
     }

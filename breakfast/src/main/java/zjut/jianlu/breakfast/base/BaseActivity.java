@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -12,8 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
-import cn.bmob.v3.BmobUser;
-import zjut.jianlu.breakfast.entity.User;
 
 /**
  * Created by jianlu on 16/3/8.
@@ -35,13 +34,25 @@ public abstract class BaseActivity extends FragmentActivity {
         Log.d(TAG, "onCreate() is called");
     }
 
-    public void showToast(String content) {
+    public void Toast(String content) {
         if (content != null) {
             if (mToast == null) {
                 mToast = Toast.makeText(getApplicationContext(), content, Toast.LENGTH_SHORT);
             } else {
                 mToast.setText(content);
             }
+            mToast.show();
+        }
+    }
+
+    public void ToastCenter(String content) {
+        if (content != null) {
+            if (mToast == null) {
+                mToast = Toast.makeText(getApplicationContext(), content, Toast.LENGTH_SHORT);
+            } else {
+                mToast.setText(content);
+            }
+            mToast.setGravity(Gravity.CENTER,0,0);
             mToast.show();
         }
     }
@@ -72,18 +83,6 @@ public abstract class BaseActivity extends FragmentActivity {
             return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
         }
         return super.onTouchEvent(event);
-    }
-
-    public String getCurrentUserMobile() {
-        User user = BmobUser.getCurrentUser(mContext, User.class);
-        if (user != null) {
-            return user.getMobilePhoneNumber();
-        }
-        return null;
-    }
-
-    public User getCurrentUser() {
-        return BmobUser.getCurrentUser(mContext, User.class);
     }
 
 }

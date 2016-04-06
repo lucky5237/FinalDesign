@@ -12,6 +12,7 @@
             style="@style/topbar_back_img_style" />
 
         <TextView
+            android:id="@+id/tv_title"
             style="@style/topbar_text_style"
             android:text="注册" />
 

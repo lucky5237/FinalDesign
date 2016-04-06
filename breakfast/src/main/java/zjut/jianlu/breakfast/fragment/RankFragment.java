@@ -47,7 +47,7 @@ public class RankFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
 
-                showToast("当前选中了第" + position);
+                Toast("当前选中了第" + position);
 
             }
 

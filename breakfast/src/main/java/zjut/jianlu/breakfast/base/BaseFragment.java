@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
-import cn.bmob.v3.BmobUser;
-import zjut.jianlu.breakfast.entity.User;
 
 /**
  * Created by jianlu on 16/3/12.
@@ -25,17 +23,16 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mContext=getActivity();
-        mPageName=this.getClass().getSimpleName();
-        View view = inflater.inflate(getLayoutId(),container,false);
+        mContext = getActivity();
+        mPageName = this.getClass().getSimpleName();
+        View view = inflater.inflate(getLayoutId(), container, false);
         ButterKnife.bind(this, view);
         return view;
 
     }
 
 
-
-    public void showToast(String content) {
+    public void Toast(String content) {
         if (content != null) {
             if (mToast == null) {
                 mToast = Toast.makeText(getActivity(), content, Toast.LENGTH_SHORT);
@@ -45,19 +42,18 @@ public abstract class BaseFragment extends Fragment {
             mToast.show();
         }
     }
+
     public abstract int getLayoutId();
 
     public String getCurrentUserMobile() {
-        User user = BmobUser.getCurrentUser(mContext, User.class);
-        if (user != null) {
-            return user.getMobilePhoneNumber();
-        }
-        return null;
+//        User user = BmobUser.getCurrentUser(mContext, User.class);
+//        if (user != null) {
+//            return user.getMobilePhoneNumber();
+//        }
+//        return null;
+        return "15757115237";
     }
 
-    public User getCurrentUser() {
-        return BmobUser.getCurrentUser(mContext, User.class);
-    }
 
     @Override
     public void onDestroyView() {

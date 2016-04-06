@@ -23,8 +23,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.entity.Food;
-import zjut.jianlu.breakfast.entity.OrderConfirmFoodList;
+import zjut.jianlu.breakfast.entity.bean.Food;
+import zjut.jianlu.breakfast.entity.bean.FoodCart;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 
 /**
@@ -41,11 +41,11 @@ public class ConfirmOrderAdapter extends BaseAdapter {
 
     private View mView;
 
-    private List<OrderConfirmFoodList> mFoodList;
+    private List<FoodCart> mFoodList;
 
     public static Button mBtnTotal;
 
-    public ConfirmOrderAdapter(Context context, List<OrderConfirmFoodList> mFoodList, View view) {
+    public ConfirmOrderAdapter(Context context, List<FoodCart> mFoodList, View view) {
         mContext = context;
         this.mFoodList = mFoodList;
         mView = view;
@@ -78,7 +78,7 @@ public class ConfirmOrderAdapter extends BaseAdapter {
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         }
-        OrderConfirmFoodList orderConfirmFoodList = (OrderConfirmFoodList) getItem(position);
+        FoodCart orderConfirmFoodList = (FoodCart) getItem(position);
         mFood = orderConfirmFoodList.getFood();
         mNum = orderConfirmFoodList.getNum();
         viewHolder.tvName.setText(mFood.getName());
@@ -88,7 +88,7 @@ public class ConfirmOrderAdapter extends BaseAdapter {
         viewHolder.tvBuyNum.setText(mNum + "");
         viewHolder.tvBuyAmount.setText(Float.valueOf(mNum * mFood.getPrice()).toString());
 
-        final String url = mFood.getImage().getFileUrl(mContext);
+        final String url = mFood.getImage();
         Picasso.with(mContext).load(url).placeholder(R.mipmap.ic_launcher).resize(100, 100).centerCrop().into(viewHolder.ivImage);
         viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
             @Override

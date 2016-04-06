@@ -1,7 +1,6 @@
 package zjut.jianlu.breakfast.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.entity.OrderInfo;
+import zjut.jianlu.breakfast.entity.bean.OrderInfo;
 
 /**
  * Created by jianlu on 16/3/17.
@@ -61,7 +59,7 @@ public class OrderListItemAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         OrderInfo orderinfo = (OrderInfo) getItem(position);
-        viewHolder.tvTime.setText(orderinfo.getCreatedAt());
+        viewHolder.tvTime.setText(orderinfo.getCreateTs());
         viewHolder.tvMoney.setText(orderinfo.getAmount() + "");
         viewHolder.tvBonus.setText(orderinfo.getBonus() + "");
 
@@ -91,11 +89,11 @@ public class OrderListItemAdapter extends BaseAdapter {
         @Bind(R.id.btn_delete)
         Button btnDelete;
 
-        @OnClick({R.id.btn_delete})
-        void onClick(int position) {
-            Log.d("jianlu","delete");
-
-        }
+//        @OnClick({R.id.btn_delete})
+//        void onClick(int position) {
+//            Log.d("jianlu","delete");
+//
+//        }
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

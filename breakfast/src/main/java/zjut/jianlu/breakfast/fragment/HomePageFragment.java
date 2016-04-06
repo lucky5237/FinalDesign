@@ -4,23 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.listener.FindCallback;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.adapter.OrderWantedItemAdapter;
 import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
-import zjut.jianlu.breakfast.entity.OrderInfo;
+import zjut.jianlu.breakfast.entity.bean.OrderInfo;
 
 /**
  * Created by jianlu on 16/3/12.
@@ -41,7 +35,7 @@ public class HomePageFragment extends BaseRefreshableFragment {
 
     @Override
     public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-        showToast(mPageName);
+        Toast(mPageName);
 
         getNewestOrder();
     }
@@ -56,29 +50,29 @@ public class HomePageFragment extends BaseRefreshableFragment {
     }
 
     private void getNewestOrder() {
-        BmobQuery query = new BmobQuery("order_info").addWhereEqualTo("status", 0).order("-createdAt");
-        query.findObjects(getActivity(), new FindCallback() {
-            @Override
-            public void onSuccess(JSONArray jsonArray) {
-                mListView.onRefreshComplete();
-                String jsonString = jsonArray.toString();
-                List<OrderInfo> mOrderInfo = new Gson().fromJson(jsonString, new TypeToken<List<OrderInfo>>() {
-                }.getType());
-                if (mOrderInfo != null && mOrderInfo.size() > 0) {
-                        if (mOrderInfoList.size()>0){
-                            mOrderInfoList.clear();
-                        }
-                    mOrderInfoList.addAll(mOrderInfo);
-                    adapter.notifyDataSetChanged();
-
-                }
-            }
-
-            @Override
-            public void onFailure(int i, String s) {
-                showToast(s);
-            }
-        });
+////        BmobQuery query = new BmobQuery("order_info").addWhereEqualTo("status", 0).order("-createdAt");
+////        query.findObjects(getActivity(), new FindCallback() {
+////            @Override
+////            public void onSuccess(JSONArray jsonArray) {
+////                mListView.onRefreshComplete();
+////                String jsonString = jsonArray.toString();
+////                List<OrderInfoDB> mOrderInfo = new Gson().fromJson(jsonString, new TypeToken<List<OrderInfoDB>>() {
+////                }.getType());
+////                if (mOrderInfo != null && mOrderInfo.size() > 0) {
+////                        if (mOrderInfoList.size()>0){
+////                            mOrderInfoList.clear();
+////                        }
+////                    mOrderInfoList.addAll(mOrderInfo);
+////                    adapter.notifyDataSetChanged();
+////
+////                }
+////            }
+////
+////            @Override
+////            public void onFailure(int i, String s) {
+////                Toast(s);
+////            }
+//        });
 
 
     }

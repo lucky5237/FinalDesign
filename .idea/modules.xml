@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FinalDesign.iml" filepath="$PROJECT_DIR$/FinalDesign.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PullToRefresh/PullToRefresh.iml" filepath="$PROJECT_DIR$/PullToRefresh/PullToRefresh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TabViewPager/TabViewPager.iml" filepath="$PROJECT_DIR$/TabViewPager/TabViewPager.iml" />
       <module fileurl="file://$PROJECT_DIR$/breakfast/breakfast.iml" filepath="$PROJECT_DIR$/breakfast/breakfast.iml" />
     </modules>
   </component>

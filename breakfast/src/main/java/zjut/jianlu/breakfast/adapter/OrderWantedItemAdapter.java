@@ -13,7 +13,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.entity.OrderInfo;
+import zjut.jianlu.breakfast.entity.bean.OrderInfo;
 
 /**
  * Created by jianlu on 16/3/16.
@@ -59,8 +59,8 @@ public class OrderWantedItemAdapter extends BaseAdapter {
         }
         OrderInfo orderInfo = (OrderInfo) getItem(position);
         viewHolder.tvBonus.setText("¥"+orderInfo.getBonus()+"");
-        viewHolder.tvTime.setText(orderInfo.getCreatedAt());
-        viewHolder.tvClient.setText(orderInfo.getClientUserId().getUsername());
+        viewHolder.tvTime.setText(orderInfo.getCreateTs());
+        viewHolder.tvClient.setText(orderInfo.getClientUser().getUsername());
 //        Picasso.with(mContext).load(orderInfo.get).placeholder(R.mipmap.ic_launcher).resize(100, 100).centerCrop().into(viewHolder.ivImage);
 //        viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
 //            @Override

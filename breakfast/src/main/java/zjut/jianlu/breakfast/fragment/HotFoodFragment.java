@@ -20,7 +20,7 @@ import cn.bmob.v3.listener.FindCallback;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.adapter.HotFoodAdapter;
 import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
-import zjut.jianlu.breakfast.entity.Food;
+import zjut.jianlu.breakfast.entity.bean.Food;
 
 /**
  * Created by jianlu on 16/3/12.

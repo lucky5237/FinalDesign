@@ -2,6 +2,7 @@ package zjut.jianlu.breakfast.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -10,9 +11,17 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.base.BaseResponse;
+import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.entity.requestBody.ChangePasswordBody;
+import zjut.jianlu.breakfast.service.UserService;
 
 /**
  * Created by jianlu on 3/10/2016.
@@ -21,11 +30,10 @@ public class SettingPasswordActivity extends BaseActivity {
 
     private String mEtPasswordContent;
     private String mEtPasswordAgainContent;
-    private static String mFromWhichActivity;
-    private static final String FROM_RESET_PASSWORD_TAG = "LoginActivity";
-    private boolean isResetPassword = false;
     private String mobile;//从注册页面传过来的手机号
-//    private static final String FROM__TAG = "ResetPasswoedActivity";
+    private Retrofit retrofit;
+    private UserService userService;
+    private boolean isChangePwd = false;
 
     @Bind(R.id.et_password)
     EditText mEtPassword;
@@ -47,21 +55,45 @@ public class SettingPasswordActivity extends BaseActivity {
                 mEtPasswordContent = mEtPassword.getText().toString();
                 mEtPasswordAgainContent = mEtpasswordAgain.getText().toString();
                 if (TextUtils.isEmpty(mEtPasswordContent) || TextUtils.isEmpty(mEtPasswordAgainContent)) {
-                    showToast("密码或确认密码不能为空");
+                    Toast("密码或确认密码不能为空");
                     return;
                 }
                 if (mEtPasswordContent.length() < 6) {
-                    showToast("密码长度至少为6位");
+                    Toast("密码长度至少为6位");
                     return;
                 }
                 if (!mEtPasswordContent.equals(mEtPasswordAgainContent)) {
-                    showToast("两次密码输入不一致");
+                    Toast("两次密码输入不一致");
                     return;
                 }
-                if (isResetPassword) {//从忘记密码跳转过来的
+                if (isChangePwd) {//从忘记密码跳转过来的
                     // TODO: 3/10/2016 重置密码成功！
-                    showToast("密码重置成功!");
-                    startActivity(new Intent(SettingPasswordActivity.this,LoginActivity.class));
+                    Call<BaseResponse<String>> call = userService.changePassword(new ChangePasswordBody(mobile, mEtPasswordContent));
+                    call.enqueue(new Callback<BaseResponse<String>>() {
+                        @Override
+                        public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body().getCode().equals("ACK")) {
+                                    Toast(response.body().getMessage());
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            startActivity(new Intent(mContext, LoginActivity.class));
+                                        }
+                                    }, 1000);
+
+                                } else {
+                                    Toast(response.body().getMessage());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+
+                        }
+                    });
+
 
                 } else {//注册时候设置密码的
                     // TODO: 3/10/2016 密码设置成功，跳转到个人信息设置
@@ -69,7 +101,6 @@ public class SettingPasswordActivity extends BaseActivity {
                     intent.putExtra(BreakfastConstant.PASSWORD_TAG, mEtPasswordContent);
                     intent.putExtra(BreakfastConstant.MOBILE_TAG, mobile);
                     startActivity(intent);
-
                 }
                 break;
 
@@ -82,18 +113,17 @@ public class SettingPasswordActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_setting_password);
-//        ButterKnife.bind(this);
         if (getIntent() != null) {
-            mFromWhichActivity = getIntent().getStringExtra(BreakfastConstant.FROM_WHICH_ACTIVITTY_TAG);
-            if (!TextUtils.isEmpty(mFromWhichActivity) && mFromWhichActivity.equals(FROM_RESET_PASSWORD_TAG)) {
-                isResetPassword = true;//从首页的重置密码跳转过来
+            mobile = getIntent().getStringExtra(BreakfastConstant.MOBILE_TAG);
+            isChangePwd = getIntent().getBooleanExtra(BreakfastConstant.TAG_IS_CHANGEPASSWORD, false);
+
+            if (isChangePwd) {
                 mTvTopbar.setText("重置密码");
                 mBtnNext.setText("马上重置");
-            } else {//注册手机号验证通过跳转过来
-                mobile = getIntent().getStringExtra(BreakfastConstant.MOBILE_TAG);
             }
         }
+        retrofit = MyApplication.getRetrofitInstance();
+        userService = retrofit.create(UserService.class);
 
     }
 

@@ -23,11 +23,17 @@ import com.baidu.location.LocationClientOption;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import cn.bmob.v3.listener.SaveListener;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.base.BaseCallback;
+import zjut.jianlu.breakfast.base.BaseResponse;
+import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.User;
+import zjut.jianlu.breakfast.entity.requestBody.RegisterBody;
+import zjut.jianlu.breakfast.service.UserService;
 
 /**
  * Created by jianlu on 3/10/2016.
@@ -48,6 +54,8 @@ public class UserInfoActivity extends BaseActivity {
     public BDLocationListener myListener = new MyLocationListener();
     private String mAddress;
     private static final int LOCATION_RESULT_TAG = 1;
+    private UserService userService;
+    private Retrofit retrofit;
 
     private class mHandler extends Handler {
         @Override
@@ -97,6 +105,8 @@ public class UserInfoActivity extends BaseActivity {
             mobile = intent.getStringExtra(BreakfastConstant.MOBILE_TAG);
             password = intent.getStringExtra(BreakfastConstant.PASSWORD_TAG);
         }
+        retrofit = MyApplication.getRetrofitInstance();
+        userService = retrofit.create(UserService.class);
 //        mLocationClient.start();
     }
 
@@ -148,7 +158,7 @@ public class UserInfoActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.sex_input, R.id.gender_ImageButton, R.id.type_input, R.id.type_ImageButton, R.id.btn_next, R.id.iv_location})
+    @OnClick({R.id.sex_input, R.id.gender_ImageButton, R.id.type_input, R.id.type_ImageButton, R.id.btn_next, R.id.iv_location, R.id.iv_back})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -165,7 +175,7 @@ public class UserInfoActivity extends BaseActivity {
                 break;
             case R.id.btn_next:
                 checkInput();
-//                showToast("点击下一个按钮");
+//                Toast("点击下一个按钮");
                 break;
             case R.id.iv_location:
                 if (mLocationClient == null) {
@@ -189,20 +199,20 @@ public class UserInfoActivity extends BaseActivity {
         userName = etUsername.getText().toString().trim();
         address = etAddress.getText().toString().trim();
         if (TextUtils.isEmpty(userName)) {
-            showToast("用户名不能为空");
+            Toast("用户名不能为空");
             return;
         }
         if (mGenderSelected == -1) {
-            showToast("请先选择你的性别");
+            Toast("请先选择你的性别");
             return;
         }
         if (mTypeSelected == -1) {
-            showToast("请先选择你的用户类型");
+            Toast("请先选择你的用户类型");
             return;
         }
         if (mTypeSelected == 1) {
             if (TextUtils.isEmpty(address)) {
-                showToast("请输入你的收货地址");
+                Toast("请输入你的收货地址");
                 return;
             }
         }
@@ -213,27 +223,24 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     private void saveUserInfo() {
-        User user = new User();
-        user.setGender(mGenderSelected);
-        user.setType(mTypeSelected);
-        user.setAddress(address);
-        user.setUsername(userName);
-        user.setMobilePhoneNumber(mobile);
-        user.setPassword(password);
-        user.signUp(mContext, new SaveListener() {
+        Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName, mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
+        call.enqueue(new BaseCallback<String>() {
             @Override
-            public void onSuccess() {
-                showToast("个人信息保存成功");
+            public void onNetFailure(Throwable t) {
+                Toast(BreakfastConstant.NO_NET_MESSAGE);
             }
 
             @Override
-            public void onFailure(int i, String s) {
-                showToast("个人信息保存失败");
-                Log.d("jianlu", "i is " + i + " s is " + s);
+            public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                Toast(response.body().getMessage());
+                startActivity(new Intent(mContext, LoginActivity.class));
+            }
+
+            @Override
+            public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                Toast(response.body().getMessage());
             }
         });
-
-
     }
 
     public class MyLocationListener implements BDLocationListener {
@@ -246,7 +253,7 @@ public class UserInfoActivity extends BaseActivity {
                 sb.append("\naddr : ");
                 sb.append(location.getAddrStr());
                 if (!TextUtils.isEmpty(location.getAddrStr())) {
-                    showToast("定位成功");
+                    Toast("定位成功");
                     Message message = Message.obtain();
                     message.obj = location.getAddrStr().substring(2);//去掉中国
                     message.what = LOCATION_RESULT_TAG;
@@ -258,7 +265,7 @@ public class UserInfoActivity extends BaseActivity {
                 sb.append("\ndescribe : ");
                 sb.append("网络定位成功");
             } else {
-                showToast("网络异常,请先打开网络连接");
+                Toast("网络异常,请先打开网络连接");
                 if (mLocationClient.isStarted()) {
                     mLocationClient.stop();
                 }

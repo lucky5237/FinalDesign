@@ -18,14 +18,14 @@ public class CourierRankragment extends BaseRefreshableFragment {
 
     @Override
     public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-        showToast(mPageName);
+        Toast(mPageName);
 
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        showToast(mPageName);
+//        Toast(mPageName);
         mListView.onRefreshComplete();
     }
 }
