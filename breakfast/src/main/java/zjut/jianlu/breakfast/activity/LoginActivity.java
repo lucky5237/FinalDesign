@@ -116,38 +116,6 @@ public class LoginActivity extends BaseActivity {
 
                     }
                 });
-////                call.enqueue(new Callback<BaseResponse<User>>() {
-////                    @Override
-////                    public void onResponse(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
-////                        if (response.isSuccessful()) {
-////                            if (response.body().getCode().equals("ACK")) {
-////                                BaseResponse<User> mResponse = response.body();
-////                                if (mResponse != null) {
-////                                    User user = mResponse.getData();
-////
-////                                    if (UserDB.count(UserDB.class) > 0) {
-////                                        UserDB.deleteAll(UserDB.class);
-////                                    }
-////                                    UserDB userDB = new UserDB(user);
-////                                    userDB.save();
-////                                    sharedPreferencesUtil.setMobile(user.getMobile());
-////                                    sharedPreferencesUtil.setPassword(user.getPassword());
-//////                                    startActivity(new Intent(mContext, MainActivicy.class));
-////                                    Toast("登录成功");
-////                                    // TODO: 16/3/25 登录成功处理
-////                                }
-////                            } else {
-////                                Toast(response.body().getMessage());
-////                            }
-////                        }
-////                    }
-////
-////                    @Override
-////                    public void onFailure(Call<BaseResponse<User>> call, Throwable t) {
-////
-////                    }
-//                });
-
 
         }
     }

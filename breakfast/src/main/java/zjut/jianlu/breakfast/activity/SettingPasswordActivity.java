@@ -17,6 +17,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
@@ -69,30 +70,29 @@ public class SettingPasswordActivity extends BaseActivity {
                 if (isChangePwd) {//从忘记密码跳转过来的
                     // TODO: 3/10/2016 重置密码成功！
                     Call<BaseResponse<String>> call = userService.changePassword(new ChangePasswordBody(mobile, mEtPasswordContent));
-                    call.enqueue(new Callback<BaseResponse<String>>() {
+                    call.enqueue(new BaseCallback<String>() {
                         @Override
-                        public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                            if (response.isSuccessful()) {
-                                if (response.body().getCode().equals("ACK")) {
-                                    Toast(response.body().getMessage());
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            startActivity(new Intent(mContext, LoginActivity.class));
-                                        }
-                                    }, 1000);
-
-                                } else {
-                                    Toast(response.body().getMessage());
-                                }
-                            }
+                        public void onNetFailure(Throwable t) {
+                            Toast(BreakfastConstant.NO_NET_MESSAGE);
                         }
 
                         @Override
-                        public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+                        public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(new Intent(mContext, LoginActivity.class));
+                                }
+                            }, 1000);
+                        }
+
+                        @Override
+                        public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                            Toast(response.body().getMessage());
 
                         }
                     });
+
 
 
                 } else {//注册时候设置密码的
