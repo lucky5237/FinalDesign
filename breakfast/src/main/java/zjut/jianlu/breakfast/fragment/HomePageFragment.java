@@ -12,7 +12,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.adapter.OrderWantedItemAdapter;
+import zjut.jianlu.breakfast.adapter.NewestOrderAdapter;
 import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
 
@@ -23,7 +23,7 @@ public class HomePageFragment extends BaseRefreshableFragment {
 
     @Bind(R.id.pull_to_refresh_listview)
     PullToRefreshListView mPullToRefreshListview;
-    private OrderWantedItemAdapter adapter;
+    private NewestOrderAdapter adapter;
 
     private List<OrderInfo> mOrderInfoList;
 
@@ -36,7 +36,6 @@ public class HomePageFragment extends BaseRefreshableFragment {
     @Override
     public void onRefresh(PullToRefreshBase<ListView> refreshView) {
         Toast(mPageName);
-
         getNewestOrder();
     }
 
@@ -44,10 +43,11 @@ public class HomePageFragment extends BaseRefreshableFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mOrderInfoList = new ArrayList<OrderInfo>();
-        adapter = new OrderWantedItemAdapter(getActivity(), mOrderInfoList);
+        adapter = new NewestOrderAdapter(getActivity(), mOrderInfoList);
         mPullToRefreshListview.setAdapter(adapter);
 
     }
+
 
     private void getNewestOrder() {
 ////        BmobQuery query = new BmobQuery("order_info").addWhereEqualTo("status", 0).order("-createdAt");

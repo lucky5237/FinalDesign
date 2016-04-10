@@ -24,7 +24,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.entity.bean.Food;
-import zjut.jianlu.breakfast.entity.bean.FoodCart;
+import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 
 /**
@@ -41,11 +41,11 @@ public class ConfirmOrderAdapter extends BaseAdapter {
 
     private View mView;
 
-    private List<FoodCart> mFoodList;
+    private List<ConfirmFood> mFoodList;
 
     public static Button mBtnTotal;
 
-    public ConfirmOrderAdapter(Context context, List<FoodCart> mFoodList, View view) {
+    public ConfirmOrderAdapter(Context context, List<ConfirmFood> mFoodList, View view) {
         mContext = context;
         this.mFoodList = mFoodList;
         mView = view;
@@ -78,9 +78,9 @@ public class ConfirmOrderAdapter extends BaseAdapter {
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         }
-        FoodCart orderConfirmFoodList = (FoodCart) getItem(position);
+        ConfirmFood orderConfirmFoodList = (ConfirmFood) getItem(position);
         mFood = orderConfirmFoodList.getFood();
-        mNum = orderConfirmFoodList.getNum();
+        mNum = orderConfirmFoodList.getQuantity();
         viewHolder.tvName.setText(mFood.getName());
         viewHolder.tvPlace.setText(mFood.getPlace());
         viewHolder.tvPrice.setText(mFood.getPrice().toString());
@@ -106,7 +106,7 @@ public class ConfirmOrderAdapter extends BaseAdapter {
                     mFoodList.remove(position);
                     notifyDataSetChanged();
                 } else {
-                    Toast.makeText(mContext, "至少保留一个区支付", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "至少保留一个去支付", Toast.LENGTH_SHORT).show();
                 }
 
             }

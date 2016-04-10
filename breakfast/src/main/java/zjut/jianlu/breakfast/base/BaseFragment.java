@@ -10,12 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
+import zjut.jianlu.breakfast.utils.SharedPreferencesUtil;
 
 /**
  * Created by jianlu on 16/3/12.
  */
 public abstract class BaseFragment extends Fragment {
-    private Context mContext;
+    public static Context mContext;
     private Toast mToast;
     public String mPageName;
 
@@ -45,13 +46,22 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract int getLayoutId();
 
-    public String getCurrentUserMobile() {
-//        User user = BmobUser.getCurrentUser(mContext, User.class);
-//        if (user != null) {
-//            return user.getMobilePhoneNumber();
-//        }
-//        return null;
-        return "15757115237";
+    public static Integer getCurrentUserType() {
+
+        return SharedPreferencesUtil.getInstance(mContext).getUserType();
+
+    }
+
+    public static Integer getCurrentUserID() {
+
+        return SharedPreferencesUtil.getInstance(mContext).getUserId();
+
+    }
+
+    public static String getCurrentUserMobile() {
+
+        return SharedPreferencesUtil.getInstance(mContext).getMobile();
+
     }
 
 

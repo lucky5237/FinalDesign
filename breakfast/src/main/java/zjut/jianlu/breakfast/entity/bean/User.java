@@ -23,6 +23,10 @@ public class User implements Serializable {
 
     private String address;//收货地址
 
+    private Float bonus;//悬赏金
+
+    private Integer orderNum;// 订单数
+
     public Integer getType() {
         return type;
     }
@@ -87,4 +91,35 @@ public class User implements Serializable {
         this.id = id;
     }
 
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public Float getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(Float bonus) {
+        this.bonus = bonus;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", mobile='" + mobile + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", type=" + type +
+                ", gender=" + gender +
+                ", brief='" + brief + '\'' +
+                ", address='" + address + '\'' +
+                ", bonus=" + bonus +
+                ", orderNum=" + orderNum +
+                '}';
+    }
 }

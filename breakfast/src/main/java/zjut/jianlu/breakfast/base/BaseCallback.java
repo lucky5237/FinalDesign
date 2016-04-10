@@ -22,6 +22,8 @@ public abstract class BaseCallback<T> implements Callback<BaseResponse<T>> {
     private static final String NACK_CODE = "NACK";
 
 
+
+
     @Override
     public void onResponse(Call<BaseResponse<T>> call, Response<BaseResponse<T>> response) {
         if (response.isSuccessful()) {
@@ -33,7 +35,9 @@ public abstract class BaseCallback<T> implements Callback<BaseResponse<T>> {
             Log.d("jianlu", "Code: " + code);
             Log.d("jianlu", "Messgae: " + message);
             if (ACK_CODE.equals(code)) {
-                Log.d("jianlu", "Data: " + data.toString());
+                if (data != null) {
+                    Log.d("jianlu", "Data: " + data.toString());
+                }
                 onBizSuccess(call, response);
             }
             if (NACK_CODE.equals(code)) {

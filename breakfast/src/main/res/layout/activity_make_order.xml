@@ -310,12 +310,4 @@
             android:minHeight="1dp"
             android:text="确认结算" />
     </LinearLayout>
-<com.victor.loading.rotate.RotateLoading
-    android:id="@+id/rotateloading"
-    android:layout_width="80dp"
-    android:layout_height="80dp"
-    app:loading_width="5dp"
-    app:loading_color="#1ac9ca"
-
-    />
 </LinearLayout>

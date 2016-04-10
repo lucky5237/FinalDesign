@@ -18,7 +18,7 @@ import zjut.jianlu.breakfast.entity.bean.OrderInfo;
 /**
  * Created by jianlu on 16/3/16.
  */
-public class OrderWantedItemAdapter extends BaseAdapter {
+public class NewestOrderAdapter extends BaseAdapter {
 
     private Context mContext;
 
@@ -26,7 +26,7 @@ public class OrderWantedItemAdapter extends BaseAdapter {
 
     private View view;
 
-    public OrderWantedItemAdapter(Context context ,List<OrderInfo> orderInfos){
+    public NewestOrderAdapter(Context context , List<OrderInfo> orderInfos){
         mContext=context;
         mlist=orderInfos;
     }

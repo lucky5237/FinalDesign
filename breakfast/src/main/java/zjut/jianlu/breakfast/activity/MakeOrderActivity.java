@@ -17,13 +17,21 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.adapter.ConfirmOrderAdapter;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.base.BaseCallback;
+import zjut.jianlu.breakfast.base.BaseResponse;
+import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.bean.Food;
-import zjut.jianlu.breakfast.entity.bean.FoodCart;
-import zjut.jianlu.breakfast.entity.bean.User;
+import zjut.jianlu.breakfast.entity.bean.BuyFood;
+import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
+import zjut.jianlu.breakfast.entity.requestBody.MakeOrderBody;
+import zjut.jianlu.breakfast.service.OrderService;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 
 /**
  * Created by jianlu on 16/3/12.
@@ -62,9 +70,6 @@ public class MakeOrderActivity extends BaseActivity {
     TextView tvOrderConfirmDiscount;
     @Bind(R.id.btn_confirm)
     Button btnConfirm;
-    private Food mfood;
-
-    private User mCurrentUser;
 
     private int mbuyFoodNum = 0;
 
@@ -75,7 +80,13 @@ public class MakeOrderActivity extends BaseActivity {
     private View view;
 
     private ConfirmOrderAdapter adapter;
-    private List<FoodCart> mFoodlist = new ArrayList<FoodCart>();
+    private ArrayList<ConfirmFood> mConfirmFoodlist = new ArrayList<ConfirmFood>();
+    private List<BuyFood> mBuyFoodList = new ArrayList<BuyFood>();
+    private Float bonus = 0.0f;
+
+    private Retrofit retrofit;
+
+    private OrderService orderService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +94,10 @@ public class MakeOrderActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            mfood = (Food) bundle.getSerializable("food");
-            mbuyFoodNum = bundle.getInt(BreakfastConstant.BUY_FOOD_NUM_TAG);
+            mConfirmFoodlist = (ArrayList<ConfirmFood>) bundle.getSerializable("foodList");
             mbuyFoodAmount = bundle.getFloat(BreakfastConstant.BUY_FOOD_AMOUNT);
-            if (mfood == null && mbuyFoodNum == 0 && mbuyFoodAmount == 0.0f) {
+            bonus = bundle.getFloat(BreakfastConstant.BUY_FOOD_BONUS);
+            if (mbuyFoodNum == 0 && mbuyFoodAmount == 0.0f) {
                 Log.d("jianlu", "食品信息并未传过来");
             }
 
@@ -96,17 +107,22 @@ public class MakeOrderActivity extends BaseActivity {
     }
 
     private void initData() {
-        mFoodlist.add(new FoodCart(mbuyFoodNum, mfood));
-        adapter = new ConfirmOrderAdapter(mContext, mFoodlist, view);
+        retrofit = MyApplication.getRetrofitInstance();
+        orderService = retrofit.create(OrderService.class);
+        adapter = new ConfirmOrderAdapter(mContext, mConfirmFoodlist, view);
         lvOrderConfirmation.setAdapter(adapter);
+        for (ConfirmFood food : mConfirmFoodlist) {
+            BuyFood mfood = new BuyFood(food.getQuantity(), food.getFood().getId());
+            mBuyFoodList.add(mfood);
+        }
 
     }
 
     private void initView() {
         view = findViewById(R.id.main_cotainer);
-        tvReceiver.setText(mCurrentUser.getUsername());
+        tvReceiver.setText(getCurrentUser().getUsername());
 //        tvContactPhone.setText(mCurrentUser.getMobilePhoneNumber());
-        tvAddress.setText(mCurrentUser.getAddress());
+        tvAddress.setText(getCurrentUser().getAddress());
         btnPayMoney.setText("实付金额：¥" + String.valueOf(mbuyFoodAmount));
 
 
@@ -126,20 +142,35 @@ public class MakeOrderActivity extends BaseActivity {
                 break;
             case R.id.btn_confirm:
                 Toast("点击了确认订单");
-                makeOrder(mfood, mbuyFoodNum, mbuyFoodAmount);
+                // TODO: 16/4/9 确认悬赏金
+                makeOrder(mbuyFoodAmount, bonus, mBuyFoodList);
                 break;
         }
     }
 
-    private void makeOrder(final Food food, final int num, float amount) {
-//        final OrderInfo orderInfo = new OrderInfo();
-//        orderInfo.setOrderNumber(BreakfastUtils.getOutTradeNo());
-//        orderInfo.setAmount(amount);
-//        orderInfo.setClientUserId(1);
-//        orderInfo.setBonus(0f);
-//        orderInfo.setClientCommented(false);
-//        orderInfo.setCourierCommented(false);
-//        orderInfo.setStatus(0);
+    private void makeOrder(Float amount, Float bonus, List<BuyFood> orderDetails) {
+        String orderNumber = BreakfastUtils.getOutTradeNo();
+        Call<BaseResponse<String>> call = orderService.makeOrder(new MakeOrderBody(orderNumber, amount, bonus, getCurrentUserID(), orderDetails));
+        call.enqueue(new BaseCallback<String>() {
+            @Override
+            public void onNetFailure(Throwable t) {
+                Toast(BreakfastConstant.NO_NET_MESSAGE);
+            }
+
+            @Override
+            public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                Toast(response.body().getMessage());
+                // TODO: 16/4/9 下单成功之后跳转
+
+
+            }
+
+            @Override
+            public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                Toast(response.body().getMessage());
+
+            }
+        });
     }
 
 }

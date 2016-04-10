@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -13,12 +16,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.Bind;
 import butterknife.OnClick;
-import cn.bmob.v3.BmobSMS;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.RequestSMSCodeListener;
-import cn.bmob.v3.listener.VerifySMSCodeListener;
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -30,6 +34,7 @@ import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.requestBody.CheckMobileBody;
 import zjut.jianlu.breakfast.service.UserService;
+import zjut.jianlu.breakfast.utils.LogUtil;
 
 /**
  * Created by jianlu on 16/3/9.
@@ -51,6 +56,23 @@ public class CheckMobileActivity extends BaseActivity {
     private boolean mHaveRequestCode = false;
 
     private boolean isChangePwd = false;//是否是忘记密码页面跳转的
+
+    private EventHandler eh;
+
+    private static final int SHOW_TOAST_TAG = 1;
+
+    private class Myhandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SHOW_TOAST_TAG:
+                    Toast(msg.obj.toString());
+                    break;
+            }
+        }
+    }
+
+    private Myhandler myhandler = new Myhandler();
 
 
     @Bind(R.id.iv_back)
@@ -117,8 +139,8 @@ public class CheckMobileActivity extends BaseActivity {
             Toast("请先获取验证码");
             return;
         }
-        if (!(mEtCaptcha.getText().toString().length() == 6)) {
-            Toast("请输入长度为6位的验证码");
+        if (!(mEtCaptcha.getText().toString().length() == 4)) {
+            Toast("请输入长度为4位的验证码");
             return;
         }
         checkCaptcha();
@@ -126,37 +148,12 @@ public class CheckMobileActivity extends BaseActivity {
     }
 
     private void checkCaptcha() {
-        BmobSMS.verifySmsCode(mContext, mEtMobile.getText().toString().trim(), mEtCaptcha.getText().toString().trim(), new VerifySMSCodeListener() {
-            @Override
-            public void done(BmobException e) {
-                if (e == null) {
-                    //TODO 注册手机号验证成功
-                    Intent intent = new Intent(CheckMobileActivity.this, SettingPasswordActivity.class);
-                    intent.putExtra(BreakfastConstant.MOBILE_TAG, mEtMobile.getText().toString());
-                    intent.putExtra(BreakfastConstant.TAG_IS_CHANGEPASSWORD, isChangePwd);
-                    startActivity(intent);
-                } else {
-                    Toast("验证码错误");
-                }
-            }
-        });
+        SMSSDK.submitVerificationCode("86", mEtMobile.getText().toString().trim(), mEtCaptcha.getText().toString().trim());
     }
 
     private void sendCaptcha() {
         Log.d("jianlu", "正在发送验证码");
-        BmobSMS.requestSMSCode(mContext, mobile, "第一条短信测试", new RequestSMSCodeListener() {
-            @Override
-            public void done(Integer integer, BmobException e) {
-                if (e == null) {
-                    mHaveRequestCode = true;
-                    Toast("正在发送短信到您手机,请注意查收");
-                } else {
-                    Log.d("jianlu", e.getMessage() + e.getErrorCode());
-                    Toast(e.getMessage());
-                    mTimeCount.cancel();
-                }
-            }
-        });
+        SMSSDK.getVerificationCode("86", mobile);
     }
 
     @Override
@@ -195,9 +192,49 @@ public class CheckMobileActivity extends BaseActivity {
         }
         retrofit = MyApplication.getRetrofitInstance();
         userService = retrofit.create(UserService.class);
-
-
+        eh = new EventHandler() {
+            @Override
+            public void afterEvent(int event, int result, Object data) {
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    //回调完成
+                    if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                        //提交验证码成功
+                        Intent intent = new Intent(CheckMobileActivity.this, SettingPasswordActivity.class);
+                        intent.putExtra(BreakfastConstant.MOBILE_TAG, mEtMobile.getText().toString());
+                        intent.putExtra(BreakfastConstant.TAG_IS_CHANGEPASSWORD, isChangePwd);
+                        startActivity(intent);
+                    } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                        //获取验证码成功
+                        mHaveRequestCode = true;
+                        Message msg = new Message();
+                        msg.what = SHOW_TOAST_TAG;
+                        msg.obj = BreakfastConstant.SEND_SMS_SUC;
+                        myhandler.sendMessage(msg);
+                    } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+                    }
+                } else {
+                    Throwable throwable = (Throwable) data;
+                    LogUtil.d(throwable.getMessage());
+                    JSONObject object = null;
+                    try {
+                        object = new JSONObject(throwable.getMessage());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String des = object.optString("detail");//错误描述
+                    int status = object.optInt("status");//错误代码
+                    if (status > 0 && !TextUtils.isEmpty(des)) {
+                        Message msg = new Message();
+                        msg.what = SHOW_TOAST_TAG;
+                        msg.obj = des;
+                        myhandler.sendMessage(msg);
+                    }
+                }
+            }
+        };
+        SMSSDK.registerEventHandler(eh);
     }
+
 
     @Override
     public int getLayoutId() {
@@ -223,6 +260,7 @@ public class CheckMobileActivity extends BaseActivity {
             mBtnCaptcha.setBackgroundResource(R.drawable.login_confirm_gray);
             mBtnCaptcha.setText(millisUntilFinished / 1000 + "s后重新获取");
         }
+
     }
 
 
@@ -232,5 +270,6 @@ public class CheckMobileActivity extends BaseActivity {
         if (mTimeCount != null) {
             mTimeCount.cancel();
         }
+        SMSSDK.unregisterEventHandler(eh);
     }
 }

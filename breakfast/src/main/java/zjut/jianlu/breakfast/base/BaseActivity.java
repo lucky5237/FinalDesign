@@ -13,6 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
+import zjut.jianlu.breakfast.entity.db.UserDB;
+import zjut.jianlu.breakfast.utils.SharedPreferencesUtil;
 
 /**
  * Created by jianlu on 16/3/8.
@@ -20,7 +22,7 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends FragmentActivity {
 
     private String TAG;
-    public Context mContext;
+    public static Context mContext;
     public Toast mToast;
 
 
@@ -33,6 +35,7 @@ public abstract class BaseActivity extends FragmentActivity {
         mContext = this;
         Log.d(TAG, "onCreate() is called");
     }
+
 
     public void Toast(String content) {
         if (content != null) {
@@ -52,10 +55,11 @@ public abstract class BaseActivity extends FragmentActivity {
             } else {
                 mToast.setText(content);
             }
-            mToast.setGravity(Gravity.CENTER,0,0);
+            mToast.setGravity(Gravity.CENTER, 0, 0);
             mToast.show();
         }
     }
+
 
     public abstract int getLayoutId();
 
@@ -83,6 +87,32 @@ public abstract class BaseActivity extends FragmentActivity {
             return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
         }
         return super.onTouchEvent(event);
+    }
+
+    public static Integer getCurrentUserType() {
+
+        return SharedPreferencesUtil.getInstance(mContext).getUserType();
+
+    }
+
+    public static Integer getCurrentUserID() {
+
+        return SharedPreferencesUtil.getInstance(mContext).getUserId();
+
+    }
+
+    public static String getCurrentUserMobile() {
+
+        return SharedPreferencesUtil.getInstance(mContext).getMobile();
+
+    }
+
+    public static UserDB getCurrentUser() {
+        UserDB userDB = null;
+        if (UserDB.count(UserDB.class) > 0) {
+            userDB = UserDB.first(UserDB.class);
+        }
+        return userDB;
     }
 
 }

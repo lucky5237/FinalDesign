@@ -1,72 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_white"
+    android:orientation="vertical"
 
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        >
+        android:padding="5dp">
+
         <ImageView
             android:id="@+id/iv_deliver_gender"
-            android:visibility="gone"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/ic_kuaidi"/>
+            android:src="@mipmap/ic_kuaidi"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/tv_status"
-            android:layout_toRightOf="@id/iv_deliver_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="订单状态"
-            android:textColor="@color/black"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_deliver_gender"
+
+            android:text="订单状态"
+            android:textColor="@color/gray"
 
             />
+
         <ImageView
+            android:visibility="gone"
+            android:id="@+id/iv_delete"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@mipmap/ic_delete"
             android:layout_alignParentRight="true"
-
+            android:src="@mipmap/ic_delete"
+            android:layout_marginRight="5dp"
             />
-
-
-
-
 
 
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_topic_gray"/>
+        android:background="@color/color_topic_gray" />
 
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="10dp"
         android:orientation="horizontal"
-        >
+        android:padding="5dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@mipmap/ic_man"
-            app:civ_border_width="2dp"
-            app:civ_border_color="@color/color_topic_gray"/>
+            app:civ_border_color="@color/color_topic_gray"
+            app:civ_border_width="2dp" />
+
         <LinearLayout
-            android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:orientation="vertical"
 
             >
@@ -74,116 +76,115 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
-                >
+                android:orientation="horizontal">
+
                 <ImageView
-                    android:layout_marginRight="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@+id/tv_food_name"
                     android:src="@mipmap/ic_rice"
 
                     />
 
                 <TextView
-                    android:layout_centerVertical="true"
                     android:id="@+id/tv_food_name"
-                    android:textSize="17sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="芝士爆浆起司鸡排饭等3件商品"
+                    android:layout_centerVertical="true"
                     android:singleLine="true"
+                    android:text="芝士爆浆起司鸡排饭等3件商品"
                     android:textColor="@color/black"
-                    />
+                    android:textSize="17sp" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
-                >
+                android:orientation="horizontal">
+
                 <ImageView
-                    android:layout_marginRight="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/tv_time"
                     android:src="@mipmap/ic_clock"
 
                     />
 
                 <TextView
-                    android:layout_centerVertical="true"
                     android:id="@+id/tv_time"
-                    android:textSize="12sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:text="2016-03-15 10:02:48"
-                    />
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="bottom|right"
+                android:layout_gravity="bottom|left"
+                android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
-                >
+                android:orientation="horizontal">
+
                 <ImageView
-                    android:layout_marginRight="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@+id/tv_money"
                     android:src="@mipmap/ic_money"
 
                     />
 
                 <TextView
-                    android:layout_centerVertical="true"
                     android:id="@+id/tv_money"
-                    android:textColor="@color/orange"
-                    android:textSize="22sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="18元"
-                    />
-                <TextView
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
                     android:layout_centerVertical="true"
-                    android:id="@+id/tv_plus"
+                    android:text="¥18"
                     android:textColor="@color/orange"
-                    android:textSize="18sp"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tv_plus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:text="+"
-                    />
+                    android:visibility="gone"
+                    android:textColor="@color/orange"
+                    android:textSize="18sp" />
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_bonus"
-                    />
+                    android:layout_marginLeft="10dp"
+                    android:src="@mipmap/ic_bonus" />
+
                 <TextView
-                    android:layout_marginLeft="5dp"
-                    android:textColor="@color/orange"
-                    android:layout_centerVertical="true"
                     android:id="@+id/tv_bonus"
-                    android:textSize="22sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="5元"/>
-
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:text="¥5"
+                    android:textColor="@color/orange"
+                    android:textSize="22sp" />
 
 
             </LinearLayout>
@@ -191,49 +192,41 @@
         </LinearLayout>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_topic_gray"
-        />
+        android:background="@color/color_topic_gray" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        >
+
         <Button
-            android:id="@+id/btn_comment"
+            android:id="@+id/btn_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="立即评价"
-            android:textColor="@color/orange"
+            android:layout_toLeftOf="@+id/btn_right"
             android:background="@drawable/shape_border_orange"
+            android:text="立即评价"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/orange"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            />
-        <Button
-            android:id="@+id/btn_make_onemore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/btn_comment"
-            android:text="再来一单"
-            android:textColor="@color/btn_blue"
             android:background="@drawable/shape_border_blue"
-            android:layout_centerVertical="true"
-            />
+            android:text="再来一单"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/btn_blue"
+            android:visibility="gone" />
 
 
     </RelativeLayout>
@@ -241,7 +234,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@color/color_topic_gray"/>
+        android:background="@color/color_topic_gray" />
 
 
 </LinearLayout>

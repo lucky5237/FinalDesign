@@ -24,5 +24,7 @@ public abstract class BaseRefreshableFragment extends BaseFragment implements Pu
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setOnRefreshListener(this);
+
     }
+
 }

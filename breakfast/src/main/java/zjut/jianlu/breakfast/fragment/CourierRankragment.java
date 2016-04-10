@@ -28,4 +28,6 @@ public class CourierRankragment extends BaseRefreshableFragment {
 //        Toast(mPageName);
         mListView.onRefreshComplete();
     }
+
+
 }

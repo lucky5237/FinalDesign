@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 public class Food implements Serializable {
 
+    private Integer id;//id
+
     private String name;//食品名称
 
     private String image;//食品图片的路径
@@ -16,6 +18,14 @@ public class Food implements Serializable {
     private String place;//购买地点
 
     private Integer sales;//销量
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -57,4 +67,15 @@ public class Food implements Serializable {
         this.sales = sales;
     }
 
+    @Override
+    public String toString() {
+        return "Food{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", price=" + price +
+                ", place='" + place + '\'' +
+                ", sales=" + sales +
+                '}';
+    }
 }

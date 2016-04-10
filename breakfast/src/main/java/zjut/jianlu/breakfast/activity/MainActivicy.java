@@ -22,7 +22,7 @@ import zjut.jianlu.breakfast.fragment.RankFragment;
  */
 public class MainActivicy extends BaseActivity {
 
-    private int mCurrentIndex = 0;//当前选中的索引
+    private int mCurrentIndex = 1;//当前选中的索引
     private HomePageFragment mHomePageFragment;
     private RankFragment mRankFragment;
     private OrderFragment mOrderFragment;
@@ -100,9 +100,10 @@ public class MainActivicy extends BaseActivity {
         mTransaction = getSupportFragmentManager().beginTransaction();
         mTransaction.add(R.id.flyt_container, mHomePageFragment)
                 .add(R.id.flyt_container, mRankFragment).add(R.id.flyt_container, mOrderFragment)
-                .add(R.id.flyt_container, mMeFragment).hide(mRankFragment).hide(mOrderFragment).hide(mMeFragment).show(mHomePageFragment).commit();
+                .add(R.id.flyt_container, mMeFragment).hide(mRankFragment).hide(mOrderFragment).hide(mMeFragment).show(mRankFragment).commit();
 
     }
+
 
     @Override
     public int getLayoutId() {

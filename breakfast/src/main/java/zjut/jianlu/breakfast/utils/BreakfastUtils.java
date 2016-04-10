@@ -5,10 +5,14 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import zjut.jianlu.breakfast.constant.BreakfastConstant;
+
 /**
  * Created by jianlu on 16/3/12.
  */
 public class BreakfastUtils {
+
+    private static final String IMAGE_FOLDER_NAME = "static/image/";
 
     public synchronized static String getOutTradeNo() {
         SimpleDateFormat format = new SimpleDateFormat("MMddHHmmss", Locale.getDefault());
@@ -18,6 +22,11 @@ public class BreakfastUtils {
         key = key + r.nextInt();
         key = key.substring(0, 15);
         return key;
+    }
+
+    public static String getAbsImageUrlPath(String imageName) {
+
+        return BreakfastConstant.URL + IMAGE_FOLDER_NAME + imageName + ".jpg";
     }
 
 }

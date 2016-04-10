@@ -25,6 +25,7 @@ public class BonusRankFragment extends BaseRefreshableFragment {
     }
 
 
+
     @Override
     public void onRefresh(PullToRefreshBase<ListView> refreshView) {
         Toast(mPageName);

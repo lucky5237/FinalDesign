@@ -5,7 +5,7 @@ import android.util.Log;
 import com.facebook.stetho.Stetho;
 import com.orm.SugarApp;
 
-import cn.bmob.v3.Bmob;
+import cn.smssdk.SMSSDK;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
@@ -13,13 +13,13 @@ import zjut.jianlu.breakfast.constant.BreakfastConstant;
 /**
  * Created by jianlu on 3/9/2016.
  */
-public class MyApplication<T> extends SugarApp {
+public class MyApplication extends SugarApp {
 
     private String TAG;
 
     private static Retrofit mRetrofit = null;
 
-    private T mService;
+//    private T mService;
 
     @Override
     public void onCreate() {
@@ -27,7 +27,7 @@ public class MyApplication<T> extends SugarApp {
         TAG = this.getClass().getSimpleName();
         Log.d(TAG, "onCreate() is called");
         Stetho.initializeWithDefaults(this);
-        Bmob.initialize(this, BreakfastConstant.BOMB_APPLICATION_ID);
+        SMSSDK.initSDK(this, BreakfastConstant.SHARE_SDK_APP_KEY, BreakfastConstant.SHARE_SDK_APP_SECRET);
 
     }
 
@@ -38,9 +38,9 @@ public class MyApplication<T> extends SugarApp {
         return mRetrofit;
     }
 
-    public T getService(Class<T> Clazz) {
-        mRetrofit = getRetrofitInstance();
-        mService = mRetrofit.create(Clazz);
-        return mService;
-    }
+//    public T getService(Class<T> Clazz) {
+//        mRetrofit = getRetrofitInstance();
+//        mService = mRetrofit.create(Clazz);
+//        return mService;
+//    }
 }

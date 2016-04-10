@@ -29,6 +29,10 @@ public class UserDB extends SugarRecord {
 
     private String address;//收货地址
 
+    private float bonus;
+
+    private Integer orderNum;
+
     public UserDB() {
 
     }
@@ -42,6 +46,33 @@ public class UserDB extends SugarRecord {
         gender = user.getGender();
         address = user.getAddress();
         brief = user.getBrief();
+        bonus = user.getBonus();
+        orderNum = user.getOrderNum();
+
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public float getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(float bonus) {
+        this.bonus = bonus;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
     }
 
     public String getMobile() {

@@ -1,0 +1,57 @@
+package zjut.jianlu.breakfast.listener;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+
+import org.greenrobot.eventbus.EventBus;
+
+import zjut.jianlu.breakfast.R;
+import zjut.jianlu.breakfast.entity.UpdateOrderStatusEvent;
+
+/**
+ * Created by jianlu on 16/4/10.
+ */
+public class UpdateOrderStatusListener implements View.OnClickListener {
+
+    private Integer orderId;
+
+    private Integer status;
+
+    private Context mContext;
+
+
+    public UpdateOrderStatusListener(Context context, Integer orderId, Integer status) {
+        mContext = context;
+        this.orderId = orderId;
+        this.status = status;
+    }
+
+    @Override
+    public void onClick(View v) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_confirm, null);
+        final AlertDialog set = new AlertDialog.Builder(mContext, AlertDialog.THEME_HOLO_LIGHT).create();
+        set.setView(view);
+        final Button cancel = (Button) view.findViewById(R.id.btn_delete_cancel);
+        Button confirm = (Button) view.findViewById(R.id.btn_delete_confirm);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                set.dismiss();
+            }
+        });
+        confirm.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                set.dismiss();
+                EventBus.getDefault().post(new UpdateOrderStatusEvent(status, orderId));
+            }
+        });
+        set.show();
+    }
+}
