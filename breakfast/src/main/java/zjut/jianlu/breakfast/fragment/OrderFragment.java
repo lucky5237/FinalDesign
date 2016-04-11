@@ -28,7 +28,7 @@ import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.UpdateOrderStatusEvent;
+import zjut.jianlu.breakfast.entity.event.UpdateOrderStatusEvent;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
 import zjut.jianlu.breakfast.entity.requestBody.BaseUserBody;
 import zjut.jianlu.breakfast.entity.requestBody.UpdateOrderStatusBody;
@@ -149,6 +149,8 @@ public class OrderFragment extends BaseRefreshableFragment
             public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
 
                 Toast.makeText(mContext, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                getMyorder();
+
 
             }
         });

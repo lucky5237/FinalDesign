@@ -1,4 +1,4 @@
-package zjut.jianlu.breakfast.entity;
+package zjut.jianlu.breakfast.entity.event;
 
 /**
  * Created by jianlu on 16/4/10.

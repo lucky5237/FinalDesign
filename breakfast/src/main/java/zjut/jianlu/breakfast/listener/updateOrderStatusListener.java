@@ -9,7 +9,9 @@ import android.widget.Button;
 import org.greenrobot.eventbus.EventBus;
 
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.entity.UpdateOrderStatusEvent;
+import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.entity.event.TakeOrderEvent;
+import zjut.jianlu.breakfast.entity.event.UpdateOrderStatusEvent;
 
 /**
  * Created by jianlu on 16/4/10.
@@ -49,7 +51,12 @@ public class UpdateOrderStatusListener implements View.OnClickListener {
             @Override
             public void onClick(View arg0) {
                 set.dismiss();
-                EventBus.getDefault().post(new UpdateOrderStatusEvent(status, orderId));
+                if (status != 1) {
+                    EventBus.getDefault().post(new UpdateOrderStatusEvent(status, orderId));//更新订单状态
+                } else {
+                    EventBus.getDefault().post(new TakeOrderEvent(BreakfastConstant.GET_NEWEST_ORDER_TAG, orderId));//接单
+
+                }
             }
         });
         set.show();

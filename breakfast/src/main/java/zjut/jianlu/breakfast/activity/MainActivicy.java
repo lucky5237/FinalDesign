@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
@@ -27,10 +30,10 @@ public class MainActivicy extends BaseActivity {
     private RankFragment mRankFragment;
     private OrderFragment mOrderFragment;
     private MeFragment mMeFragment;
-    private static final int HOME_INDEX = 0;
-    private static final int RANK_INDEX = 1;
-    private static final int ORDER_INDEX = 2;
-    private static final int ME_INDEX = 3;
+    public static final int HOME_INDEX = 0;
+    public static final int RANK_INDEX = 1;
+    public static final int ORDER_INDEX = 2;
+    public static final int ME_INDEX = 3;
     @Bind(R.id.tv_topbar)
     TextView mTvTopBar;
     @Bind(R.id.iv_plus)
@@ -39,7 +42,7 @@ public class MainActivicy extends BaseActivity {
     private FragmentTransaction mTransaction;
     private Fragment[] fragments;
 
-    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_me,R.id.iv_plus})
+    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_me, R.id.iv_plus})
     public void onclick(View view) {
         switch (view.getId()) {
             case R.id.btn_home:
@@ -63,7 +66,7 @@ public class MainActivicy extends BaseActivity {
                 ShowFragment(ME_INDEX);
                 break;
             case R.id.iv_plus:
-                startActivity(new Intent(MainActivicy.this,FoodShopActivity.class));
+                startActivity(new Intent(MainActivicy.this, FoodShopActivity.class));
                 break;
             default:
                 break;
@@ -80,13 +83,10 @@ public class MainActivicy extends BaseActivity {
 
         transaction.hide(fragments[mCurrentIndex]);
 
-        mCurrentIndex=index;
+        mCurrentIndex = index;
 
         transaction.show(fragments[index]).commit();
-        }
-
-
-
+    }
 
 
     @Override
@@ -96,7 +96,7 @@ public class MainActivicy extends BaseActivity {
         mRankFragment = new RankFragment();
         mOrderFragment = new OrderFragment();
         mMeFragment = new MeFragment();
-        fragments=new Fragment[]{mHomePageFragment,mRankFragment,mOrderFragment,mMeFragment};
+        fragments = new Fragment[]{mHomePageFragment, mRankFragment, mOrderFragment, mMeFragment};
         mTransaction = getSupportFragmentManager().beginTransaction();
         mTransaction.add(R.id.flyt_container, mHomePageFragment)
                 .add(R.id.flyt_container, mRankFragment).add(R.id.flyt_container, mOrderFragment)
@@ -104,6 +104,25 @@ public class MainActivicy extends BaseActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+
+    @Subscribe
+    public void ChangeIndex(Integer index) {
+        if (index != null) {
+            ShowFragment(index);
+        }
+    }
 
     @Override
     public int getLayoutId() {

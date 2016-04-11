@@ -9,6 +9,8 @@ import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
 import zjut.jianlu.breakfast.entity.requestBody.BaseUserBody;
 import zjut.jianlu.breakfast.entity.requestBody.MakeOrderBody;
+import zjut.jianlu.breakfast.entity.requestBody.NewestOrderBody;
+import zjut.jianlu.breakfast.entity.requestBody.TakeOrderBody;
 import zjut.jianlu.breakfast.entity.requestBody.UpdateOrderStatusBody;
 
 /**
@@ -23,4 +25,10 @@ public interface OrderService {
 
     @POST("order/updateStatus")
     Call<BaseResponse<String>> updateOrderStatus(@Body UpdateOrderStatusBody body);
+
+    @POST("order/newestOrder")
+    Call<BaseResponse<List<OrderInfo>>> getNewestOrders(@Body NewestOrderBody body);
+
+    @POST("order/takeOrder")
+    Call<BaseResponse<String>> takeOrder(@Body TakeOrderBody body);
 }
