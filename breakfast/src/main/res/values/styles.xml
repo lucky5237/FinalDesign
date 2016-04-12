@@ -60,9 +60,9 @@
     </style>
 
     <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
-        <item name="android:background">@color/color_loginBtn</item>
+        <item name="android:background">@drawable/tab_indicator</item>
         <item name="android:textAppearance">@style/CustomTabPageIndicator.Text</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/font_m</item>
         <item name="android:dividerPadding">8dp</item>
         <item name="android:showDividers">middle</item>
         <item name="android:paddingLeft">10dp</item>
@@ -73,7 +73,7 @@
 
     <style name="CustomTabPageIndicator.Text" parent="android:TextAppearance.Medium">
         <item name="android:typeface">monospace</item>
-        <item name="android:textColor">@color/color_white</item>
+        <item name="android:textColor">@drawable/selector_tabtext</item>
     </style>
 
     <style name="main_tab_bottom">

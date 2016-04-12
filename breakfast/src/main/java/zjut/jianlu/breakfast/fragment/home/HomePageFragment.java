@@ -1,4 +1,4 @@
-package zjut.jianlu.breakfast.fragment;
+package zjut.jianlu.breakfast.fragment.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

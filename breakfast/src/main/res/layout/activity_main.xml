@@ -3,6 +3,7 @@
     android:id="@+id/main_cotainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/activity_background_gray"
     android:orientation="vertical">
     <RelativeLayout style="@style/topbar_layout_style">
 
@@ -30,6 +31,11 @@
         android:layout_weight="1">
 
     </FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="1dp"
+        android:background="@color/gray"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,45 +43,57 @@
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center">
             <RadioButton
+                android:gravity="center_horizontal"
                 android:id="@+id/btn_home"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:paddingLeft="0dp"
                 android:text="首页"
-
+                android:checked="true"
+                android:textColor="@drawable/selector_bottom_text"
                 android:button="@null"
-                android:drawableTop="@mipmap/ic_launcher"/>
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/selector_home_btn"/>
             <RadioButton
+                android:gravity="center_horizontal"
                 android:id="@+id/btn_rank"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:paddingLeft="0dp"
                 android:layout_height="match_parent"
-                android:paddingBottom="2dp"
                 android:text="榜单"
+                android:textColor="@drawable/selector_bottom_text"
+                android:drawablePadding="5dp"
                 android:button="@null"
-                android:drawableTop="@mipmap/ic_launcher"/>
+                android:drawableTop="@drawable/selector_rank_btn"/>
             <RadioButton
+                android:gravity="center_horizontal"
                 android:id="@+id/btn_order"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:paddingLeft="0dp"
                 android:text="订单"
+                android:drawablePadding="5dp"
+                android:textColor="@drawable/selector_bottom_text"
                 android:button="@null"
-                android:drawableTop="@mipmap/ic_launcher"/>
+                android:drawableTop="@drawable/selector_order_btn"/>
             <RadioButton
+                android:gravity="center_horizontal"
                 android:id="@+id/btn_me"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:paddingLeft="0dp"
+                android:drawablePadding="5dp"
+                android:textColor="@drawable/selector_bottom_text"
                 android:text="我的"
                 android:button="@null"
-                android:drawableTop="@mipmap/ic_launcher"/>
+                android:drawableTop="@drawable/selector_me_btn"/>
 
         </RadioGroup>
 

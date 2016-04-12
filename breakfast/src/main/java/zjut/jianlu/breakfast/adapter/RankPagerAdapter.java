@@ -9,28 +9,32 @@ import java.util.List;
 /**
  * Created by jianlu on 16/3/12.
  */
-public class HomePagerViewAdapter extends FragmentPagerAdapter {
+public class RankPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> mFragmentList;
 
-    private static final String[] TITLES= new String[]{"热销早餐","土豪悬赏金排行榜","送客送货量排行榜"};
+    private static final String[] TITLES = new String[]{"热销排行榜", "用户排行榜"};
 
-    public HomePagerViewAdapter(FragmentManager fm, List<Fragment> fragmentList) {
+
+    public RankPagerAdapter(FragmentManager fm, List<Fragment> fragmentList) {
         super(fm);
         mFragmentList = fragmentList;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return TITLES[position%TITLES.length];
+        return TITLES[position % TITLES.length];
     }
 
     @Override
     public Fragment getItem(int position) {
-        return mFragmentList.get(position%TITLES.length);
+        return mFragmentList.get(position % TITLES.length);
     }
+
 
     @Override
     public int getCount() {
         return mFragmentList.size();
     }
+
+
 }

@@ -15,17 +15,17 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
-import zjut.jianlu.breakfast.fragment.HomePageFragment;
+import zjut.jianlu.breakfast.fragment.home.HomePageFragment;
 import zjut.jianlu.breakfast.fragment.MeFragment;
 import zjut.jianlu.breakfast.fragment.OrderFragment;
-import zjut.jianlu.breakfast.fragment.RankFragment;
+import zjut.jianlu.breakfast.fragment.rank.RankFragment;
 
 /**
  * Created by jianlu on 16/3/12.
  */
 public class MainActivicy extends BaseActivity {
 
-    private int mCurrentIndex = 1;//当前选中的索引
+    private int mCurrentIndex = 0;//当前选中的索引
     private HomePageFragment mHomePageFragment;
     private RankFragment mRankFragment;
     private OrderFragment mOrderFragment;
@@ -100,7 +100,7 @@ public class MainActivicy extends BaseActivity {
         mTransaction = getSupportFragmentManager().beginTransaction();
         mTransaction.add(R.id.flyt_container, mHomePageFragment)
                 .add(R.id.flyt_container, mRankFragment).add(R.id.flyt_container, mOrderFragment)
-                .add(R.id.flyt_container, mMeFragment).hide(mRankFragment).hide(mOrderFragment).hide(mMeFragment).show(mRankFragment).commit();
+                .add(R.id.flyt_container, mMeFragment).hide(mRankFragment).hide(mOrderFragment).hide(mMeFragment).show(mHomePageFragment).commit();
 
     }
 

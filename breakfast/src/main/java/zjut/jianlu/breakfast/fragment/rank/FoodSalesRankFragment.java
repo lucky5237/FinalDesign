@@ -1,4 +1,4 @@
-package zjut.jianlu.breakfast.fragment;
+package zjut.jianlu.breakfast.fragment.rank;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,7 +27,7 @@ import zjut.jianlu.breakfast.service.FoodService;
 /**
  * Created by jianlu on 16/3/12.
  */
-public class HotFoodFragment extends BaseRefreshableFragment {
+public class FoodSalesRankFragment extends BaseRefreshableFragment {
 //    @Bind(R.id.pull_to_refresh_listview)
 //    PullToRefreshListView listView;
 

@@ -1,5 +1,7 @@
 package zjut.jianlu.breakfast.service;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -9,6 +11,7 @@ import zjut.jianlu.breakfast.entity.requestBody.ChangePasswordBody;
 import zjut.jianlu.breakfast.entity.requestBody.CheckMobileBody;
 import zjut.jianlu.breakfast.entity.requestBody.LoginBody;
 import zjut.jianlu.breakfast.entity.requestBody.RegisterBody;
+import zjut.jianlu.breakfast.entity.requestBody.UserRankBody;
 
 /**
  * Created by jianlu on 16/3/23.
@@ -26,4 +29,13 @@ public interface UserService {
 
     @POST("user/changePassword")
     Call<BaseResponse<String>> changePassword(@Body ChangePasswordBody body);
+
+    @POST("user/bonusRank")
+    Call<BaseResponse<List<User>>> getBonusRank(@Body UserRankBody body);
+
+    @POST("user/orderNumRank")
+    Call<BaseResponse<List<User>>> getOrderNumRank(@Body UserRankBody body);
+
+    @POST("user/rank")
+    Call<BaseResponse<List<User>>> getUserRank(@Body UserRankBody body);
 }

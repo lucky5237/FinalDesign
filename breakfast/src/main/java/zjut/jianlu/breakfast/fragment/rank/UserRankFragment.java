@@ -1,44 +1,44 @@
-package zjut.jianlu.breakfast.fragment;
+package zjut.jianlu.breakfast.fragment.rank;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
-import com.viewpagerindicator.TabPageIndicator;
+import com.viewpagerindicator.IconPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.adapter.HomePagerViewAdapter;
+import zjut.jianlu.breakfast.adapter.UserRankPagerAdapter;
 import zjut.jianlu.breakfast.base.BaseFragment;
 
 /**
  * Created by jianlu on 16/3/12.
  */
-public class RankFragment extends BaseFragment {
-    @Bind(R.id.titles)
-    TabPageIndicator mtabPageIndicator;
+public class UserRankFragment extends BaseFragment {
+    @Bind(R.id.icons)
+    IconPageIndicator mIconPageIndicator;
     @Bind(R.id.pages)
     ViewPager mViewPager;
     private List<Fragment> mFragmentList;
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_rank;
+        return R.layout.fragment_user_rank;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mFragmentList = new ArrayList<Fragment>();
-        mFragmentList.add(new HotFoodFragment());
-        mFragmentList.add(new BonusRankFragment());
-        mFragmentList.add(new CourierRankragment());
-        mViewPager.setAdapter(new HomePagerViewAdapter(getChildFragmentManager(), mFragmentList));
-        mtabPageIndicator.setViewPager(mViewPager);
-        mtabPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mFragmentList.add(new ClientRankFragment());
+        mFragmentList.add(new CourierRankFragment());
+
+        mViewPager.setAdapter(new UserRankPagerAdapter(getChildFragmentManager(), mFragmentList));
+        mIconPageIndicator.setViewPager(mViewPager);
+        mIconPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 

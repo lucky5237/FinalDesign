@@ -1,5 +1,7 @@
 package zjut.jianlu.breakfast.utils;
 
+import android.content.Context;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -27,6 +29,17 @@ public class BreakfastUtils {
     public static String getAbsImageUrlPath(String imageName) {
 
         return BreakfastConstant.URL + IMAGE_FOLDER_NAME + imageName + ".jpg";
+    }
+
+
+    public static int getResourseIdByName(Context context,String resourseType,String resourceName){
+
+        return context.getResources().getIdentifier(resourceName,resourseType,context.getPackageName());
+    }
+
+    public static int getDrawableIdByName(Context context,String resourceName){
+
+        return getResourseIdByName(context,"mipmap",resourceName);
     }
 
 }

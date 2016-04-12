@@ -76,7 +76,7 @@ public class HotFoodAdapter extends BaseAdapter {
         if (position == 0 || position == 1 || position == 2) {
             String imageName = "ic_rank_" + (position + 1);
             viewHolder.mIvRank.setVisibility(View.VISIBLE);
-            viewHolder.mIvRank.setImageResource(mContext.getResources().getIdentifier(imageName, "mipmap", mContext.getPackageName()));
+            viewHolder.mIvRank.setImageResource(BreakfastUtils.getDrawableIdByName(mContext,imageName));
         } else {
             viewHolder.mIvRank.setVisibility(View.GONE);
         }
