@@ -1,9 +1,11 @@
 package zjut.jianlu.breakfast.entity.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by jianlu on 16/4/12.
  */
-public class Place {
+public class Place implements Serializable {
 
     private Integer id;
     private String name;

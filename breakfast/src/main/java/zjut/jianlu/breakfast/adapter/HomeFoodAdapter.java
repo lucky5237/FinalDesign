@@ -84,7 +84,7 @@ public class HomeFoodAdapter extends BaseAdapter {
         viewHolder.tvName.setText(mFood.getName());
         viewHolder.tvPlace.setText(mFood.getPlace().getName());
         viewHolder.tvPrice.setText(mFood.getPrice().toString());
-        viewHolder.tvSales.setText(mFood.getSales());
+        viewHolder.tvSales.setText(mFood.getSales().toString());
         viewHolder.tvTime.setText(mFood.getCreateTs());
         viewHolder.btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
