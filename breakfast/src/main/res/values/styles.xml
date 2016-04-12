@@ -92,11 +92,7 @@
 
 
 
-    <style name="AppTheme" parent="AppBaseTheme"></style>
 
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:windowNoTitle">true</item>
-    </style>
     <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     <style name="title_bar_bottom_border_style2">
         <item name="android:layout_width">fill_parent</item>

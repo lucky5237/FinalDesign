@@ -1,79 +1,64 @@
 package zjut.jianlu.breakfast.fragment.home;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.widget.ListView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.adapter.NewestOrderAdapter;
-import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
-import zjut.jianlu.breakfast.entity.bean.OrderInfo;
+import zjut.jianlu.breakfast.adapter.HomeFoodPagerAdapter;
+import zjut.jianlu.breakfast.base.BaseFragment;
 
 /**
  * Created by jianlu on 16/3/12.
  */
-public class ClientHomePageFragment extends BaseRefreshableFragment {
+public class ClientHomePageFragment extends BaseFragment {
 
-    @Bind(R.id.pull_to_refresh_listview)
-    PullToRefreshListView mPullToRefreshListview;
-    private NewestOrderAdapter adapter;
-
-    private List<OrderInfo> mOrderInfoList;
-
+    @Bind(R.id.titles)
+    TabPageIndicator mtabPageIndicator;
+    @Bind(R.id.pages)
+    ViewPager mViewPager;
+    private List<Fragment> mFragmentList;
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_homepage;
+        return R.layout.fragment_client_homepage;
     }
 
     @Override
-    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-        Toast(mPageName);
-        getNewestOrder();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mOrderInfoList = new ArrayList<OrderInfo>();
-        adapter = new NewestOrderAdapter(getActivity(), mOrderInfoList);
-        mPullToRefreshListview.setAdapter(adapter);
+        mFragmentList = new ArrayList<Fragment>();
+        mFragmentList.add(new RubbishStreetFoodFrament());
+        mFragmentList.add(new YangxianCanteenFoodFragment());
+        mFragmentList.add(new HomePeaceCanteenFoodFragment());
+        mViewPager.setAdapter(new HomeFoodPagerAdapter(getChildFragmentManager(), mFragmentList));
+        mtabPageIndicator.setViewPager(mViewPager);
+        mtabPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                Toast("当前选中了第" + position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 
 
-    private void getNewestOrder() {
-////        BmobQuery query = new BmobQuery("order_info").addWhereEqualTo("status", 0).order("-createdAt");
-////        query.findObjects(getActivity(), new FindCallback() {
-////            @Override
-////            public void onSuccess(JSONArray jsonArray) {
-////                mListView.onRefreshComplete();
-////                String jsonString = jsonArray.toString();
-////                List<OrderInfoDB> mOrderInfo = new Gson().fromJson(jsonString, new TypeToken<List<OrderInfoDB>>() {
-////                }.getType());
-////                if (mOrderInfo != null && mOrderInfo.size() > 0) {
-////                        if (mOrderInfoList.size()>0){
-////                            mOrderInfoList.clear();
-////                        }
-////                    mOrderInfoList.addAll(mOrderInfo);
-////                    adapter.notifyDataSetChanged();
-////
-////                }
-////            }
-////
-////            @Override
-////            public void onFailure(int i, String s) {
-////                Toast(s);
-////            }
-//        });
-
-
-    }
 }

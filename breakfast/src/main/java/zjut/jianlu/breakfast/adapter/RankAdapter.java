@@ -58,7 +58,7 @@ public class RankAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         User user = (User) getItem(position);
-        String genderChinese = user.getGender() == 0 ? "男" : "女";
+        String genderChinese = user.getGender() == 0 ? "他" : "她";
         switch (userType) {
             case 0:
                 viewHolder.tvUserName.setText(user.getUsername());

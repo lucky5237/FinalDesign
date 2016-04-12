@@ -34,7 +34,7 @@ import zjut.jianlu.breakfast.service.OrderService;
 /**
  * Created by jianlu on 16/3/12.
  */
-public class HomePageFragment extends BaseRefreshableFragment {
+public class CourierHomePageFragment extends BaseRefreshableFragment {
 
     @Bind(R.id.pull_to_refresh_listview)
     PullToRefreshListView mPullToRefreshListview;
@@ -47,7 +47,7 @@ public class HomePageFragment extends BaseRefreshableFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_homepage;
+        return R.layout.fragment_courier_homepage;
     }
 
     @Override
@@ -84,6 +84,7 @@ public class HomePageFragment extends BaseRefreshableFragment {
                 }
                 if (response.body().getData().size() == 0) {
                     Toast("当前暂无新订单");
+                    mPullToRefreshListview.onRefreshComplete();
                     return;
                 }
                 mOrderInfoList.addAll(response.body().getData());

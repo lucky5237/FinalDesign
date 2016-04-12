@@ -70,7 +70,7 @@ public class HotFoodAdapter extends BaseAdapter {
         }
         final Food food = (Food) getItem(position);
         viewHolder.mTvName.setText(food.getName());
-        viewHolder.mTvPlace.setText(food.getPlace());
+        viewHolder.mTvPlace.setText(food.getPlace().getName());
         viewHolder.mTvPrice.setText("¥：" + food.getPrice().toString());
         viewHolder.mTvSales.setText("已售" + food.getSales().toString() + "份");
         if (position == 0 || position == 1 || position == 2) {

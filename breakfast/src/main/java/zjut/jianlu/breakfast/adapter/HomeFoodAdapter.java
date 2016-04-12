@@ -1,6 +1,8 @@
 package zjut.jianlu.breakfast.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -23,17 +26,20 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.entity.bean.Food;
+import zjut.jianlu.breakfast.activity.MakeOrderActivity;
+import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
+import zjut.jianlu.breakfast.entity.bean.Food;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 
 /**
  * Created by jianlu on 16/3/14.
  */
-public class ConfirmOrderAdapter extends BaseAdapter {
+public class HomeFoodAdapter extends BaseAdapter {
 
 
-    private Context mContext;
+    static Context mContext;
 
     private Food mFood;
 
@@ -41,16 +47,12 @@ public class ConfirmOrderAdapter extends BaseAdapter {
 
     private View mView;
 
-    private List<ConfirmFood> mFoodList;
+    private List<Food> mFoodList;
 
-    public static Button mBtnTotal;
 
-    public ConfirmOrderAdapter(Context context, List<ConfirmFood> mFoodList, View view) {
+    public HomeFoodAdapter(Context context, List<Food> mFoodList) {
         mContext = context;
         this.mFoodList = mFoodList;
-        mView = view;
-        mBtnTotal= (Button) view.findViewById(R.id.btn_pay_money);
-
     }
 
     @Override
@@ -74,22 +76,39 @@ public class ConfirmOrderAdapter extends BaseAdapter {
         if (convertView != null) {
             viewHolder = (ViewHolder) convertView.getTag();
         } else {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_order_confirm_food_item, parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_home_food, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         }
-        ConfirmFood orderConfirmFoodList = (ConfirmFood) getItem(position);
-        mFood = orderConfirmFoodList.getFood();
-        mNum = orderConfirmFoodList.getQuantity();
+        final Food mFood = (Food) getItem(position);
         viewHolder.tvName.setText(mFood.getName());
         viewHolder.tvPlace.setText(mFood.getPlace().getName());
         viewHolder.tvPrice.setText(mFood.getPrice().toString());
-        viewHolder.etQuantity.setText(mNum + "");
-        viewHolder.tvBuyNum.setText(mNum + "");
-        viewHolder.tvBuyAmount.setText(Float.valueOf(mNum * mFood.getPrice()).toString());
+        viewHolder.tvSales.setText(mFood.getSales());
+        viewHolder.tvTime.setText(mFood.getCreateTs());
+        viewHolder.btnBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (TextUtils.isEmpty(viewHolder.etQuantity.getText().toString())) {
+                    Toast.makeText(mContext, "请先选择购买的数目", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                Toast.makeText(mContext, "跳转购买界面", Toast.LENGTH_SHORT).show();
+                ArrayList<ConfirmFood> foodCarts = new ArrayList<ConfirmFood>();
+                foodCarts.add(new ConfirmFood(Integer.valueOf(viewHolder.etQuantity.getText().toString()), mFood));
+                //添加其他购买的食品
+                Intent intent = new Intent(mContext, MakeOrderActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("foodList", foodCarts);
+                bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, mFood.getPrice());
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+            }
+        });
 
         final String url = mFood.getImage();
-        Picasso.with(mContext).load(url).placeholder(R.mipmap.ic_launcher).resize(100, 100).centerCrop().into(viewHolder.ivImage);
+        Picasso.with(mContext).load(BreakfastUtils.getAbsImageUrlPath(url)).placeholder(R.mipmap.ic_launcher).resize(100, 100).centerCrop().into(viewHolder.ivImage);
         viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,20 +118,6 @@ public class ConfirmOrderAdapter extends BaseAdapter {
                 }
             }
         });
-        viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mFoodList.size() > 1) {
-                    mFoodList.remove(position);
-                    notifyDataSetChanged();
-                } else {
-                    Toast.makeText(mContext, "至少保留一个去支付", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
-
         return convertView;
     }
 
@@ -125,18 +130,18 @@ public class ConfirmOrderAdapter extends BaseAdapter {
                 TextView tvPlace;
         @Bind(R.id.tv_price)//商品单价
                 TextView tvPrice;
+        @Bind(R.id.tv_create_ts)
+        TextView tvTime;
+        @Bind(R.id.tv_sales)
+        TextView tvSales;
         @Bind(R.id.btn_sub)
         Button btnSub;
         @Bind(R.id.et_quantity)
         EditText etQuantity;
         @Bind(R.id.btn_add)
         Button btnAdd;
-        @Bind(R.id.btn_delete)
-        Button btnDelete;
-        @Bind(R.id.tv_buy_num)//购买数目
-                TextView tvBuyNum;
-        @Bind(R.id.tv_buy_amount)//购买总额
-                TextView tvBuyAmount;
+        @Bind(R.id.btn_buy)
+        Button btnBuy;
 
 
         public ViewHolder(View view) {
@@ -145,9 +150,6 @@ public class ConfirmOrderAdapter extends BaseAdapter {
 
         @OnTextChanged(value = R.id.et_quantity, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
         void afterTextChanged(Editable s) {
-
-
-            tvBuyAmount.setText(String.valueOf((float) (Float.valueOf(tvPrice.getText().toString()) * Integer.valueOf(etQuantity.getText().toString().equals("") ? "0" : etQuantity.getText().toString()))));
             etQuantity.setSelection(etQuantity.getText().length());
         }
 
@@ -165,21 +167,15 @@ public class ConfirmOrderAdapter extends BaseAdapter {
                 case R.id.btn_add:
                     if (numberInt < 99) {
                         etQuantity.setText(String.valueOf(numberInt + 1));
-                        tvBuyNum.setText(String.valueOf(numberInt + 1));
-
                     }
                     break;
                 case R.id.btn_sub:
                     if (numberInt > 1) {
                         etQuantity.setText(String.valueOf(numberInt - 1));
-                        tvBuyNum.setText(String.valueOf(numberInt - 1));
-
                     }
                     break;
 
             }
-            tvBuyAmount.setText(String.valueOf((float) (Float.valueOf(tvPrice.getText().toString()) * Integer.valueOf(etQuantity.getText().toString()))));
-            mBtnTotal.setText("实付金额：¥"+tvBuyAmount.getText().toString());
         }
 
     }

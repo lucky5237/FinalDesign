@@ -30,12 +30,6 @@ public interface UserService {
     @POST("user/changePassword")
     Call<BaseResponse<String>> changePassword(@Body ChangePasswordBody body);
 
-    @POST("user/bonusRank")
-    Call<BaseResponse<List<User>>> getBonusRank(@Body UserRankBody body);
-
-    @POST("user/orderNumRank")
-    Call<BaseResponse<List<User>>> getOrderNumRank(@Body UserRankBody body);
-
     @POST("user/rank")
     Call<BaseResponse<List<User>>> getUserRank(@Body UserRankBody body);
 }

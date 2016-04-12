@@ -33,9 +33,9 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
 
     private List<User> userList;
 
-    public Integer userType ;//默认显示买家发出的悬赏金
+    public Integer userType;//默认显示买家发出的悬赏金
 
-    public Integer flag=0;//0-悬赏金，1-订单数
+    public Integer flag = 0;//0-悬赏金，1-订单数
 
     private Retrofit retrofit;
 
@@ -51,22 +51,21 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
     }
 
 
-
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         userList = new ArrayList<User>();
         adapter = new RankAdapter(mContext, userList, userType);
+        mListView.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         userService = retrofit.create(UserService.class);
 
     }
 
-   public abstract void setUserType();
+    public abstract void setUserType();
 
     private void getBonusRank(Integer userType, Integer flag) {
-        Call<BaseResponse<List<User>>> call = userService.getBonusRank(new UserRankBody(SHOW_NUM, userType, flag));
+        Call<BaseResponse<List<User>>> call = userService.getUserRank(new UserRankBody(SHOW_NUM, userType, flag));
         call.enqueue(new BaseCallback<List<User>>() {
             @Override
             public void onNetFailure(Throwable t) {
@@ -94,6 +93,6 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
     @Override
     public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 
-//        getBonusRank(userType);
+        getBonusRank(userType, flag);
     }
 }

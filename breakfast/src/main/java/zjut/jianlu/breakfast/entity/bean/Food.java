@@ -15,9 +15,11 @@ public class Food implements Serializable {
 
     private Float price;//食品价格
 
-    private String place;//购买地点
+    private Place place;//购买地点
 
     private Integer sales;//销量
+
+    private String createTs;
 
     public Integer getId() {
         return id;
@@ -27,8 +29,24 @@ public class Food implements Serializable {
         this.id = id;
     }
 
+    public String getCreateTs() {
+        return createTs;
+    }
+
+    public void setCreateTs(String createTs) {
+        this.createTs = createTs;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
     public void setName(String name) {
@@ -51,13 +69,6 @@ public class Food implements Serializable {
         return price;
     }
 
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
 
     public Integer getSales() {
         return sales;
@@ -74,8 +85,9 @@ public class Food implements Serializable {
                 ", name='" + name + '\'' +
                 ", image='" + image + '\'' +
                 ", price=" + price +
-                ", place='" + place + '\'' +
+                ", place=" + place +
                 ", sales=" + sales +
+                ", createTs='" + createTs + '\'' +
                 '}';
     }
 }
