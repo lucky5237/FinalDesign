@@ -3,6 +3,8 @@ package zjut.jianlu.breakfast.entity.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
+
 /**
  * Created by jianlu on 16/3/12.
  */

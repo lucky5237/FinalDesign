@@ -14,6 +14,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.entity.event.UpdateBadgeNumEvent;
 import zjut.jianlu.breakfast.fragment.OrderFragment;
 import zjut.jianlu.breakfast.fragment.ShopCartFragment;
 import zjut.jianlu.breakfast.fragment.home.ClientHomePageFragment;
@@ -54,7 +55,7 @@ public class MainActivicy extends BaseActivity {
                 if (getCurrentUserType() == 0) {
                     mTvTopBar.setText("美食广场");
 
-                }else {
+                } else {
                     mTvTopBar.setText("最新订单");
 
                 }
@@ -133,6 +134,14 @@ public class MainActivicy extends BaseActivity {
     public void ChangeIndex(Integer index) {
         if (index != null) {
             ShowFragment(index);
+        }
+    }
+
+    @Subscribe
+    public void updateBadgeView(UpdateBadgeNumEvent event) {
+        if (badgeView != null) {
+            int newNumber = badgeView.getBadgeCount() + event.getNum();
+            badgeView.setBadgeCount(newNumber < 0 ? 0 : newNumber);
         }
     }
 

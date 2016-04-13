@@ -14,7 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
 import zjut.jianlu.breakfast.listener.UpdateOrderStatusListener;
 

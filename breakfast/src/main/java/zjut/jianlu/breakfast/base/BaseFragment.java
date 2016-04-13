@@ -7,9 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
+import zjut.jianlu.breakfast.R;
+import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.utils.SharedPreferencesUtil;
 
 /**
@@ -19,6 +22,12 @@ public abstract class BaseFragment extends Fragment {
     public static Context mContext;
     private Toast mToast;
     public String mPageName;
+    public RelativeLayout mRlltNoData;
+    public RelativeLayout mRlltNoNet;
+    public RelativeLayout mRlltNoGoodInShopCart;
+    public RelativeLayout mRlltNoOrder;
+
+    public View view;
 
 
     @Nullable
@@ -26,9 +35,36 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = getActivity();
         mPageName = this.getClass().getSimpleName();
-        View view = inflater.inflate(getLayoutId(), container, false);
+        view = inflater.inflate(getLayoutId(), container, false);
+        mRlltNoData = (RelativeLayout) view.findViewById(R.id.no_data_tips);
+        mRlltNoNet = (RelativeLayout) view.findViewById(R.id.no_net);
+        mRlltNoGoodInShopCart = (RelativeLayout) view.findViewById(R.id.no_goods_cart);
+        mRlltNoOrder = (RelativeLayout) view.findViewById(R.id.no_orders);
+
         ButterKnife.bind(this, view);
         return view;
+
+    }
+
+    public void ShowUI(int status) {
+        mRlltNoData.setVisibility(View.VISIBLE);
+        mRlltNoNet.setVisibility(View.GONE);
+        mRlltNoGoodInShopCart.setVisibility(View.GONE);
+        mRlltNoOrder.setVisibility(View.GONE);
+        switch (status) {
+            case BreakfastConstant.NO_NET:
+                mRlltNoNet.setVisibility(View.VISIBLE);
+                break;
+            case BreakfastConstant.NO_GOOD_SHOPCART:
+                mRlltNoGoodInShopCart.setVisibility(View.VISIBLE);
+                break;
+            case BreakfastConstant.NO_ORDER:
+                mRlltNoOrder.setVisibility(View.VISIBLE);
+                break;
+            case BreakfastConstant.NORMAL:
+                mRlltNoData.setVisibility(View.GONE);
+        }
+
 
     }
 

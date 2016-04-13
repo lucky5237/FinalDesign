@@ -7,6 +7,8 @@ import com.orm.SugarRecord;
  */
 public class FoodDB extends SugarRecord {
 
+    private Integer foodID;
+
     private String name;//食品名称
 
     private String image;//食品图片的路径
@@ -23,6 +25,14 @@ public class FoodDB extends SugarRecord {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getFoodID() {
+        return foodID;
+    }
+
+    public void setFoodID(Integer foodID) {
+        this.foodID = foodID;
     }
 
     public void setName(String name) {

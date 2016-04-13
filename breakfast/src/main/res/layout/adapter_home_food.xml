@@ -248,8 +248,7 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/shape_border_orange"
-                    android:ems="5"
-                    android:text="马上订购"
+                    android:text="加入购物车"
                     android:textStyle="bold" />
             </RelativeLayout>
 

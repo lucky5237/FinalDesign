@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +30,12 @@ import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.activity.MakeOrderActivity;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.entity.bean.Food;
+import zjut.jianlu.breakfast.entity.event.UpdateBadgeNumEvent;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
+import zjut.jianlu.breakfast.widget.ShoppingCartDialog;
 
 /**
  * Created by jianlu on 16/3/14.
@@ -48,6 +52,10 @@ public class HomeFoodAdapter extends BaseAdapter {
     private View mView;
 
     private List<Food> mFoodList;
+
+    private ShoppingCartDialog dialog;
+
+    private static final String MESSAGE = "已加入购物车";
 
 
     public HomeFoodAdapter(Context context, List<Food> mFoodList) {
@@ -94,16 +102,25 @@ public class HomeFoodAdapter extends BaseAdapter {
                     Toast.makeText(mContext, "请先选择购买的数目", Toast.LENGTH_LONG).show();
                     return;
                 }
-                Toast.makeText(mContext, "跳转购买界面", Toast.LENGTH_SHORT).show();
-                ArrayList<ConfirmFood> foodCarts = new ArrayList<ConfirmFood>();
-                foodCarts.add(new ConfirmFood(Integer.valueOf(viewHolder.etQuantity.getText().toString()), mFood));
-                //添加其他购买的食品
-                Intent intent = new Intent(mContext, MakeOrderActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("foodList", foodCarts);
-                bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, mFood.getPrice());
-                intent.putExtras(bundle);
-                mContext.startActivity(intent);
+
+                EventBus.getDefault().post(new UpdateBadgeNumEvent(1));
+                dialog = new ShoppingCartDialog(mContext, mFood.getName() + MESSAGE, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext, "跳转购买界面", Toast.LENGTH_SHORT).show();
+                        ArrayList<ConfirmFood> foodCarts = new ArrayList<ConfirmFood>();
+                        Float totalCost = Float.valueOf(Integer.valueOf(viewHolder.etQuantity.getText().toString()) * mFood.getPrice());
+                        foodCarts.add(new ConfirmFood(Integer.valueOf(viewHolder.etQuantity.getText().toString()), mFood, totalCost));
+                        //添加其他购买的食品
+                        Intent intent = new Intent(mContext, MakeOrderActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("foodList", foodCarts);
+                        bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, mFood.getPrice());
+                        intent.putExtras(bundle);
+                        mContext.startActivity(intent);
+                    }
+                });
+                dialog.show();
             }
         });
 

@@ -28,7 +28,7 @@ import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.BuyFood;
-import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.entity.requestBody.MakeOrderBody;
 import zjut.jianlu.breakfast.service.OrderService;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;

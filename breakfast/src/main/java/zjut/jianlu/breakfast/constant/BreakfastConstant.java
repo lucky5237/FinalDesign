@@ -27,5 +27,10 @@ public class BreakfastConstant {
     public final static int FOOD_SALES_RANK_NUM = 10;
     public final static String GET_NEWEST_ORDER_TAG = "空白格";
 
+    public static final int NO_NET = 0;//断网标识
+    public static final int NO_GOOD_SHOPCART = 1;//购物车无数据
+    public static final int NO_ORDER = 2;//无订单
+    public static final int NORMAL = -1;//正常
+
 
 }

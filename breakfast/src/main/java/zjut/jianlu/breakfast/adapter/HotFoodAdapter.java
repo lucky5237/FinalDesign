@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.activity.MakeOrderActivity;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.entity.bean.Food;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
@@ -76,7 +76,7 @@ public class HotFoodAdapter extends BaseAdapter {
         if (position == 0 || position == 1 || position == 2) {
             String imageName = "ic_rank_" + (position + 1);
             viewHolder.mIvRank.setVisibility(View.VISIBLE);
-            viewHolder.mIvRank.setImageResource(BreakfastUtils.getDrawableIdByName(mContext,imageName));
+            viewHolder.mIvRank.setImageResource(BreakfastUtils.getDrawableIdByName(mContext, imageName));
         } else {
             viewHolder.mIvRank.setVisibility(View.GONE);
         }
@@ -99,7 +99,7 @@ public class HotFoodAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Toast.makeText(mContext, "跳转购买界面", Toast.LENGTH_SHORT).show();
                 ArrayList<ConfirmFood> foodCarts = new ArrayList<ConfirmFood>();
-                foodCarts.add(new ConfirmFood(1, food));
+                foodCarts.add(new ConfirmFood(1, food, food.getPrice()));
                 //添加其他购买的食品
                 Intent intent = new Intent(mContext, MakeOrderActivity.class);
                 Bundle bundle = new Bundle();

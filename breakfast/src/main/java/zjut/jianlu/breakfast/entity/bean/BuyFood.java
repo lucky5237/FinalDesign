@@ -9,9 +9,9 @@ public class BuyFood implements Serializable {
 
     private Integer quantity;
 
-    private Integer foodId;
+    private Long foodId;
 
-    public BuyFood(Integer quantity, Integer foodId) {
+    public BuyFood(Integer quantity, Long foodId) {
         this.quantity = quantity;
         this.foodId = foodId;
     }
@@ -24,11 +24,11 @@ public class BuyFood implements Serializable {
         this.quantity = quantity;
     }
 
-    public Integer getFoodId() {
+    public Long getFoodId() {
         return foodId;
     }
 
-    public void setFoodId(Integer foodId) {
+    public void setFoodId(Long foodId) {
         this.foodId = foodId;
     }
 }

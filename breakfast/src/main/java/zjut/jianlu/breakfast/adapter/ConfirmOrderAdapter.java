@@ -24,7 +24,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.entity.bean.Food;
-import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 
 /**

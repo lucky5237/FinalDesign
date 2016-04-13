@@ -77,7 +77,12 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
                 if (foodList != null || foodList.size() > 0) {
                     foodList.clear();
                 }
+
                 foodList.addAll(response.body().getData());
+                Food.deleteAll(Food.class);
+                for (Food food : foodList) {
+                    food.save();
+                }
                 adapter.notifyDataSetChanged();
                 mListView.onRefreshComplete();
             }

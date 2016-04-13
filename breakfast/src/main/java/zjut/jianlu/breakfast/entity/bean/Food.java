@@ -1,13 +1,14 @@
 package zjut.jianlu.breakfast.entity.bean;
 
+import com.orm.SugarRecord;
+
 import java.io.Serializable;
 
 /**
  * Created by jianlu on 16/3/13.
  */
-public class Food implements Serializable {
+public class Food extends SugarRecord implements Serializable  {
 
-    private Integer id;//id
 
     private String name;//食品名称
 
@@ -21,13 +22,7 @@ public class Food implements Serializable {
 
     private String createTs;
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getCreateTs() {
         return createTs;
@@ -78,16 +73,5 @@ public class Food implements Serializable {
         this.sales = sales;
     }
 
-    @Override
-    public String toString() {
-        return "Food{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", image='" + image + '\'' +
-                ", price=" + price +
-                ", place=" + place +
-                ", sales=" + sales +
-                ", createTs='" + createTs + '\'' +
-                '}';
-    }
+
 }

@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.entity.bean.Food;
 import zjut.jianlu.breakfast.listener.ConfirmOnclickListener;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
@@ -52,6 +52,11 @@ public class ShoppingCartAdapter extends BaseAdapter {
     public ShoppingCartAdapter(Context context, List<ConfirmFood> mFoodList) {
         mContext = context;
         this.mFoodList = mFoodList;
+        if (mFoodList != null && mFoodList.size() > 0) {
+            for (int i = 0; i < mFoodList.size(); i++) {
+                checkList.add(new CheckBean(i, true));
+            }
+        }
     }
 
     @Override
@@ -79,7 +84,6 @@ public class ShoppingCartAdapter extends BaseAdapter {
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         }
-        checkList.add(new CheckBean(position,true));
         final ConfirmFood mConfirmFood = (ConfirmFood) getItem(position);
         final Food mFood = mConfirmFood.getFood();
         final Integer number = mConfirmFood.getQuantity();
@@ -89,6 +93,11 @@ public class ShoppingCartAdapter extends BaseAdapter {
         viewHolder.etQuantity.setText(number.toString());
         viewHolder.tvTotalNum.setText("数量：" + number.toString() + "件");
         viewHolder.tvTotalFee.setText("小计：¥" + String.valueOf(Float.valueOf(number * mFood.getPrice())));
+        if (checkList.get(position).isChecked) {
+            viewHolder.cbCheck.setChecked(true);
+        } else {
+            viewHolder.cbCheck.setChecked(false);
+        }
 
 
         final String url = mFood.getImage();
@@ -105,10 +114,12 @@ public class ShoppingCartAdapter extends BaseAdapter {
         viewHolder.cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
+                    checkList.get(position).isChecked = true;
                     viewHolder.tvTotalNum.setText("数量：" + number.toString() + "件");
                     viewHolder.tvTotalFee.setText("小计：¥" + String.valueOf(Float.valueOf(number * mFood.getPrice())));
-                }else{
+                } else {
+                    checkList.get(position).isChecked = false;
                     viewHolder.tvTotalNum.setText("数量：0件");
                     viewHolder.tvTotalFee.setText("小计：¥0.0");
                 }
@@ -116,7 +127,7 @@ public class ShoppingCartAdapter extends BaseAdapter {
             }
         });
 
-        viewHolder.btnDelete.setOnClickListener(new DeleteConfirmListener(mContext,"是否确认从购物车删除该物品",position));
+        viewHolder.btnDelete.setOnClickListener(new DeleteConfirmListener(mContext, "是否确认从购物车删除该物品", position));
         return convertView;
     }
 
@@ -138,9 +149,20 @@ public class ShoppingCartAdapter extends BaseAdapter {
     }
 
     public void setAllChecked(boolean isCheck) {
-        if (isCheck){
-
+        if (isCheck) {
+            for (CheckBean checkBean : checkList) {
+                if (!checkBean.isChecked) {//没勾选上的话勾选上
+                    checkBean.isChecked = true;
+                }
+            }
+        } else {
+            for (CheckBean checkBean : checkList) {
+                if (checkBean.isChecked) {
+                    checkBean.isChecked = false;
+                }
+            }
         }
+        notifyDataSetChanged();
 
     }
 

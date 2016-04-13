@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,7 +17,8 @@ import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.adapter.ShoppingCartAdapter;
 import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
-import zjut.jianlu.breakfast.entity.bean.ConfirmFood;
+import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 
 /**
  * Created by jianlu on 16/3/12.
@@ -26,6 +28,7 @@ public class ShopCartFragment extends BaseRefreshableFragment {
     CheckBox cbShoppingCartTotalCheck;
     @Bind(R.id.tv_shopping_cart_total_cost)
     TextView tvShoppingCartTotalCost;
+
 
     @Override
     public int getLayoutId() {
@@ -49,20 +52,35 @@ public class ShopCartFragment extends BaseRefreshableFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adapter = new ShoppingCartAdapter(mContext, foodList);
-        mListView.setAdapter(adapter);
+        if (ConfirmFood.count(ConfirmFood.class) == 0) {//说明本地没保存的购物车数据
+            ShowUI(BreakfastConstant.NO_GOOD_SHOPCART);
+        } else {
+            foodList = ConfirmFood.listAll(ConfirmFood.class);
+            initData();
+        }
+
 
     }
 
+    private void initData() {
+
+        adapter = new ShoppingCartAdapter(mContext, foodList);
+        mListView.setAdapter(adapter);
+        cbShoppingCartTotalCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                adapter.setAllChecked(isChecked);
+
+            }
+        });
+    }
 
 
-
-    @OnClick({R.id.cb_shopping_cart_total_check, R.id.tv_shopping_cart_total_cost})
+    @OnClick(R.id.tv_shopping_cart_total_cost)
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.cb_shopping_cart_total_check:
 
-                break;
             case R.id.tv_shopping_cart_total_cost:
                 break;
         }

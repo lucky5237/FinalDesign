@@ -56,6 +56,7 @@
                 android:orientation="horizontal" >
 
                 <TextView
+                    android:text="结算 ¥123"
                     android:id="@+id/tv_shopping_cart_total_cost"
                     style="@style/font_white_xl"
                     android:layout_width="wrap_content"
