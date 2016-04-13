@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+
+            android:id="@+id/cb_check"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:checked="true"
+            android:button="@drawable/selector_shopping_cart"
+            android:visibility="visible" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:background="@drawable/shape_menu_head_border"
+                android:padding="5dp">
+
+
+                <ImageView
+                    android:id="@+id/iv_food_image"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@mipmap/ic_launcher"
+                    android:contentDescription="@null"
+                    android:visibility="visible" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp">
+
+                <TextView
+                    android:id="@+id/tv_food_name"
+                    style="@style/font_black_l"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:text="肉夹馍" />
+
+                <TextView
+                    android:id="@+id/tv_cart_rmb"
+                    style="@style/font_red_l"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¥" />
+
+                <TextView
+                    android:id="@+id/tv_food_price"
+                    style="@style/font_red_xxl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12344" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_food_place"
+                style="@style/font_gray_s"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="垃圾街" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="3dp"
+                android:paddingRight="@dimen/padding_normal">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/llyt_item_cart_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bd_good_add_shape"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btn_sub"
+                            style="@style/font_black_m"
+                            android:layout_width="@dimen/dp30"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:background="@null"
+                            android:gravity="center"
+                            android:text="-" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/darker_gray" />
+
+                        <EditText
+                            android:id="@+id/et_quantity"
+                            style="@style/font_black_m"
+                            android:layout_width="55dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:background="@null"
+                            android:gravity="center"
+                            android:inputType="number" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/darker_gray" />
+
+                        <Button
+                            android:id="@+id/btn_add"
+                            style="@style/font_black_m"
+                            android:layout_width="@dimen/dp30"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:background="@null"
+                            android:gravity="center"
+                            android:text="+" />
+                    </LinearLayout>
+
+
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    style="@style/font_gray_m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/bd_good_add_shape"
+                    android:ems="3"
+                    android:gravity="center"
+                    android:text="删除" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F2F2F2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing" >
+
+        <TextView
+            android:id="@+id/tv_food_total_num"
+            style="@style/font_gray_m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_large"
+            android:text="数量：2件" />
+
+        <TextView
+            android:id="@+id/tv_food_total_fee"
+            style="@style/font_gray_m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/spacing"
+            android:text="小计：￥23.40" />
+    </LinearLayout>
+
+
+</LinearLayout>

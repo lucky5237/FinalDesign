@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/no_orders"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone" >
+
+    <TextView
+        android:id="@+id/tv_orders"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:gravity="center"
+        android:text="暂无订单"
+        android:textColor="@color/tab_page_indicator_color"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_orders_tip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_orders"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="快去首页逛逛吧"
+        android:textColor="@color/gray_show"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/bt_orders_back_home"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150dp"
+        android:background="@drawable/btn_continue_search_shape"
+        android:gravity="center"
+        android:text="首页"
+        android:textColor="@color/red" />
+
+</RelativeLayout>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+<include layout="@layout/no_data_tips"/>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/pull_to_refresh_listview"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="fill_parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:id="@+id/llyt_cart_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:baselineAligned="true"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" >
+
+                <CheckBox
+                    android:id="@+id/cb_shopping_cart_total_check"
+                    style="@style/font_gray_xl"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:button="@drawable/selector_shopping_cart"
+                    android:gravity="center"
+                    android:text="全选" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/llyt_shopping_cart_total_cost"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@color/top_menu_title_color"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/tv_shopping_cart_total_cost"
+                    style="@style/font_white_xl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

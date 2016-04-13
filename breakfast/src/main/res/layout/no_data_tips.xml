@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/no_data_tips"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone" >
+
+
+    <include layout="@layout/no_net" />
+    
+    <include layout="@layout/no_goods_in_cart" />
+
+    <include layout="@layout/no_orders" />
+
+</RelativeLayout>

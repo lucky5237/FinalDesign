@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/no_net"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone" >
+
+    <ImageView
+        android:id="@+id/iv_tip_pictrue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/no_net" />
+
+    <TextView
+        android:id="@+id/tv_show_product_name"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/iv_tip_pictrue"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="请检查您的手机是否联网"
+        android:textColor="@color/gray_show"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/bt_again_load"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@id/tv_show_product_name"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_back_home_shape"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:text="点击重新加载"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/no_goods_cart"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone" >
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <ImageView
+                    android:id="@+id/iv_tip_pictrue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="135dp"
+                    android:src="@mipmap/no_goods_cart" />
+
+                <TextView
+                    android:id="@+id/tv_show_cart"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/iv_tip_pictrue"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="购物车还是空的"
+                    android:textColor="@color/tab_page_indicator_color"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_show_cart_tip"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/tv_show_cart"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="矮油，购物车都是空的，马上去逛逛吧"
+                    android:textColor="@color/gray_show"
+                    android:textSize="16sp" />
+
+
+            </RelativeLayout>
+
+</RelativeLayout>
