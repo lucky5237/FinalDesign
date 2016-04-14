@@ -1,13 +1,11 @@
 package zjut.jianlu.breakfast.entity.db;
 
-import com.orm.SugarRecord;
-
 import zjut.jianlu.breakfast.entity.bean.Food;
 
 /**
  * Created by jianlu on 16/4/13.
  */
-public class ShoppingCartDB extends SugarRecord {
+public class ShoppingCartDB {
 
     private Food food;
 

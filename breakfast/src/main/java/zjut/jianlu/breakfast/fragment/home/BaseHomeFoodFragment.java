@@ -19,6 +19,7 @@ import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.Food;
+import zjut.jianlu.breakfast.entity.db.FoodDB;
 import zjut.jianlu.breakfast.entity.requestBody.HomeFoodBody;
 import zjut.jianlu.breakfast.service.FoodService;
 
@@ -40,6 +41,8 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
 
     private FoodService foodService;
 
+    private boolean isFirstRequest = true;
+
 
     private static final int SHOW_NUM = 10;
 
@@ -51,6 +54,8 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
     }
 
 
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -59,6 +64,24 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
         mListView.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         foodService = retrofit.create(FoodService.class);
+        getlocalFood();
+
+    }
+
+
+    private void getlocalFood() {
+        if (foodList != null || foodList.size() > 0) {
+            foodList.clear();
+        }
+        List<FoodDB> foodDbList = FoodDB.find(FoodDB.class, "PLACE_ID= ?", placeId.toString());
+        if (foodDbList != null && foodDbList.size() > 0) {
+            for (FoodDB foodDb : foodDbList) {
+                Food food = new Food(foodDb);
+                foodList.add(food);
+            }
+        }
+        adapter.notifyDataSetChanged();
+
 
     }
 
@@ -98,10 +121,11 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
             return;
         }
         ShowUI(BreakfastConstant.NORMAL);
-//        Food
-//        for(Food food : foodList){
-//            food.getPlace().sa
-//        }
+        FoodDB.deleteAll(FoodDB.class, "PLACE_ID = ?", String.valueOf(placeId));//删除本地数据库中当前tag下的食品
+        for (Food food : foodList) {
+            FoodDB foodDB = new FoodDB(food);
+            foodDB.save();
+        }
 
     }
 
@@ -109,5 +133,17 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
     public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 
         getallFood(placeId, flag);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            if (isFirstRequest) {
+                getallFood(placeId, flag);
+                isFirstRequest = false;
+            }
+        }
+
     }
 }

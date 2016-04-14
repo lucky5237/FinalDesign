@@ -2,8 +2,6 @@ package zjut.jianlu.breakfast.entity.db;
 
 import com.orm.SugarRecord;
 
-import java.util.List;
-
 import zjut.jianlu.breakfast.entity.bean.User;
 
 /**
@@ -131,11 +129,5 @@ public class UserDB extends SugarRecord {
         this.address = address;
     }
 
-    List<OrderInfoDB> getClientOrderInfos() {
-        return OrderInfoDB.find(OrderInfoDB.class, "clientUser = ?", new String[]{String.valueOf(userId)});
-    }
 
-    List<OrderInfoDB> getCourierOrderInfos() {
-        return OrderInfoDB.find(OrderInfoDB.class, "courierUser = ?", new String[]{String.valueOf(userId)});
-    }
 }

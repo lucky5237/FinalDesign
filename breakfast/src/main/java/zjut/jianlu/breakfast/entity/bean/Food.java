@@ -1,14 +1,15 @@
 package zjut.jianlu.breakfast.entity.bean;
 
-import com.orm.SugarRecord;
-
 import java.io.Serializable;
+
+import zjut.jianlu.breakfast.entity.db.FoodDB;
 
 /**
  * Created by jianlu on 16/3/13.
  */
-    public class Food extends SugarRecord implements Serializable  {
+public class Food implements Serializable {
 
+    private Long id;
 
     private String name;//食品名称
 
@@ -25,8 +26,25 @@ import java.io.Serializable;
     public String getCreateTs() {
         return createTs;
     }
-    public Food(){
 
+    public Food(FoodDB foodDB) {
+        id = foodDB.getFoodID();
+        name = foodDB.getName();
+        image = foodDB.getImage();
+        price = foodDB.getPrice();
+        Place place = new Place(foodDB.getPlaceId(), foodDB.getName());
+        this.place = place;
+        sales = foodDB.getSales();
+        createTs = foodDB.getCreateTs();
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setCreateTs(String createTs) {

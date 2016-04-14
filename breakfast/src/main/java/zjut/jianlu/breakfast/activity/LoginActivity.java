@@ -22,6 +22,7 @@ import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.User;
+import zjut.jianlu.breakfast.entity.db.UserDB;
 import zjut.jianlu.breakfast.entity.requestBody.LoginBody;
 import zjut.jianlu.breakfast.service.UserService;
 import zjut.jianlu.breakfast.utils.SharedPreferencesUtil;
@@ -93,11 +94,12 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onBizSuccess(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
-                        if (User.count(User.class) > 0) {
-                            User.deleteAll(User.class);
+                        if (UserDB.count(UserDB.class) > 0) {
+                            UserDB.deleteAll(UserDB.class);
                         }
                         User user = response.body().getData();
-                        user.save();
+                        UserDB userDB = new UserDB(user);
+                        userDB.save();
                         sharedPreferencesUtil.setUserId(user.getId().intValue());
                         sharedPreferencesUtil.setUserType(user.getType());
                         sharedPreferencesUtil.setMobile(user.getMobile());

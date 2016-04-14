@@ -14,7 +14,6 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
-import zjut.jianlu.breakfast.entity.bean.Place;
 import zjut.jianlu.breakfast.entity.event.UpdateBadgeNumEvent;
 import zjut.jianlu.breakfast.fragment.OrderFragment;
 import zjut.jianlu.breakfast.fragment.ShopCartFragment;
@@ -113,14 +112,14 @@ public class MainActivicy extends BaseActivity {
         mTransaction.add(R.id.flyt_container, mHomePageFragment)
                 .add(R.id.flyt_container, mRankFragment).add(R.id.flyt_container, mOrderFragment)
                 .add(R.id.flyt_container, mMeFragment).hide(mRankFragment).hide(mOrderFragment).hide(mMeFragment).show(mHomePageFragment).commit();
-        for (int i = 0; i < 4; i++) {
-            Place place = new Place("no." + i,i);
-            place.setId(Long.valueOf(i));
-            place.save();
-        }
-        Place p = new Place("ext", 5);
-        p.setId(3l);
-        p.save();
+//        for (int i = 0; i < 4; i++) {
+//            Place place = new Place("no." + i,i);
+//            place.setId(Long.valueOf(i));
+//            place.save();
+//        }
+//        Place p = new Place("ext", 5);
+//        p.setId(3l);
+//        p.save();
 
 
 

@@ -1,12 +1,10 @@
 package zjut.jianlu.breakfast.entity.db;
 
-import com.orm.SugarRecord;
-
 /**
  * Created by jianlu on 16/3/16.
  * 订单详情（此订单购买的物品）
  */
-public class OrderDetailDB extends SugarRecord {
+public class OrderDetailDB  {
 
     private OrderInfoDB orderInfo;
 

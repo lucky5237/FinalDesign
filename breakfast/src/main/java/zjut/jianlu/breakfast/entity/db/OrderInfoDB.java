@@ -1,15 +1,12 @@
 package zjut.jianlu.breakfast.entity.db;
 
-import com.orm.SugarRecord;
-
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by jianlu on 16/3/12.
  * 数据库订单信息表
  */
-public class OrderInfoDB extends SugarRecord {
+public class OrderInfoDB  {
 
     private String orderNumber;//订单号
 
@@ -105,9 +102,7 @@ public class OrderInfoDB extends SugarRecord {
         this.receivedTs = receivedTs;
     }
 
-    List<OrderDetailDB> getOrderDetails() {
-        return OrderDetailDB.find(OrderDetailDB.class, "orderInfo = ?", new String(String.valueOf(getId())));
-    }
+
 
 
 }
