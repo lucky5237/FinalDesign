@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by jianlu on 16/3/13.
  */
-public class Food extends SugarRecord implements Serializable  {
+    public class Food extends SugarRecord implements Serializable  {
 
 
     private String name;//食品名称
@@ -22,10 +22,11 @@ public class Food extends SugarRecord implements Serializable  {
 
     private String createTs;
 
-
-
     public String getCreateTs() {
         return createTs;
+    }
+    public Food(){
+
     }
 
     public void setCreateTs(String createTs) {
@@ -63,7 +64,6 @@ public class Food extends SugarRecord implements Serializable  {
     public Float getPrice() {
         return price;
     }
-
 
     public Integer getSales() {
         return sales;

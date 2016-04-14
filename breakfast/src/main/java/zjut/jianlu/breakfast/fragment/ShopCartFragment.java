@@ -17,7 +17,6 @@ import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.adapter.ShoppingCartAdapter;
 import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
-import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 
 /**
@@ -52,12 +51,12 @@ public class ShopCartFragment extends BaseRefreshableFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (ConfirmFood.count(ConfirmFood.class) == 0) {//说明本地没保存的购物车数据
-            ShowUI(BreakfastConstant.NO_GOOD_SHOPCART);
-        } else {
-            foodList = ConfirmFood.listAll(ConfirmFood.class);
-            initData();
-        }
+//        if (ConfirmFood.count(ConfirmFood.class) == 0) {//说明本地没保存的购物车数据
+//            ShowUI(BreakfastConstant.NO_GOOD_SHOPCART);
+//        } else {
+//            foodList = ConfirmFood.listAll(ConfirmFood.class);
+//            initData();
+//        }
 
 
     }

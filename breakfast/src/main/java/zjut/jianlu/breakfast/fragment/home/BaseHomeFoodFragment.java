@@ -64,7 +64,7 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
 
     public abstract void setPlaceId();
 
-    private void getallFood(Integer placeId, Integer flag) {
+    private void getallFood(final Integer placeId, Integer flag) {
         Call<BaseResponse<List<Food>>> call = foodService.getAllFood(new HomeFoodBody(SHOW_NUM, placeId, flag));
         call.enqueue(new BaseCallback<List<Food>>() {
             @Override
@@ -79,10 +79,8 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
                 }
 
                 foodList.addAll(response.body().getData());
-                Food.deleteAll(Food.class);
-                for (Food food : foodList) {
-                    food.save();
-                }
+                updateLocalDB(placeId, foodList);
+
                 adapter.notifyDataSetChanged();
                 mListView.onRefreshComplete();
             }
@@ -92,6 +90,19 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
 
             }
         });
+    }
+
+    public void updateLocalDB(Integer placeId, List<Food> foodList) {
+        if (foodList == null || foodList.size() == 0) {
+            ShowUI(BreakfastConstant.NO_FOOD);
+            return;
+        }
+        ShowUI(BreakfastConstant.NORMAL);
+//        Food
+//        for(Food food : foodList){
+//            food.getPlace().sa
+//        }
+
     }
 
     @Override

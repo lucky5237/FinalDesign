@@ -26,6 +26,7 @@ public abstract class BaseFragment extends Fragment {
     public RelativeLayout mRlltNoNet;
     public RelativeLayout mRlltNoGoodInShopCart;
     public RelativeLayout mRlltNoOrder;
+    public RelativeLayout mRlltNoFood;
 
     public View view;
 
@@ -40,6 +41,7 @@ public abstract class BaseFragment extends Fragment {
         mRlltNoNet = (RelativeLayout) view.findViewById(R.id.no_net);
         mRlltNoGoodInShopCart = (RelativeLayout) view.findViewById(R.id.no_goods_cart);
         mRlltNoOrder = (RelativeLayout) view.findViewById(R.id.no_orders);
+        mRlltNoFood = (RelativeLayout) view.findViewById(R.id.no_relation_goods);
 
         ButterKnife.bind(this, view);
         return view;
@@ -51,6 +53,7 @@ public abstract class BaseFragment extends Fragment {
         mRlltNoNet.setVisibility(View.GONE);
         mRlltNoGoodInShopCart.setVisibility(View.GONE);
         mRlltNoOrder.setVisibility(View.GONE);
+        mRlltNoFood.setVisibility(View.GONE);
         switch (status) {
             case BreakfastConstant.NO_NET:
                 mRlltNoNet.setVisibility(View.VISIBLE);
@@ -60,6 +63,9 @@ public abstract class BaseFragment extends Fragment {
                 break;
             case BreakfastConstant.NO_ORDER:
                 mRlltNoOrder.setVisibility(View.VISIBLE);
+                break;
+            case BreakfastConstant.NO_FOOD:
+                mRlltNoFood.setVisibility(View.VISIBLE);
                 break;
             case BreakfastConstant.NORMAL:
                 mRlltNoData.setVisibility(View.GONE);

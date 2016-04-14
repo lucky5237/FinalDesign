@@ -14,6 +14,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.entity.bean.Place;
 import zjut.jianlu.breakfast.entity.event.UpdateBadgeNumEvent;
 import zjut.jianlu.breakfast.fragment.OrderFragment;
 import zjut.jianlu.breakfast.fragment.ShopCartFragment;
@@ -27,9 +28,7 @@ import zjut.jianlu.breakfast.widget.MyBadgeView;
  */
 public class MainActivicy extends BaseActivity {
 
-    private int mCurrentIndex = 0;//当前选中的索引
-    private CourierHomePageFragment mCourierHomePageFragment;
-    private ClientHomePageFragment mClientHomePageFragment;
+    private int mCurrentIndex = 0; //当前选中的索引
     private Fragment mHomePageFragment;
     private RankFragment mRankFragment;
     private OrderFragment mOrderFragment;
@@ -59,19 +58,19 @@ public class MainActivicy extends BaseActivity {
                     mTvTopBar.setText("最新订单");
 
                 }
-                ShowFragment(HOCART_INDEX);
+                showFragment(HOCART_INDEX);
                 break;
             case R.id.btn_rank:
                 mTvTopBar.setText("热门榜单");
-                ShowFragment(RANK_INDEX);
+                showFragment(RANK_INDEX);
                 break;
             case R.id.btn_order:
                 mTvTopBar.setText("我的订单");
-                ShowFragment(ORDER_INDEX);
+                showFragment(ORDER_INDEX);
                 break;
             case R.id.btn_cart:
                 mTvTopBar.setText("购物车");
-                ShowFragment(CART_INDEX);
+                showFragment(CART_INDEX);
                 break;
             default:
                 break;
@@ -80,7 +79,7 @@ public class MainActivicy extends BaseActivity {
 
     }
 
-    private void ShowFragment(int index) {
+    private void showFragment(int index) {
         if (index == mCurrentIndex) {
             return;
         }
@@ -114,6 +113,17 @@ public class MainActivicy extends BaseActivity {
         mTransaction.add(R.id.flyt_container, mHomePageFragment)
                 .add(R.id.flyt_container, mRankFragment).add(R.id.flyt_container, mOrderFragment)
                 .add(R.id.flyt_container, mMeFragment).hide(mRankFragment).hide(mOrderFragment).hide(mMeFragment).show(mHomePageFragment).commit();
+        for (int i = 0; i < 4; i++) {
+            Place place = new Place("no." + i,i);
+            place.setId(Long.valueOf(i));
+            place.save();
+        }
+        Place p = new Place("ext", 5);
+        p.setId(3l);
+        p.save();
+
+
+
 
     }
 
@@ -131,9 +141,9 @@ public class MainActivicy extends BaseActivity {
 
 
     @Subscribe
-    public void ChangeIndex(Integer index) {
+    public void changeIndex(Integer index) {
         if (index != null) {
-            ShowFragment(index);
+            showFragment(index);
         }
     }
 

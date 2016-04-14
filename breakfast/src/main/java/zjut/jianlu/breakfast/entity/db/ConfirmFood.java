@@ -1,7 +1,5 @@
 package zjut.jianlu.breakfast.entity.db;
 
-import com.orm.SugarRecord;
-
 import java.io.Serializable;
 
 import zjut.jianlu.breakfast.entity.bean.Food;
@@ -10,7 +8,7 @@ import zjut.jianlu.breakfast.entity.bean.Food;
  * Created by jianlu on 16/3/14.
  */
 
-public class ConfirmFood extends SugarRecord implements Serializable {
+public class ConfirmFood  implements Serializable {
 
     private Integer quantity;
 
@@ -18,9 +16,6 @@ public class ConfirmFood extends SugarRecord implements Serializable {
 
     private float totalCost;
 
-    public ConfirmFood() {
-
-    }
 
     public ConfirmFood(Integer quantity, Food food, float totalCost) {
         this.quantity = quantity;

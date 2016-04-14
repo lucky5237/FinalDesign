@@ -1,13 +1,15 @@
 package zjut.jianlu.breakfast.entity.bean;
 
+import com.orm.SugarRecord;
+
 import java.io.Serializable;
 
 /**
  * Created by jianlu on 16/3/9.
  */
-public class User implements Serializable {
+public class User extends SugarRecord implements Serializable {
 
-    private Long id;//id
+//    private Long id;//id
 
     private String mobile;//手机号
 
@@ -83,13 +85,13 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public Integer getOrderNum() {
         return orderNum;
@@ -107,19 +109,22 @@ public class User implements Serializable {
         this.bonus = bonus;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", mobile='" + mobile + '\'' +
-                ", password='" + password + '\'' +
-                ", username='" + username + '\'' +
-                ", type=" + type +
-                ", gender=" + gender +
-                ", brief='" + brief + '\'' +
-                ", address='" + address + '\'' +
-                ", bonus=" + bonus +
-                ", orderNum=" + orderNum +
-                '}';
+    public User() {
     }
+
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + id +
+//                ", mobile='" + mobile + '\'' +
+//                ", password='" + password + '\'' +
+//                ", username='" + username + '\'' +
+//                ", type=" + type +
+//                ", gender=" + gender +
+//                ", brief='" + brief + '\'' +
+//                ", address='" + address + '\'' +
+//                ", bonus=" + bonus +
+//                ", orderNum=" + orderNum +
+//                '}';
+//    }
 }

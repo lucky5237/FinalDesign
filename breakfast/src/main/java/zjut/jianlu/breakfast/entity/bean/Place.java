@@ -1,23 +1,25 @@
 package zjut.jianlu.breakfast.entity.bean;
 
+import com.orm.SugarRecord;
+
 import java.io.Serializable;
 
 /**
  * Created by jianlu on 16/4/12.
  */
-public class Place implements Serializable {
+public class Place extends SugarRecord implements Serializable {
 
-    private Integer id;
     private String name;
     private Integer orderNum;
 
-    public Integer getId() {
-        return id;
+    public Place() {
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Place(String name, Integer orderNum) {
+        this.name = name;
+        this.orderNum = orderNum;
     }
+
 
     public String getName() {
         return name;
@@ -35,12 +37,5 @@ public class Place implements Serializable {
         this.orderNum = orderNum;
     }
 
-    @Override
-    public String toString() {
-        return "Place{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", orderNum=" + orderNum +
-                '}';
-    }
+
 }

@@ -31,6 +31,8 @@ public class BreakfastConstant {
     public static final int NO_GOOD_SHOPCART = 1;//购物车无数据
     public static final int NO_ORDER = 2;//无订单
     public static final int NORMAL = -1;//正常
+    public static final int NO_FOOD = 3;//无商品
+
 
 
 }
