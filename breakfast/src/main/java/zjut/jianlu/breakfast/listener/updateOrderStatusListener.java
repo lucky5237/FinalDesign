@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,11 +25,14 @@ public class UpdateOrderStatusListener implements View.OnClickListener {
 
     private Context mContext;
 
+    private String message;
 
-    public UpdateOrderStatusListener(Context context, Integer orderId, Integer status) {
+
+    public UpdateOrderStatusListener(Context context, Integer orderId, Integer status, String message) {
         mContext = context;
         this.orderId = orderId;
         this.status = status;
+        this.message = message;
     }
 
     @Override
@@ -36,6 +40,8 @@ public class UpdateOrderStatusListener implements View.OnClickListener {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_confirm, null);
         final AlertDialog set = new AlertDialog.Builder(mContext, AlertDialog.THEME_HOLO_LIGHT).create();
         set.setView(view);
+        TextView tv = (TextView) view.findViewById(R.id.tv_message);
+        tv.setText(message);
         final Button cancel = (Button) view.findViewById(R.id.btn_delete_cancel);
         Button confirm = (Button) view.findViewById(R.id.btn_delete_confirm);
 

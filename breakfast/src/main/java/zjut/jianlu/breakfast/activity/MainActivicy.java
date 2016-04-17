@@ -209,6 +209,11 @@ public class MainActivicy extends BaseActivity {
         Integer index = event.getIndex();
         if (index != null) {
             FragmentTransaction transaction = mTransitionManager.beginTransaction();
+            if (index == ORDER_INDEX) {
+                if (mOrderFragment != null) {
+                    mOrderFragment.getMyorder();
+                }
+            }
             showFragment(index, transaction);
             transaction.commitAllowingStateLoss();
         }

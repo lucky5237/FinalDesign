@@ -29,6 +29,8 @@ public class NewestOrderAdapter extends BaseAdapter {
 
     private View view;
 
+    private static final String RECEIVE_ORDER_MESSAGE = "是否确认接单";
+
     public NewestOrderAdapter(Context context, List<OrderInfo> orderInfos) {
         mContext = context;
         mlist = orderInfos;
@@ -74,7 +76,7 @@ public class NewestOrderAdapter extends BaseAdapter {
         viewHolder.tvBonus.setText("¥" + orderInfo.getBonus() + "");
         viewHolder.tvTime.setText(orderInfo.getCreateTs());
         viewHolder.tvAddress.setText(orderInfo.getClientUser().getAddress());
-        viewHolder.btnReceive.setOnClickListener(new UpdateOrderStatusListener(mContext, orderInfo.getId(), 1));
+        viewHolder.btnReceive.setOnClickListener(new UpdateOrderStatusListener(mContext, orderInfo.getId(), 1, RECEIVE_ORDER_MESSAGE));
 
 
 //        Picasso.with(mContext).load(orderInfo.get).placeholder(R.mipmap.ic_launcher).resize(100, 100).centerCrop().into(viewHolder.ivImage);

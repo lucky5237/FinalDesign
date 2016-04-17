@@ -56,19 +56,6 @@ public class OrderFragment extends BaseFragment
         return R.layout.fragment_order;
     }
 
-//    @Override
-//    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-//        getMyorder();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mListView.onRefreshComplete();
-//
-//            }
-//        }, 500);
-//
-//    }
-
 
     public void getMyorder() {
         Call<BaseResponse<List<OrderInfo>>> call = orderService.getMyorderList(new BaseUserBody(getCurrentUserID(), getCurrentUserType()));
@@ -83,21 +70,15 @@ public class OrderFragment extends BaseFragment
                 if (mOrderInfos != null && mOrderInfos.size() > 0) {
                     mOrderInfos.clear();
                 }
-
                 mOrderInfos.addAll(response.body().getData());
                 adapter.notifyDataSetChanged();
-
-
             }
 
             @Override
             public void onBizFailure(Call<BaseResponse<List<OrderInfo>>> call, Response<BaseResponse<List<OrderInfo>>> response) {
                 Toast(response.body().getMessage());
-
             }
         });
-
-
     }
 
     @Override
@@ -111,7 +92,6 @@ public class OrderFragment extends BaseFragment
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
             }
         });
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -125,11 +105,8 @@ public class OrderFragment extends BaseFragment
 
                                                    }
                                                }, 500);
-
-
                                            }
                                        }
-
         );
 
         getMyorder();

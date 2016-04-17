@@ -2,9 +2,7 @@ package zjut.jianlu.breakfast.fragment.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.ListView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,11 +19,12 @@ import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.activity.MainActivicy;
 import zjut.jianlu.breakfast.adapter.NewestOrderAdapter;
 import zjut.jianlu.breakfast.base.BaseCallback;
-import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
+import zjut.jianlu.breakfast.base.BaseFragment;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
+import zjut.jianlu.breakfast.entity.event.ChangeIndexEvent;
 import zjut.jianlu.breakfast.entity.event.TakeOrderEvent;
 import zjut.jianlu.breakfast.entity.requestBody.NewestOrderBody;
 import zjut.jianlu.breakfast.entity.requestBody.TakeOrderBody;
@@ -34,7 +33,7 @@ import zjut.jianlu.breakfast.service.OrderService;
 /**
  * Created by jianlu on 16/3/12.
  */
-public class CourierHomePageFragment extends BaseRefreshableFragment {
+public class CourierHomePageFragment extends BaseFragment {
 
     @Bind(R.id.pull_to_refresh_listview)
     PullToRefreshListView mPullToRefreshListview;
@@ -50,10 +49,7 @@ public class CourierHomePageFragment extends BaseRefreshableFragment {
         return R.layout.fragment_courier_homepage;
     }
 
-    @Override
-    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-        getNewestOrder();
-    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -63,6 +59,7 @@ public class CourierHomePageFragment extends BaseRefreshableFragment {
         mPullToRefreshListview.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         orderService = retrofit.create(OrderService.class);
+        getNewestOrder();
 
     }
 
@@ -112,8 +109,9 @@ public class CourierHomePageFragment extends BaseRefreshableFragment {
             public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
 
                 Toast(response.body().getMessage());
+                getNewestOrder();
                 //接单成功,跳转到我的订单页面查看
-                EventBus.getDefault().post(MainActivicy.ORDER_INDEX);
+                EventBus.getDefault().post(new ChangeIndexEvent(MainActivicy.ORDER_INDEX));
 
             }
 

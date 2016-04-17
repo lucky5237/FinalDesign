@@ -46,6 +46,12 @@ public class MyOrderAdapter extends BaseAdapter {
 
     private static final String ONEMORE_ORDER = "再来一单";
 
+    private static final String CANCEL_CONFIRM_MESSGAE = "是否确定取消订单";
+
+    private static final String START_DELIVERY_CONFIRM_MESSGAE = "是否确定开始配送";
+
+    private static final String RECEIVE_CONFIRM_MESSAGE = "是否确认收货";
+
 
     public MyOrderAdapter(Context context, List<OrderInfo> orderInfos, Integer userType) {
         mContext = context;
@@ -101,7 +107,7 @@ public class MyOrderAdapter extends BaseAdapter {
                 viewHolder.btnRight.setText(CANCEL_ORDER);
                 viewHolder.btnRight.setVisibility(View.VISIBLE);
                 viewHolder.btnLeft.setVisibility(View.GONE);
-                viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.CANCEL.getCode()));
+                viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
                 break;
 
             case 1://待卖家配送
@@ -109,14 +115,14 @@ public class MyOrderAdapter extends BaseAdapter {
                 if (userType == 0) {//买家界面
                     viewHolder.btnRight.setText(CANCEL_ORDER);
                     viewHolder.btnLeft.setVisibility(View.GONE);
-                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.CANCEL.getCode()));
+                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
                 }
                 if (userType == 1) {
                     viewHolder.btnLeft.setText(CANCEL_ORDER);
                     viewHolder.btnRight.setText(Start_DELIVERY);
                     viewHolder.btnLeft.setVisibility(View.VISIBLE);
-                    viewHolder.btnLeft.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.CANCEL.getCode()));
-                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.WAIT_CONFIRM.getCode()));
+                    viewHolder.btnLeft.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
+                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.WAIT_CONFIRM.getCode(), START_DELIVERY_CONFIRM_MESSGAE));
                 }
                 break;
             case 2:
@@ -125,7 +131,7 @@ public class MyOrderAdapter extends BaseAdapter {
                 if (userType == 0) {
                     viewHolder.btnRight.setText(CONFIRM_ORDER);
                     viewHolder.btnRight.setVisibility(View.VISIBLE);
-                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.FINISH.getCode()));
+                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.FINISH.getCode(), RECEIVE_CONFIRM_MESSAGE));
                 }
                 break;
             case 3:
