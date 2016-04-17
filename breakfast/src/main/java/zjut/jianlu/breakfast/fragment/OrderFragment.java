@@ -24,12 +24,12 @@ import retrofit2.Retrofit;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.adapter.MyOrderAdapter;
 import zjut.jianlu.breakfast.base.BaseCallback;
-import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
+import zjut.jianlu.breakfast.base.BaseFragment;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.event.UpdateOrderStatusEvent;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
+import zjut.jianlu.breakfast.entity.event.UpdateOrderStatusEvent;
 import zjut.jianlu.breakfast.entity.requestBody.BaseUserBody;
 import zjut.jianlu.breakfast.entity.requestBody.UpdateOrderStatusBody;
 import zjut.jianlu.breakfast.service.OrderService;
@@ -37,11 +37,11 @@ import zjut.jianlu.breakfast.service.OrderService;
 /**
  * Created by jianlu on 16/3/12.
  */
-public class OrderFragment extends BaseRefreshableFragment
+public class OrderFragment extends BaseFragment
 
 {
     @Bind(R.id.pull_to_refresh_listview)
-    PullToRefreshListView pullToRefreshListview;
+    PullToRefreshListView mListView;
 
     private Retrofit retrofit;
 
@@ -56,18 +56,18 @@ public class OrderFragment extends BaseRefreshableFragment
         return R.layout.fragment_order;
     }
 
-    @Override
-    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-        getMyorder();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mListView.onRefreshComplete();
-
-            }
-        }, 500);
-
-    }
+//    @Override
+//    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+//        getMyorder();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mListView.onRefreshComplete();
+//
+//            }
+//        }, 500);
+//
+//    }
 
 
     public void getMyorder() {
@@ -83,6 +83,7 @@ public class OrderFragment extends BaseRefreshableFragment
                 if (mOrderInfos != null && mOrderInfos.size() > 0) {
                     mOrderInfos.clear();
                 }
+
                 mOrderInfos.addAll(response.body().getData());
                 adapter.notifyDataSetChanged();
 
@@ -106,13 +107,31 @@ public class OrderFragment extends BaseRefreshableFragment
         orderService = retrofit.create(OrderService.class);
         mOrderInfos = new ArrayList<OrderInfo>();
         adapter = new MyOrderAdapter(mContext, mOrderInfos, getCurrentUserType());
-        pullToRefreshListview.setAdapter(adapter);
-        pullToRefreshListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             }
         });
+        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+                                           @Override
+                                           public void onRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+                                               getMyorder();
+                                               new Handler().postDelayed(new Runnable() {
+                                                   @Override
+                                                   public void run() {
+                                                       mListView.onRefreshComplete();
+
+                                                   }
+                                               }, 500);
+
+
+                                           }
+                                       }
+
+        );
+
         getMyorder();
     }
 

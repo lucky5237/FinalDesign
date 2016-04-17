@@ -13,6 +13,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.utils.LogUtil;
 import zjut.jianlu.breakfast.utils.SharedPreferencesUtil;
 
 /**
@@ -36,16 +37,36 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = getActivity();
         mPageName = this.getClass().getSimpleName();
+        LogUtil.d(mPageName + " oncreateView is called");
         view = inflater.inflate(getLayoutId(), container, false);
         mRlltNoData = (RelativeLayout) view.findViewById(R.id.no_data_tips);
         mRlltNoNet = (RelativeLayout) view.findViewById(R.id.no_net);
         mRlltNoGoodInShopCart = (RelativeLayout) view.findViewById(R.id.no_goods_cart);
         mRlltNoOrder = (RelativeLayout) view.findViewById(R.id.no_orders);
         mRlltNoFood = (RelativeLayout) view.findViewById(R.id.no_relation_goods);
-
         ButterKnife.bind(this, view);
         return view;
 
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        LogUtil.d(mPageName + " onActivityCreated is called");
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtil.d(mPageName + " onresume is called");
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        LogUtil.d(mPageName + " onHiddenChange " + hidden);
     }
 
     public void ShowUI(int status) {

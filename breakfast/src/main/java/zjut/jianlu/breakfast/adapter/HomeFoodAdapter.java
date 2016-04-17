@@ -30,8 +30,10 @@ import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.activity.MakeOrderActivity;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.entity.bean.Food;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
+import zjut.jianlu.breakfast.entity.db.FoodDB;
+import zjut.jianlu.breakfast.entity.db.ShoppingCartDB;
 import zjut.jianlu.breakfast.entity.event.UpdateBadgeNumEvent;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
@@ -95,46 +97,92 @@ public class HomeFoodAdapter extends BaseAdapter {
         viewHolder.tvSales.setText(mFood.getSales().toString());
         viewHolder.tvTime.setText(mFood.getCreateTs());
         viewHolder.btnBuy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                                                 @Override
+                                                 public void onClick(View v) {
 
-                if (TextUtils.isEmpty(viewHolder.etQuantity.getText().toString())) {
-                    Toast.makeText(mContext, "请先选择购买的数目", Toast.LENGTH_LONG).show();
-                    return;
-                }
+                                                     if (TextUtils.isEmpty(viewHolder.etQuantity.getText().toString())) {
+                                                         Toast.makeText(mContext, "请先选择购买的数目", Toast.LENGTH_LONG).show();
+                                                         return;
+                                                     }
 
-                EventBus.getDefault().post(new UpdateBadgeNumEvent(1));
-                dialog = new ShoppingCartDialog(mContext, mFood.getName() + MESSAGE, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(mContext, "跳转购买界面", Toast.LENGTH_SHORT).show();
-                        ArrayList<ConfirmFood> foodCarts = new ArrayList<ConfirmFood>();
-                        Float totalCost = Float.valueOf(Integer.valueOf(viewHolder.etQuantity.getText().toString()) * mFood.getPrice());
-                        foodCarts.add(new ConfirmFood(Integer.valueOf(viewHolder.etQuantity.getText().toString()), mFood, totalCost));
-                        //添加其他购买的食品
-                        Intent intent = new Intent(mContext, MakeOrderActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("foodList", foodCarts);
-                        bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, mFood.getPrice());
-                        intent.putExtras(bundle);
-                        mContext.startActivity(intent);
-                    }
-                });
-                dialog.show();
-            }
-        });
+                                                     final int num = Integer.valueOf(viewHolder.etQuantity.getText().toString());//购买数目
+                                                     final float totalCost = Float.valueOf(num * mFood.getPrice());
+
+
+                                                     FoodDB foodDB = new FoodDB(mFood);
+                                                     if (FoodDB.count(FoodDB.class, "FOOD_ID = ?", new String[]{mFood.getId().toString()}) == 0) {
+                                                         foodDB.save();
+                                                     }
+//
+
+                                                     dialog = new ShoppingCartDialog(mContext, mFood.getName() + MESSAGE, new View.OnClickListener() {
+                                                         @Override
+                                                         public void onClick(View v) {
+                                                             int updateNum = 0;
+                                                             List<ShoppingCartDB> shoppingCartDBs = ShoppingCartDB.find(ShoppingCartDB.class, "FOOD_ID = ?", mFood.getId().toString());
+                                                             if (shoppingCartDBs != null && shoppingCartDBs.size() > 0) {
+                                                                 //购物车中已经存在这个产品
+                                                                 ShoppingCartDB db = shoppingCartDBs.get(0);
+                                                                 db.setNum(db.getNum() + num);
+                                                                 db.setTotalCost(db.getTotalCost() + totalCost);
+                                                                 db.save();
+                                                             } else {
+                                                                 ShoppingCartDB shoppingCartDB = new ShoppingCartDB(mFood.getId(), num, totalCost);
+                                                                 shoppingCartDB.save();
+                                                                 updateNum = 1;
+                                                             }
+                                                             EventBus.getDefault().post(new UpdateBadgeNumEvent(updateNum));
+                                                             dialog.dismiss();
+
+                                                         }
+                                                     }, new View.OnClickListener() {
+                                                         @Override
+                                                         public void onClick(View v) {
+                                                             Toast.makeText(mContext, "跳转购买界面", Toast.LENGTH_SHORT).show();
+                                                             ArrayList<ConfirmFood> foodCarts = new ArrayList<ConfirmFood>();
+                                                             foodCarts.add(new ConfirmFood(num, mFood, totalCost));
+                                                             Intent intent = new Intent(mContext, MakeOrderActivity.class);
+                                                             Bundle bundle = new Bundle();
+                                                             bundle.putInt("from", 0);
+                                                             bundle.putSerializable("foodList", foodCarts);
+                                                             bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, totalCost);
+                                                             intent.putExtras(bundle);
+                                                             mContext.startActivity(intent);
+                                                             dialog.dismiss();
+                                                         }
+                                                     });
+                                                     dialog.show();
+                                                 }
+                                             }
+
+        );
 
         final String url = mFood.getImage();
-        Picasso.with(mContext).load(BreakfastUtils.getAbsImageUrlPath(url)).placeholder(R.mipmap.ic_launcher).resize(100, 100).centerCrop().into(viewHolder.ivImage);
-        viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, url);
-                if (!popWindow.isShowing()) {
-                    popWindow.showAtLocation(mView, Gravity.TOP, 0, 0);
-                }
-            }
-        });
+        Picasso.with(mContext).
+
+                load(BreakfastUtils.getAbsImageUrlPath(url)
+
+                ).
+                placeholder(R.mipmap.ic_launcher).resize(100, 100)
+                .centerCrop()
+
+                .
+
+                        into(viewHolder.ivImage);
+
+        viewHolder.ivImage.setOnClickListener(new View.OnClickListener()
+
+                                              {
+                                                  @Override
+                                                  public void onClick(View v) {
+                                                      ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, url);
+                                                      if (!popWindow.isShowing()) {
+                                                          popWindow.showAtLocation(mView, Gravity.TOP, 0, 0);
+                                                      }
+                                                  }
+                                              }
+
+        );
         return convertView;
     }
 

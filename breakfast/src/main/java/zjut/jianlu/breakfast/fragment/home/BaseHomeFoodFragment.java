@@ -1,6 +1,7 @@
 package zjut.jianlu.breakfast.fragment.home;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.widget.ListView;
 
@@ -22,6 +23,8 @@ import zjut.jianlu.breakfast.entity.bean.Food;
 import zjut.jianlu.breakfast.entity.db.FoodDB;
 import zjut.jianlu.breakfast.entity.requestBody.HomeFoodBody;
 import zjut.jianlu.breakfast.service.FoodService;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
+import zjut.jianlu.breakfast.utils.LogUtil;
 
 import static zjut.jianlu.breakfast.R.layout.fragment_home_food;
 
@@ -54,32 +57,45 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
     }
 
 
-
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         foodList = new ArrayList<Food>();
         adapter = new HomeFoodAdapter(mContext, foodList);
         mListView.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         foodService = retrofit.create(FoodService.class);
-        getlocalFood();
+        if (BreakfastUtils.isNetworkAvailable(mContext)) {
+            getallFood(placeId, flag);
+        } else {
+            getlocalFood();
+        }
 
     }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LogUtil.d(mPageName + " onDestroyView is called");
+    }
 
     private void getlocalFood() {
         if (foodList != null || foodList.size() > 0) {
             foodList.clear();
         }
         List<FoodDB> foodDbList = FoodDB.find(FoodDB.class, "PLACE_ID= ?", placeId.toString());
-        if (foodDbList != null && foodDbList.size() > 0) {
+        if (foodDbList == null || foodDbList.size() == 0) {
+            ShowUI(BreakfastConstant.NO_FOOD);
+            return;
+        } else {
             for (FoodDB foodDb : foodDbList) {
                 Food food = new Food(foodDb);
                 foodList.add(food);
             }
         }
+        ShowUI(BreakfastConstant.NORMAL);
         adapter.notifyDataSetChanged();
 
 
@@ -93,6 +109,7 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
+
             }
 
             @Override
@@ -103,9 +120,17 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
 
                 foodList.addAll(response.body().getData());
                 updateLocalDB(placeId, foodList);
+                getlocalFood();
+
 
                 adapter.notifyDataSetChanged();
-                mListView.onRefreshComplete();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListView.onRefreshComplete();
+                    }
+                }, 500);
+
             }
 
             @Override
@@ -117,10 +142,8 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
 
     public void updateLocalDB(Integer placeId, List<Food> foodList) {
         if (foodList == null || foodList.size() == 0) {
-            ShowUI(BreakfastConstant.NO_FOOD);
             return;
         }
-        ShowUI(BreakfastConstant.NORMAL);
         FoodDB.deleteAll(FoodDB.class, "PLACE_ID = ?", String.valueOf(placeId));//删除本地数据库中当前tag下的食品
         for (Food food : foodList) {
             FoodDB foodDB = new FoodDB(food);
@@ -135,15 +158,5 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
         getallFood(placeId, flag);
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) {
-            if (isFirstRequest) {
-                getallFood(placeId, flag);
-                isFirstRequest = false;
-            }
-        }
 
-    }
 }

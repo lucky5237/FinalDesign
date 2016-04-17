@@ -3,6 +3,7 @@ package zjut.jianlu.breakfast.adapter;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +18,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.entity.bean.Food;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
+import zjut.jianlu.breakfast.entity.db.ShoppingCartDB;
+import zjut.jianlu.breakfast.entity.event.UpdateBadgeNumEvent;
+import zjut.jianlu.breakfast.entity.event.UpdatePayMoneyEvent;
 import zjut.jianlu.breakfast.listener.ConfirmOnclickListener;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
@@ -45,18 +49,16 @@ public class ShoppingCartAdapter extends BaseAdapter {
 
     private View mView;
 
-    private List<ConfirmFood> mFoodList;
-    private List<CheckBean> checkList = new ArrayList<CheckBean>();
+    private static List<ConfirmFood> mFoodList;
+
+    public static List<ConfirmFood> getmFoodList() {
+        return mFoodList;
+    }
 
 
     public ShoppingCartAdapter(Context context, List<ConfirmFood> mFoodList) {
         mContext = context;
         this.mFoodList = mFoodList;
-        if (mFoodList != null && mFoodList.size() > 0) {
-            for (int i = 0; i < mFoodList.size(); i++) {
-                checkList.add(new CheckBean(i, true));
-            }
-        }
     }
 
     @Override
@@ -93,41 +95,97 @@ public class ShoppingCartAdapter extends BaseAdapter {
         viewHolder.etQuantity.setText(number.toString());
         viewHolder.tvTotalNum.setText("数量：" + number.toString() + "件");
         viewHolder.tvTotalFee.setText("小计：¥" + String.valueOf(Float.valueOf(number * mFood.getPrice())));
-        if (checkList.get(position).isChecked) {
+        if (mConfirmFood.isChecked()) {
             viewHolder.cbCheck.setChecked(true);
         } else {
             viewHolder.cbCheck.setChecked(false);
         }
-
-
-        final String url = mFood.getImage();
-        Picasso.with(mContext).load(BreakfastUtils.getAbsImageUrlPath(url)).placeholder(R.mipmap.ic_launcher).resize(100, 100).centerCrop().into(viewHolder.ivImage);
-        viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
+        viewHolder.etQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, url);
-                if (!popWindow.isShowing()) {
-                    popWindow.showAtLocation(mView, Gravity.TOP, 0, 0);
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && TextUtils.isEmpty(viewHolder.etQuantity.getText().toString())) {
+                    viewHolder.etQuantity.setText("1");
                 }
             }
         });
-        viewHolder.cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    checkList.get(position).isChecked = true;
-                    viewHolder.tvTotalNum.setText("数量：" + number.toString() + "件");
-                    viewHolder.tvTotalFee.setText("小计：¥" + String.valueOf(Float.valueOf(number * mFood.getPrice())));
-                } else {
-                    checkList.get(position).isChecked = false;
-                    viewHolder.tvTotalNum.setText("数量：0件");
-                    viewHolder.tvTotalFee.setText("小计：¥0.0");
-                }
 
-            }
-        });
+        viewHolder.etQuantity.addTextChangedListener(new TextWatcher() {
+                                                         @Override
+                                                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        viewHolder.btnDelete.setOnClickListener(new DeleteConfirmListener(mContext, "是否确认从购物车删除该物品", position));
+                                                         }
+
+                                                         @Override
+                                                         public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                                         }
+
+                                                         @Override
+                                                         public void afterTextChanged(Editable s) {
+                                                             if (!TextUtils.isEmpty(s.toString())) {
+                                                                 int num = Integer.valueOf(s.toString());
+                                                                 float price = Float.valueOf(viewHolder.tvPrice.getText().toString());
+                                                                 float totalCost = num * price;
+                                                                 mFoodList.get(position).setQuantity(num);
+                                                                 mFoodList.get(position).setTotalCost(totalCost);
+                                                                 viewHolder.tvTotalNum.setText("数量：" + num + "件");
+                                                                 viewHolder.tvTotalFee.setText("小计：¥" + String.valueOf(totalCost));
+                                                                 viewHolder.etQuantity.setSelection(viewHolder.etQuantity.getText().length());
+                                                                 EventBus.getDefault().post(new UpdatePayMoneyEvent(getAllMoney()));
+
+                                                             }
+                                                         }
+                                                     }
+
+        );
+
+
+        final String url = BreakfastUtils.getAbsImageUrlPath(mFood.getImage());
+        Picasso.with(mContext).load(url).placeholder(R.mipmap.ic_launcher)
+                .resize(100, 100)
+                .centerCrop()
+                .into(viewHolder.ivImage);
+
+        viewHolder.ivImage.setOnClickListener(new View.OnClickListener()
+
+                                              {
+                                                  @Override
+                                                  public void onClick(View v) {
+                                                      ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, url);
+                                                      if (!popWindow.isShowing()) {
+                                                          popWindow.showAtLocation(mView, Gravity.TOP, 0, 0);
+                                                      }
+                                                  }
+                                              }
+
+        );
+        viewHolder.cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+
+                                                      {
+                                                          @Override
+                                                          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                              if (isChecked) {
+                                                                  mFoodList.get(position).setChecked(true);
+                                                                  viewHolder.tvTotalNum.setText("数量：" + number.toString() + "件");
+                                                                  viewHolder.tvTotalFee.setText("小计：¥" + String.valueOf(Float.valueOf(number * mFood.getPrice())));
+                                                              } else {
+                                                                  mFoodList.get(position).setChecked(false);
+                                                                  viewHolder.tvTotalNum.setText("数量：0件");
+                                                                  viewHolder.tvTotalFee.setText("小计：¥0.0");
+                                                              }
+                                                              EventBus.getDefault().post(new UpdatePayMoneyEvent(getAllMoney()));
+
+
+                                                          }
+                                                      }
+
+        );
+
+        viewHolder.btnDelete.setOnClickListener(new
+
+                DeleteConfirmListener(mContext, "是否确认从购物车删除该物品", position)
+
+        );
         return convertView;
     }
 
@@ -141,24 +199,25 @@ public class ShoppingCartAdapter extends BaseAdapter {
 
         @Override
         public void onConfirm() {
+            ConfirmFood food = (ConfirmFood) getItem(position);
+            ShoppingCartDB.deleteAll(ShoppingCartDB.class, "id = ?", food.getShopCartId().toString());
             mFoodList.remove(position);
-            checkList.remove(position);
-            notifyDataSetChanged();
+            EventBus.getDefault().post(new UpdateBadgeNumEvent(-1));
 
         }
     }
 
     public void setAllChecked(boolean isCheck) {
         if (isCheck) {
-            for (CheckBean checkBean : checkList) {
-                if (!checkBean.isChecked) {//没勾选上的话勾选上
-                    checkBean.isChecked = true;
+            for (ConfirmFood food : mFoodList) {
+                if (!food.isChecked()) {//没勾选上的话勾选上
+                    food.setChecked(true);
                 }
             }
         } else {
-            for (CheckBean checkBean : checkList) {
-                if (checkBean.isChecked) {
-                    checkBean.isChecked = false;
+            for (ConfirmFood food : mFoodList) {
+                if (food.isChecked()) {
+                    food.setChecked(false);
                 }
             }
         }
@@ -166,31 +225,20 @@ public class ShoppingCartAdapter extends BaseAdapter {
 
     }
 
-    class CheckBean {
-        private Integer position;
-        private boolean isChecked;
-
-        public CheckBean(Integer position, boolean isChecked) {
-            this.position = position;
-            this.isChecked = isChecked;
+    public float getAllMoney() {
+        float sum = 0.0f;
+        if (mFoodList != null && mFoodList.size() > 0) {
+            for (int i = 0; i < mFoodList.size(); i++) {
+                if (mFoodList.get(i).isChecked()) {
+                    sum += mFoodList.get(i).getTotalCost();
+                }
+            }
         }
 
-        public Integer getPosition() {
-            return position;
-        }
+        return sum;
 
-        public void setPosition(Integer position) {
-            this.position = position;
-        }
-
-        public boolean isChecked() {
-            return isChecked;
-        }
-
-        public void setChecked(boolean checked) {
-            isChecked = checked;
-        }
     }
+
 
     static class ViewHolder {
         @Bind(R.id.iv_food_image)//商品图片
@@ -221,11 +269,6 @@ public class ShoppingCartAdapter extends BaseAdapter {
             ButterKnife.bind(this, view);
         }
 
-        @OnTextChanged(value = R.id.et_quantity, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-        void afterTextChanged(Editable s) {
-            etQuantity.setSelection(etQuantity.getText().length());
-        }
-
 
         @OnClick({R.id.btn_add, R.id.btn_sub})
         public void onclick(View view) {
@@ -243,6 +286,9 @@ public class ShoppingCartAdapter extends BaseAdapter {
                         etQuantity.setText(String.valueOf(numberInt + 1));
                         tvTotalNum.setText("数量：" + String.valueOf(numberInt + 1) + "件");
                         tvTotalFee.setText("小计：¥" + String.valueOf(Float.valueOf((numberInt + 1) * price)));
+//                        EventBus.getDefault().post(new UpdatePayMoneyEvent(Float.valueOf(tvPrice.getText().toString())));
+
+
                     }
                     break;
                 case R.id.btn_sub:
@@ -250,6 +296,8 @@ public class ShoppingCartAdapter extends BaseAdapter {
                         etQuantity.setText(String.valueOf(numberInt - 1));
                         tvTotalNum.setText("数量：" + String.valueOf(numberInt - 1) + "件");
                         tvTotalFee.setText("小计：¥" + String.valueOf(Float.valueOf((numberInt - 1) * price)));
+//                        EventBus.getDefault().post(new UpdatePayMoneyEvent(-Float.valueOf(tvPrice.getText().toString())));
+
                     }
                     break;
 

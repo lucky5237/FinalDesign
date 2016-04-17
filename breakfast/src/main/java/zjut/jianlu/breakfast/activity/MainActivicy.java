@@ -1,7 +1,10 @@
 package zjut.jianlu.breakfast.activity;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.RadioButton;
@@ -14,6 +17,8 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.entity.db.ShoppingCartDB;
+import zjut.jianlu.breakfast.entity.event.ChangeIndexEvent;
 import zjut.jianlu.breakfast.entity.event.UpdateBadgeNumEvent;
 import zjut.jianlu.breakfast.fragment.OrderFragment;
 import zjut.jianlu.breakfast.fragment.ShopCartFragment;
@@ -31,8 +36,9 @@ public class MainActivicy extends BaseActivity {
     private Fragment mHomePageFragment;
     private RankFragment mRankFragment;
     private OrderFragment mOrderFragment;
-    private ShopCartFragment mMeFragment;
-    public static final int HOCART_INDEX = 0;
+    private ShopCartFragment mShopCartFragment;
+    private FragmentManager mTransitionManager;
+    public static final int HOME_INDEX = 0;
     public static final int RANK_INDEX = 3;
     public static final int ORDER_INDEX = 1;
     public static final int CART_INDEX = 2;
@@ -48,6 +54,7 @@ public class MainActivicy extends BaseActivity {
 
     @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart})
     public void onclick(View view) {
+        FragmentTransaction transation = mTransitionManager.beginTransaction();
         switch (view.getId()) {
             case R.id.btn_home:
                 if (getCurrentUserType() == 0) {
@@ -57,93 +64,155 @@ public class MainActivicy extends BaseActivity {
                     mTvTopBar.setText("最新订单");
 
                 }
-                showFragment(HOCART_INDEX);
+                showFragment(HOME_INDEX, transation);
                 break;
             case R.id.btn_rank:
                 mTvTopBar.setText("热门榜单");
-                showFragment(RANK_INDEX);
+                showFragment(RANK_INDEX, transation);
                 break;
             case R.id.btn_order:
                 mTvTopBar.setText("我的订单");
-                showFragment(ORDER_INDEX);
+                showFragment(ORDER_INDEX, transation);
                 break;
             case R.id.btn_cart:
                 mTvTopBar.setText("购物车");
-                showFragment(CART_INDEX);
+                showFragment(CART_INDEX, transation);
                 break;
             default:
                 break;
         }
+        transation.commitAllowingStateLoss();
 
 
     }
 
-    private void showFragment(int index) {
-        if (index == mCurrentIndex) {
-            return;
-        }
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    private void onTabSelected(int index) {
 
-        transaction.hide(fragments[mCurrentIndex]);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        mCurrentIndex = index;
+        showFragment(mCurrentIndex, transaction);
+        transaction.commitAllowingStateLoss();
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void showFragment(int index, FragmentTransaction transaction) {
 
         mCurrentIndex = index;
+        switch (index) {
+            case HOME_INDEX:
+                if (null != mRankFragment) {
+                    transaction.hide(mRankFragment);
+                }
+                if (null != mOrderFragment) {
+                    transaction.hide(mOrderFragment);
+                }
+                if (null != mShopCartFragment) {
+                    transaction.hide(mShopCartFragment);
+                }
+                if (null == mHomePageFragment) {
+                    if (getCurrentUserType() == 0) {
+                        mHomePageFragment = new ClientHomePageFragment();
+                    }
+                    if (getCurrentUserType() == 1) {
+                        mHomePageFragment = new CourierHomePageFragment();
+                    }
+                    transaction.add(R.id.flyt_container, mHomePageFragment);
+                } else {
+                    transaction.show(mHomePageFragment);
+                }
+                break;
+            case ORDER_INDEX:
+                if (null != mRankFragment) {
+                    transaction.hide(mRankFragment);
+                }
+                if (null != mHomePageFragment) {
+                    transaction.hide(mHomePageFragment);
+                }
+                if (null != mShopCartFragment) {
+                    transaction.hide(mShopCartFragment);
+                }
+                if (null == mOrderFragment) {
+                    mOrderFragment = new OrderFragment();
+                    transaction.add(R.id.flyt_container, mOrderFragment);
+                } else {
+                    transaction.show(mOrderFragment);
+                }
+                break;
+            case RANK_INDEX:
+                if (null != mHomePageFragment) {
+                    transaction.hide(mHomePageFragment);
+                }
+                if (null != mOrderFragment) {
+                    transaction.hide(mOrderFragment);
+                }
+                if (null != mShopCartFragment) {
+                    transaction.hide(mShopCartFragment);
+                }
+                if (null == mRankFragment) {
+                    mRankFragment = new RankFragment();
+                    transaction.add(R.id.flyt_container, mRankFragment);
+                } else {
+                    transaction.show(mRankFragment);
+                }
+                break;
+            case CART_INDEX:
+                if (null != mRankFragment) {
+                    transaction.hide(mRankFragment);
+                }
+                if (null != mOrderFragment) {
+                    transaction.hide(mOrderFragment);
+                }
+                if (null != mHomePageFragment) {
+                    transaction.hide(mHomePageFragment);
+                }
+                if (null == mShopCartFragment) {
+                    mShopCartFragment = new ShopCartFragment();
+                    transaction.add(R.id.flyt_container, mShopCartFragment);
+                } else {
+                    transaction.show(mShopCartFragment);
+                }
+                break;
 
-        transaction.show(fragments[index]).commit();
+        }
     }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getCurrentUserType() == 0) {
-            mHomePageFragment = new ClientHomePageFragment();
-            badgeView = new MyBadgeView(mContext);
-            badgeView.setTargetView(mRbtnCart);
-            badgeView.setBadgeCount(5);
-        }
-        if (getCurrentUserType() == 1) {
-            mHomePageFragment = new CourierHomePageFragment();
-        }
-        mRankFragment = new RankFragment();
-        mOrderFragment = new OrderFragment();
-        mMeFragment = new ShopCartFragment();
-        fragments = new Fragment[]{mHomePageFragment, mRankFragment, mOrderFragment, mMeFragment};
-        mTransaction = getSupportFragmentManager().beginTransaction();
-        mTransaction.add(R.id.flyt_container, mHomePageFragment)
-                .add(R.id.flyt_container, mRankFragment).add(R.id.flyt_container, mOrderFragment)
-                .add(R.id.flyt_container, mMeFragment).hide(mRankFragment).hide(mOrderFragment).hide(mMeFragment).show(mHomePageFragment).commit();
-//        for (int i = 0; i < 4; i++) {
-//            Place place = new Place("no." + i,i);
-//            place.setId(Long.valueOf(i));
-//            place.save();
-//        }
-//        Place p = new Place("ext", 5);
-//        p.setId(3l);
-//        p.save();
-
-
-
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         EventBus.getDefault().register(this);
+        mTransitionManager = getSupportFragmentManager();
+        onTabSelected(mCurrentIndex);
+        badgeView = new MyBadgeView(this);
+        badgeView.setTargetView(mRbtnCart);
+        badgeView.setBadgeCount(getBadgeViewCount());
+//        
+
+
     }
 
+    private int getBadgeViewCount() {
+        // TODO: 16/4/15 购物车的数目 
+        return (int) ShoppingCartDB.count(ShoppingCartDB.class);
+    }
+
+
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 
-
     @Subscribe
-    public void changeIndex(Integer index) {
+    public void changeIndex(ChangeIndexEvent event) {
+        Integer index = event.getIndex();
         if (index != null) {
-            showFragment(index);
+            FragmentTransaction transaction = mTransitionManager.beginTransaction();
+            showFragment(index, transaction);
+            transaction.commitAllowingStateLoss();
         }
+
     }
 
     @Subscribe
@@ -152,7 +221,14 @@ public class MainActivicy extends BaseActivity {
             int newNumber = badgeView.getBadgeCount() + event.getNum();
             badgeView.setBadgeCount(newNumber < 0 ? 0 : newNumber);
         }
+        if (mShopCartFragment == null) {
+            mShopCartFragment = new ShopCartFragment();
+        }
+        mShopCartFragment.initData();
+
+        mShopCartFragment.adapter.notifyDataSetChanged();
     }
+
 
     @Override
     public int getLayoutId() {

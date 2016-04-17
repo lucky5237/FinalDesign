@@ -13,7 +13,7 @@ public class ShoppingCartDialog extends MyAlertDialog {
     private static final String POSITIVE_MSG = "去结算";
 
 
-    public ShoppingCartDialog(Context context, String message, View.OnClickListener positiveListener) {
-        super(context, TITLE, message, NEGATIVE_MSG, POSITIVE_MSG, positiveListener);
+    public ShoppingCartDialog(Context context, String message, View.OnClickListener negativeListener, View.OnClickListener positiveListener) {
+        super(context, TITLE, message, NEGATIVE_MSG, POSITIVE_MSG, negativeListener, positiveListener);
     }
 }

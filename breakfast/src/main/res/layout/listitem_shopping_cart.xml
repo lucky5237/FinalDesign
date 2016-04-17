@@ -19,8 +19,8 @@
             android:layout_height="100dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:checked="true"
             android:button="@drawable/selector_shopping_cart"
+            android:checked="true"
             android:visibility="visible" />
 
 
@@ -166,7 +166,8 @@
                             android:layout_gravity="center_vertical"
                             android:background="@null"
                             android:gravity="center"
-                            android:inputType="number" />
+                            android:inputType="number"
+                            android:maxLength="2" />
 
                         <View
                             android:layout_width="1dp"
@@ -201,6 +202,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -211,7 +213,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:orientation="horizontal"
-        android:padding="@dimen/spacing" >
+        android:padding="@dimen/spacing">
 
         <TextView
             android:id="@+id/tv_food_total_num"

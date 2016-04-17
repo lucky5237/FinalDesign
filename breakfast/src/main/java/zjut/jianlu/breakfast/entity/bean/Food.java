@@ -32,8 +32,7 @@ public class Food implements Serializable {
         name = foodDB.getName();
         image = foodDB.getImage();
         price = foodDB.getPrice();
-        Place place = new Place(foodDB.getPlaceId(), foodDB.getName());
-        this.place = place;
+        place = new Place(foodDB.getPlaceId(), foodDB.getPlaceName());
         sales = foodDB.getSales();
         createTs = foodDB.getCreateTs();
 

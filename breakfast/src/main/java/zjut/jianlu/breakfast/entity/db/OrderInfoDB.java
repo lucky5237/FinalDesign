@@ -1,18 +1,16 @@
 package zjut.jianlu.breakfast.entity.db;
 
-import java.util.Date;
+import com.orm.SugarRecord;
 
 /**
  * Created by jianlu on 16/3/12.
  * 数据库订单信息表
  */
-public class OrderInfoDB  {
+public class OrderInfoDB extends SugarRecord {
 
     private String orderNumber;//订单号
 
-    private UserDB clientUser;//下单用户id
-
-    private UserDB courierUser;//派送用户id
+    private String userImageUrl;//用户图片路径
 
     private Integer status;//订单状态
 
@@ -24,7 +22,7 @@ public class OrderInfoDB  {
 
     private boolean isCourierCommented;//派送员是否评论
 
-    private Date receivedTs;//接单时间
+    private String receivedTs;//接单时间
 
     public OrderInfoDB() {
 
@@ -77,32 +75,6 @@ public class OrderInfoDB  {
     public void setCourierCommented(boolean courierCommented) {
         isCourierCommented = courierCommented;
     }
-
-    public UserDB getClientUser() {
-        return clientUser;
-    }
-
-    public void setClientUser(UserDB clientUser) {
-        this.clientUser = clientUser;
-    }
-
-    public UserDB getCourierUser() {
-        return courierUser;
-    }
-
-    public void setCourierUser(UserDB courierUser) {
-        this.courierUser = courierUser;
-    }
-
-    public Date getReceivedTs() {
-        return receivedTs;
-    }
-
-    public void setReceivedTs(Date receivedTs) {
-        this.receivedTs = receivedTs;
-    }
-
-
 
 
 }

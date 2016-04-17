@@ -38,7 +38,9 @@ public class ClientHomePageFragment extends BaseFragment {
         mFragmentList.add(new YangxianCanteenFoodFragment());
         mFragmentList.add(new HomePeaceCanteenFoodFragment());
         mViewPager.setAdapter(new HomeFoodPagerAdapter(getChildFragmentManager(), mFragmentList));
+        mViewPager.setOffscreenPageLimit(2);
         mtabPageIndicator.setViewPager(mViewPager);
+        mtabPageIndicator.setCurrentItem(0);
         mtabPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

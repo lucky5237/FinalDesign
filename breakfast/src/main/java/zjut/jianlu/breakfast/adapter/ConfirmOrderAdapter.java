@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.Bind;
@@ -25,6 +27,8 @@ import butterknife.OnTextChanged;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.entity.bean.Food;
 import zjut.jianlu.breakfast.entity.db.ConfirmFood;
+import zjut.jianlu.breakfast.entity.event.UpdatePayMoneyEvent;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 
 /**
@@ -49,7 +53,7 @@ public class ConfirmOrderAdapter extends BaseAdapter {
         mContext = context;
         this.mFoodList = mFoodList;
         mView = view;
-        mBtnTotal= (Button) view.findViewById(R.id.btn_pay_money);
+        mBtnTotal = (Button) view.findViewById(R.id.btn_pay_money);
 
     }
 
@@ -88,7 +92,7 @@ public class ConfirmOrderAdapter extends BaseAdapter {
         viewHolder.tvBuyNum.setText(mNum + "");
         viewHolder.tvBuyAmount.setText(Float.valueOf(mNum * mFood.getPrice()).toString());
 
-        final String url = mFood.getImage();
+        final String url = BreakfastUtils.getAbsImageUrlPath(mFood.getImage());
         Picasso.with(mContext).load(url).placeholder(R.mipmap.ic_launcher).resize(100, 100).centerCrop().into(viewHolder.ivImage);
         viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +170,7 @@ public class ConfirmOrderAdapter extends BaseAdapter {
                     if (numberInt < 99) {
                         etQuantity.setText(String.valueOf(numberInt + 1));
                         tvBuyNum.setText(String.valueOf(numberInt + 1));
+                        EventBus.getDefault().post(new UpdatePayMoneyEvent(Float.valueOf(tvPrice.getText().toString())));
 
                     }
                     break;
@@ -173,13 +178,14 @@ public class ConfirmOrderAdapter extends BaseAdapter {
                     if (numberInt > 1) {
                         etQuantity.setText(String.valueOf(numberInt - 1));
                         tvBuyNum.setText(String.valueOf(numberInt - 1));
+                        EventBus.getDefault().post(new UpdatePayMoneyEvent(-Float.valueOf(tvPrice.getText().toString())));
 
                     }
                     break;
 
             }
             tvBuyAmount.setText(String.valueOf((float) (Float.valueOf(tvPrice.getText().toString()) * Integer.valueOf(etQuantity.getText().toString()))));
-            mBtnTotal.setText("实付金额：¥"+tvBuyAmount.getText().toString());
+            mBtnTotal.setText("实付金额：¥" + tvBuyAmount.getText().toString());
         }
 
     }

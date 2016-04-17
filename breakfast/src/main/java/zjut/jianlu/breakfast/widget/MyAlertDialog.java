@@ -22,7 +22,7 @@ public class MyAlertDialog {
 
     private Button btnPositive;
 
-    private MyAlertDialog dialog;
+    private AlertDialog set;
 
     private static Context context;
 
@@ -36,16 +36,20 @@ public class MyAlertDialog {
 
     private View.OnClickListener positiveListener;
 
+    private View.OnClickListener negativeListener;
+
+
     private static final String CANCEL = "取消";
     private static final String CONFIRM = "确认";
 
-    public MyAlertDialog(Context context, String title, String message, String negativeMsg, String positiveMsg, View.OnClickListener positiveListener) {
+    public MyAlertDialog(Context context, String title, String message, String negativeMsg, String positiveMsg, View.OnClickListener negativeListener, View.OnClickListener positiveListener) {
         this.context = context;
         this.title = title;
         this.message = message;
         this.negativeMsg = negativeMsg;
         this.positiveMsg = positiveMsg;
         this.positiveListener = positiveListener;
+        this.negativeListener = negativeListener;
     }
 
     public MyAlertDialog(Context context, String title, String message, View.OnClickListener positiveListener) {
@@ -57,9 +61,10 @@ public class MyAlertDialog {
         this.positiveListener = positiveListener;
     }
 
+
     public void show() {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_confirm, null);
-        final AlertDialog set = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT).create();
+        set = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT).create();
         set.setView(view);
         btnNegative = (Button) view.findViewById(R.id.btn_delete_cancel);
         btnPositive = (Button) view.findViewById(R.id.btn_delete_confirm);
@@ -67,13 +72,28 @@ public class MyAlertDialog {
         tvTitle = (TextView) view.findViewById(R.id.tv_title);
         tvTitle.setText(title);
         tvMessage.setText(message);
-        btnNegative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                set.dismiss();
-            }
-        });
+        btnNegative.setText(negativeMsg);
+        btnPositive.setText(positiveMsg);
+        if (negativeListener == null) {
+            btnNegative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    set.dismiss();
+                }
+            });
+        } else {
+            btnNegative.setOnClickListener(negativeListener);
+        }
+
         btnPositive.setOnClickListener(positiveListener);
         set.show();
     }
+
+    public void dismiss() {
+        if (set != null && set.isShowing()) {
+            set.dismiss();
+        }
+    }
+
+
 }
