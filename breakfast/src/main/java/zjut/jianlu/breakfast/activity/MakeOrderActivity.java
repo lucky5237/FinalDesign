@@ -85,7 +85,7 @@ public class MakeOrderActivity extends BaseActivity {
 
     private View view;
 
-    private static int fromWhere;//从哪里跳转的  0-首页下单直接购买 1-购物车点击结算
+    private static int fromWhere;//从哪里跳转的  0-首页下单直接购买或者直接再来一单  1-购物车点击结算
 
     private static final String GIVE_UP_ORDER_TITLE = "是否确认放弃下单";
 

@@ -27,7 +27,6 @@ public class UpdateOrderStatusListener implements View.OnClickListener {
 
     private String message;
 
-
     public UpdateOrderStatusListener(Context context, Integer orderId, Integer status, String message) {
         mContext = context;
         this.orderId = orderId;
@@ -40,11 +39,10 @@ public class UpdateOrderStatusListener implements View.OnClickListener {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_confirm, null);
         final AlertDialog set = new AlertDialog.Builder(mContext, AlertDialog.THEME_HOLO_LIGHT).create();
         set.setView(view);
-        TextView tv = (TextView) view.findViewById(R.id.tv_message);
-        tv.setText(message);
         final Button cancel = (Button) view.findViewById(R.id.btn_delete_cancel);
         Button confirm = (Button) view.findViewById(R.id.btn_delete_confirm);
-
+        TextView tvMessage = (TextView) view.findViewById(R.id.tv_message);
+        tvMessage.setText(message);
         cancel.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -58,9 +56,9 @@ public class UpdateOrderStatusListener implements View.OnClickListener {
             public void onClick(View arg0) {
                 set.dismiss();
                 if (status != 1) {
-                    EventBus.getDefault().post(new UpdateOrderStatusEvent(status, orderId));//更新订单状态
+                    EventBus.getDefault().post(new UpdateOrderStatusEvent(status, orderId));// 更新订单状态
                 } else {
-                    EventBus.getDefault().post(new TakeOrderEvent(BreakfastConstant.GET_NEWEST_ORDER_TAG, orderId));//接单
+                    EventBus.getDefault().post(new TakeOrderEvent(BreakfastConstant.GET_NEWEST_ORDER_TAG, orderId));// 接单
 
                 }
             }

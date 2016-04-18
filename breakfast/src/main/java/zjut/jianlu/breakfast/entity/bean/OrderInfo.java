@@ -1,7 +1,7 @@
 package zjut.jianlu.breakfast.entity.bean;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
 import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 
@@ -40,7 +40,7 @@ public class OrderInfo implements Serializable {
 
     private Integer cancelUserType;//取消订单的用户类型
 
-    private List<ConfirmFood> orderdetails;
+    private ArrayList<ConfirmFood> orderdetails;
 
     public String getDeliveryTs() {
         return deliveryTs;
@@ -74,11 +74,11 @@ public class OrderInfo implements Serializable {
         this.cancelUserType = cancelUserType;
     }
 
-    public List<ConfirmFood> getOrderdetails() {
+    public ArrayList<ConfirmFood> getOrderdetails() {
         return orderdetails;
     }
 
-    public void setOrderdetails(List<ConfirmFood> orderdetails) {
+    public void setOrderdetails(ArrayList<ConfirmFood> orderdetails) {
         this.orderdetails = orderdetails;
     }
 

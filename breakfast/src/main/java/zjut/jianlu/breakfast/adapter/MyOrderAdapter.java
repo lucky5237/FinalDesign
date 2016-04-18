@@ -1,6 +1,8 @@
 package zjut.jianlu.breakfast.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +11,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.entity.db.ConfirmFood;
+import zjut.jianlu.breakfast.activity.CommentActivity;
+import zjut.jianlu.breakfast.activity.MakeOrderActivity;
+import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
+import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.enums.OrderStatus;
 import zjut.jianlu.breakfast.listener.UpdateOrderStatusListener;
-import zjut.jianlu.breakfast.utils.LogUtil;
-
 
 /**
  * Created by jianlu on 16/3/17.
@@ -30,7 +34,7 @@ public class MyOrderAdapter extends BaseAdapter {
 
     private List<OrderInfo> mOrderInfoList;
 
-    private List<ConfirmFood> mBuyFoodList;
+    private ArrayList<ConfirmFood> mBuyFoodList;
 
     private Integer userType;
 
@@ -52,13 +56,11 @@ public class MyOrderAdapter extends BaseAdapter {
 
     private static final String RECEIVE_CONFIRM_MESSAGE = "是否确认收货";
 
-
     public MyOrderAdapter(Context context, List<OrderInfo> orderInfos, Integer userType) {
         mContext = context;
         mOrderInfoList = orderInfos;
         this.userType = userType;
     }
-
 
     @Override
     public int getCount() {
@@ -87,14 +89,15 @@ public class MyOrderAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        OrderInfo orderinfo = (OrderInfo) getItem(position);
+        final OrderInfo orderinfo = (OrderInfo) getItem(position);
         orderId = orderinfo.getId();
         mBuyFoodList = orderinfo.getOrderdetails();
         if (mBuyFoodList != null && mBuyFoodList.size() > 0) {
             if (mBuyFoodList.size() == 1) {
                 viewHolder.tvFoodName.setText(mBuyFoodList.get(0).getFood().getName());
             } else {
-                viewHolder.tvFoodName.setText(mBuyFoodList.get(0).getFood().getName() + "等" + mBuyFoodList.size() + "件食品");
+                viewHolder.tvFoodName
+                        .setText(mBuyFoodList.get(0).getFood().getName() + "等" + mBuyFoodList.size() + "件食品");
             }
         }
         viewHolder.tvTime.setText(orderinfo.getCreateTs());
@@ -103,80 +106,82 @@ public class MyOrderAdapter extends BaseAdapter {
         viewHolder.tvStatus.setText(OrderStatus.getOrderDesByCode(orderinfo.getStatus(), userType));
         switch (orderinfo.getStatus()) {
 
-            case 0://待卖家接单
+        case 0:// 待卖家接单
+            viewHolder.btnRight.setText(CANCEL_ORDER);
+            viewHolder.btnRight.setVisibility(View.VISIBLE);
+            viewHolder.btnLeft.setVisibility(View.GONE);
+            viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                    OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
+            break;
+
+        case 1:// 待卖家配送
+            viewHolder.btnRight.setVisibility(View.VISIBLE);
+            if (userType == 0) {// 买家界面
                 viewHolder.btnRight.setText(CANCEL_ORDER);
+                viewHolder.btnLeft.setVisibility(View.GONE);
+                viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                        OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
+            }
+            if (userType == 1) {
+                viewHolder.btnLeft.setText(CANCEL_ORDER);
+                viewHolder.btnRight.setText(Start_DELIVERY);
+                viewHolder.btnLeft.setVisibility(View.VISIBLE);
+                viewHolder.btnLeft.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                        OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
+                viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                        OrderStatus.WAIT_CONFIRM.getCode(), START_DELIVERY_CONFIRM_MESSGAE));
+            }
+            break;
+        case 2:
+            viewHolder.btnRight.setVisibility(View.GONE);
+            viewHolder.btnLeft.setVisibility(View.GONE);
+            if (userType == 0) {
+                viewHolder.btnRight.setText(CONFIRM_ORDER);
                 viewHolder.btnRight.setVisibility(View.VISIBLE);
-                viewHolder.btnLeft.setVisibility(View.GONE);
-                viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
-                break;
+                viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                        OrderStatus.FINISH.getCode(), RECEIVE_CONFIRM_MESSAGE));
+            }
+            break;
+        case 3:
+            viewHolder.btnRight.setVisibility(View.VISIBLE);
+            viewHolder.btnRight.setText(COMMENT_ORDER);
+            viewHolder.btnRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {// 订单评论
+                    Intent intent = new Intent(mContext, CommentActivity.class);
+                    intent.putExtra("orderId", orderId);
+                    mContext.startActivity(intent);
+                }
+            });
+            viewHolder.btnLeft.setVisibility(View.GONE);
+            if (userType == 0) {
+                viewHolder.btnLeft.setText(ONEMORE_ORDER);
+                viewHolder.btnLeft.setVisibility(View.VISIBLE);
+                viewHolder.btnLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {// 再来一单
 
-            case 1://待卖家配送
-                viewHolder.btnRight.setVisibility(View.VISIBLE);
-                if (userType == 0) {//买家界面
-                    viewHolder.btnRight.setText(CANCEL_ORDER);
-                    viewHolder.btnLeft.setVisibility(View.GONE);
-                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
-                }
-                if (userType == 1) {
-                    viewHolder.btnLeft.setText(CANCEL_ORDER);
-                    viewHolder.btnRight.setText(Start_DELIVERY);
-                    viewHolder.btnLeft.setVisibility(View.VISIBLE);
-                    viewHolder.btnLeft.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
-                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.WAIT_CONFIRM.getCode(), START_DELIVERY_CONFIRM_MESSGAE));
-                }
-                break;
-            case 2:
-                viewHolder.btnRight.setVisibility(View.GONE);
-                viewHolder.btnLeft.setVisibility(View.GONE);
-                if (userType == 0) {
-                    viewHolder.btnRight.setText(CONFIRM_ORDER);
-                    viewHolder.btnRight.setVisibility(View.VISIBLE);
-                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId, OrderStatus.FINISH.getCode(), RECEIVE_CONFIRM_MESSAGE));
-                }
-                break;
-            case 3:
-                viewHolder.btnRight.setVisibility(View.VISIBLE);
-                viewHolder.btnRight.setText(COMMENT_ORDER);
-                viewHolder.btnRight.setOnClickListener(new CommentListener());
-                viewHolder.btnLeft.setVisibility(View.GONE);
-                if (userType == 0) {
-                    viewHolder.btnLeft.setText(ONEMORE_ORDER);
-                    viewHolder.btnLeft.setVisibility(View.VISIBLE);
-                    viewHolder.btnLeft.setOnClickListener(new AgainMakeOrderListener());
-                }
+                        Intent intent = new Intent(mContext, MakeOrderActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("from", 0);
+                        bundle.putSerializable("foodList", mBuyFoodList);
+                        bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, orderinfo.getAmount());
+                        intent.putExtras(bundle);
+                        mContext.startActivity(intent);
+                    }
+                });
+            }
 
-                break;
-            case 4:
-                viewHolder.btnRight.setVisibility(View.GONE);
-                viewHolder.btnLeft.setVisibility(View.GONE);
-                break;
-
+            break;
+        case 4:
+            viewHolder.btnRight.setVisibility(View.GONE);
+            viewHolder.btnLeft.setVisibility(View.GONE);
+            break;
 
         }
-
 
         return convertView;
     }
-
-    class CommentListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            // TODO: 16/4/10 跳转订单评论的界面或者是弹框
-            LogUtil.d("点击了评论");
-        }
-    }
-
-    class AgainMakeOrderListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            // TODO: 16/4/10  再来一单，跳转至相同的下单界面
-            LogUtil.d("点击了再来一单");
-
-        }
-    }
-
 
     static class ViewHolder {
         @Bind(R.id.iv_deliver_gender)
@@ -199,7 +204,6 @@ public class MyOrderAdapter extends BaseAdapter {
         Button btnLeft;
         @Bind(R.id.btn_right)
         Button btnRight;
-
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

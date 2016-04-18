@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:hedgehog="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_background_gray"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/topbar_layout_style">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/topbar_back_img_style" />
+
+        <TextView
+            style="@style/topbar_text_style"
+            android:text="用户评价" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_user_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/ic_man"
+            app:civ_border_color="@color/color_topic_gray"
+            app:civ_border_width="2dp"
+
+            />
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="123"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户评分："
+            android:textSize="18sp" />
+
+        <com.hedgehog.ratingbar.RatingBar
+            android:id="@+id/ratingbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            hedgehog:clickable="true"
+            hedgehog:starCount="5"
+            hedgehog:starHalf="@mipmap/ic_half_star"
+            hedgehog:starEmpty="@mipmap/ic_empty_star"
+            hedgehog:starFill="@mipmap/ic_full_start"
+            hedgehog:starImageSize="30dp" />
+
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/tv_score_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="请进行评分"
+            android:textColor="@color/orange"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="用户评论"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/et_comment"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@color/white"
+            android:gravity="top"
+            android:hint="有什么想对ta说的话"
+            android:inputType="textMultiLine"
+            android:maxEms="10"
+            android:maxLength="200"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/font_m" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        >
+
+        <Button
+            android:id="@+id/btn_commit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/index_login"
+            android:padding="10dp"
+            android:text="提交评论"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

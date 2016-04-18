@@ -138,7 +138,6 @@ public class HomeFoodAdapter extends BaseAdapter {
                                                      }, new View.OnClickListener() {
                                                          @Override
                                                          public void onClick(View v) {
-                                                             Toast.makeText(mContext, "跳转购买界面", Toast.LENGTH_SHORT).show();
                                                              ArrayList<ConfirmFood> foodCarts = new ArrayList<ConfirmFood>();
                                                              foodCarts.add(new ConfirmFood(num, mFood, totalCost));
                                                              Intent intent = new Intent(mContext, MakeOrderActivity.class);
