@@ -66,6 +66,8 @@ public class CommentDetailAdapter extends BaseAdapter {
         switch (mUserType){
             case 0://查看买家的个人中心
 
+
+
                 break;
             case 1://卖家个人中心
                 break;

@@ -154,6 +154,10 @@ public class MakeOrderActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
+                if (fromWhere == 2) {
+                    finish();
+                    return;
+                }
                 MyAlertDialog dialog = new MyAlertDialog(mContext, GIVE_UP_ORDER_TITLE, GIVE_UP_ORDER_MESSAGE, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -217,32 +221,32 @@ public class MakeOrderActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if (fromWhere == 2) {
+                finish();
+                return true;
+            }
+
             MyAlertDialog dialog = new MyAlertDialog(mContext, GIVE_UP_ORDER_TITLE, GIVE_UP_ORDER_MESSAGE, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MyAlertDialog dialog = new MyAlertDialog(mContext, GIVE_UP_ORDER_TITLE, GIVE_UP_ORDER_MESSAGE, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (fromWhere == 0) {//主页直接下单，放弃支付的话需要加入到购物车
-                                int updateNum = 0;
-                                for (ConfirmFood food : mConfirmFoodlist) {
-                                    ShoppingCartDB db = ShoppingCartDB.findById(ShoppingCartDB.class, food.getShopCartId());
-                                    if (db != null) {//购物车如果已经存在该商品的话，那么加上购买数目
-                                        db.setNum(db.getNum() + food.getQuantity());
-                                        db.setTotalCost(db.getTotalCost() + food.getTotalCost());
-                                        db.save();
-                                    } else {
-                                        ShoppingCartDB newDb = new ShoppingCartDB(food);
-                                        newDb.save();
-                                        updateNum = 1;
-                                    }
-                                    EventBus.getDefault().post(new UpdateBadgeNumEvent(updateNum));
-                                }
+                    if (fromWhere == 0) {//主页直接下单，放弃支付的话需要加入到购物车
+                        int updateNum = 0;
+                        for (ConfirmFood food : mConfirmFoodlist) {
+                            ShoppingCartDB db = ShoppingCartDB.findById(ShoppingCartDB.class, food.getShopCartId());
+                            if (db != null) {//购物车如果已经存在该商品的话，那么加上购买数目
+                                db.setNum(db.getNum() + food.getQuantity());
+                                db.setTotalCost(db.getTotalCost() + food.getTotalCost());
+                                db.save();
+                            } else {
+                                ShoppingCartDB newDb = new ShoppingCartDB(food);
+                                newDb.save();
+                                updateNum = 1;
                             }
-                            finish();
+                            EventBus.getDefault().post(new UpdateBadgeNumEvent(updateNum));
                         }
-                    });
-                    dialog.show();
+                    }
+                    finish();
                 }
             });
             dialog.show();

@@ -26,6 +26,7 @@ import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.requestBody.OrderCommentBody;
 import zjut.jianlu.breakfast.service.OrderService;
+import zjut.jianlu.breakfast.utils.LogUtil;
 
 /**
  * Created by jianlu on 4/18/2016.
@@ -57,6 +58,10 @@ public class CommentActivity extends BaseActivity {
 
     private Retrofit retrofit;
 
+    private String userName;
+
+    private Long userId;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_comment;
@@ -69,6 +74,9 @@ public class CommentActivity extends BaseActivity {
         retrofit = MyApplication.getRetrofitInstance();
         service = retrofit.create(OrderService.class);
         orderId = getIntent().getIntExtra("orderId", 0);
+        userName = getIntent().getStringExtra("otherUserName");
+        userId = getIntent().getLongExtra("otherUserId", 0);
+        mTvUserName.setText(userName == null ? "" : userName);
         mRatingbar.setOnRatingChangeListener(new RatingBar.OnRatingChangeListener() {
             @Override
             public void onRatingChange(int RatingCount) {
@@ -83,9 +91,7 @@ public class CommentActivity extends BaseActivity {
     }
 
     private void makeComment() {
-//        LogUtil.d(mCurrentScore + " " + mEtComment.getText().toString());
-//        Toast("开始进行进行订单评论");
-        OrderCommentBody body = new OrderCommentBody(getCurrentUserID(), getCurrentUserType(), mCurrentScore, mEtComment.getText().toString(), orderId);
+        OrderCommentBody body = new OrderCommentBody(getCurrentUserID(), getCurrentUserType(), mCurrentScore, mEtComment.getText().toString(), orderId, getCurrentUser().getUsername(), userId.intValue(), userName);
         Call<BaseResponse<String>> call = service.comment(body);
         call.enqueue(new BaseCallback<String>() {
             @Override
@@ -101,7 +107,7 @@ public class CommentActivity extends BaseActivity {
 
             @Override
             public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-
+                LogUtil.d(response.body().getMessage());
             }
         });
 

@@ -23,6 +23,7 @@ import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
 import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.enums.OrderStatus;
+import zjut.jianlu.breakfast.listener.OrderClickListener;
 import zjut.jianlu.breakfast.listener.UpdateOrderStatusListener;
 
 /**
@@ -78,7 +79,7 @@ public class MyOrderAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder;
 
@@ -106,82 +107,99 @@ public class MyOrderAdapter extends BaseAdapter {
         viewHolder.tvStatus.setText(OrderStatus.getOrderDesByCode(orderinfo.getStatus(), userType));
         switch (orderinfo.getStatus()) {
 
-        case 0:// 待卖家接单
-            viewHolder.btnRight.setText(CANCEL_ORDER);
-            viewHolder.btnRight.setVisibility(View.VISIBLE);
-            viewHolder.btnLeft.setVisibility(View.GONE);
-            viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
-                    OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
-            break;
-
-        case 1:// 待卖家配送
-            viewHolder.btnRight.setVisibility(View.VISIBLE);
-            if (userType == 0) {// 买家界面
+            case 0:// 待卖家接单
                 viewHolder.btnRight.setText(CANCEL_ORDER);
+                viewHolder.btnRight.setVisibility(View.VISIBLE);
                 viewHolder.btnLeft.setVisibility(View.GONE);
                 viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
                         OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
-            }
-            if (userType == 1) {
-                viewHolder.btnLeft.setText(CANCEL_ORDER);
-                viewHolder.btnRight.setText(Start_DELIVERY);
-                viewHolder.btnLeft.setVisibility(View.VISIBLE);
-                viewHolder.btnLeft.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
-                        OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
-                viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
-                        OrderStatus.WAIT_CONFIRM.getCode(), START_DELIVERY_CONFIRM_MESSGAE));
-            }
-            break;
-        case 2:
-            viewHolder.btnRight.setVisibility(View.GONE);
-            viewHolder.btnLeft.setVisibility(View.GONE);
-            if (userType == 0) {
-                viewHolder.btnRight.setText(CONFIRM_ORDER);
-                viewHolder.btnRight.setVisibility(View.VISIBLE);
-                viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
-                        OrderStatus.FINISH.getCode(), RECEIVE_CONFIRM_MESSAGE));
-            }
-            break;
-        case 3:
-            viewHolder.btnRight.setVisibility(View.VISIBLE);
-            viewHolder.btnRight.setText(COMMENT_ORDER);
-            viewHolder.btnRight.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {// 订单评论
-                    Intent intent = new Intent(mContext, CommentActivity.class);
-                    intent.putExtra("orderId", orderId);
-                    mContext.startActivity(intent);
-                }
-            });
-            viewHolder.btnLeft.setVisibility(View.GONE);
-            if (userType == 0) {
-                viewHolder.btnLeft.setText(ONEMORE_ORDER);
-                viewHolder.btnLeft.setVisibility(View.VISIBLE);
-                viewHolder.btnLeft.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {// 再来一单
+                break;
 
-                        Intent intent = new Intent(mContext, MakeOrderActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("from", 0);
-                        bundle.putSerializable("foodList", mBuyFoodList);
-                        bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, orderinfo.getAmount());
-                        intent.putExtras(bundle);
+            case 1:// 待卖家配送
+                viewHolder.btnRight.setVisibility(View.VISIBLE);
+                if (userType == 0) {// 买家界面
+                    viewHolder.btnRight.setText(CANCEL_ORDER);
+                    viewHolder.btnLeft.setVisibility(View.GONE);
+                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                            OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
+                }
+                if (userType == 1) {
+                    viewHolder.btnLeft.setText(CANCEL_ORDER);
+                    viewHolder.btnRight.setText(Start_DELIVERY);
+                    viewHolder.btnLeft.setVisibility(View.VISIBLE);
+                    viewHolder.btnLeft.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                            OrderStatus.CANCEL.getCode(), CANCEL_CONFIRM_MESSGAE));
+                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                            OrderStatus.WAIT_CONFIRM.getCode(), START_DELIVERY_CONFIRM_MESSGAE));
+                }
+                break;
+            case 2:
+                viewHolder.btnRight.setVisibility(View.GONE);
+                viewHolder.btnLeft.setVisibility(View.GONE);
+                if (userType == 0) {
+                    viewHolder.btnRight.setText(CONFIRM_ORDER);
+                    viewHolder.btnRight.setVisibility(View.VISIBLE);
+                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                            OrderStatus.FINISH.getCode(), RECEIVE_CONFIRM_MESSAGE));
+                }
+                break;
+            case 3:
+                viewHolder.btnRight.setVisibility(View.VISIBLE);
+                viewHolder.btnRight.setText(COMMENT_ORDER);
+//                viewHolder.btnRight.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {// 订单评论
+//                        Intent intent = new Intent(mContext, CommentActivity.class);
+//                        intent.putExtra("orderId", orderId);
+//                        String userName = userType == 1 ? orderinfo.getClientUser().getUsername() : orderinfo.getCourierUser().getUsername();
+//                        intent.putExtra("userName", userName);
+//                        mContext.startActivity(intent);
+//                    }
+//                });
+                viewHolder.btnRight.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, CommentActivity.class);
+                        OrderInfo orderInfos = (OrderInfo) getItem(position);
+                        String otherUserName = userType == 0 ? orderInfos.getCourierUser().getUsername() : orderInfos.getClientUser().getUsername();
+                        Long otherUserId = userType == 0 ? orderInfos.getCourierUser().getId() : orderInfos.getClientUser().getId();
+                        intent.putExtra("orderId", orderInfos.getId());
+                        intent.putExtra("otherUserId", otherUserId);
+                        intent.putExtra("otherUserName", otherUserName);
                         mContext.startActivity(intent);
                     }
-                });
-            }
+                }));
+                viewHolder.btnLeft.setVisibility(View.GONE);
+                if (userType == 0) {
+                    viewHolder.btnLeft.setText(ONEMORE_ORDER);
+                    viewHolder.btnLeft.setVisibility(View.VISIBLE);
+                    viewHolder.btnLeft.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mContext, MakeOrderActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("from", 2);
+                            OrderInfo orderInfos = (OrderInfo) getItem(position);
+                            mBuyFoodList = orderInfos.getOrderdetails();
+                            bundle.putSerializable("foodList", mBuyFoodList);
+                            bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, orderInfos.getAmount());
+                            intent.putExtras(bundle);
+                            mContext.startActivity(intent);
+                        }
+                    }));
+                }
 
-            break;
-        case 4:
-            viewHolder.btnRight.setVisibility(View.GONE);
-            viewHolder.btnLeft.setVisibility(View.GONE);
-            break;
+                break;
+            case 4:
+                viewHolder.btnRight.setVisibility(View.GONE);
+                viewHolder.btnLeft.setVisibility(View.GONE);
+                break;
 
         }
 
         return convertView;
     }
+
 
     static class ViewHolder {
         @Bind(R.id.iv_deliver_gender)
