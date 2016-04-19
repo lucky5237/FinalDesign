@@ -39,6 +39,7 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.OnClick;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -62,7 +63,7 @@ import zjut.jianlu.breakfast.widget.WheelView;
 /**
  * Created by jianlu on 3/10/2016.
  */
-public class UserInfoActivity extends BaseActivity implements OnWheelScrollListener{
+public class UserInfoActivity extends BaseActivity implements OnWheelScrollListener {
 
     private AlertDialog mGenderDialog;
     private AlertDialog mTypeDialog;
@@ -74,7 +75,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
     private String password;
     private String address;
     private static String userName;
-    public static File tempFile = new File(Environment.getExternalStorageDirectory(),userName+".jpg");
+    public static File tempFile = new File(Environment.getExternalStorageDirectory(), userName + ".jpg");
     private String mCurrentPhotoPath;
     private String mCurrentSmallPhotoPath;
     public LocationClient mLocationClient = null;
@@ -105,7 +106,6 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
 
         }
     }
-
 
 
     @Bind(R.id.iv_back)
@@ -140,7 +140,6 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
     RelativeLayout mRlAvatar;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,24 +159,28 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
     }
 
 
-    private void uploadAvatar(){
-        File file =new File(mCurrentPhotoPath);
-        RequestBody body =RequestBody.create(MediaType.parse("multipart/form-data"),file);
-        Call<BaseResponse<String>> call = userService.uploadImage("lujian.jpg",body);
+    private void uploadAvatar() {
+        File file = new File(mCurrentPhotoPath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", etUsername.getText().toString().trim() + ".jpg", requestBody);
+        Call<BaseResponse<String>> call = userService.uploadImage(body);
         call.enqueue(new BaseCallback<String>() {
             @Override
             public void onNetFailure(Throwable t) {
-
+                Toast(BreakfastConstant.NO_NET_MESSAGE);
             }
 
             @Override
             public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                Toast(response.body().getMessage());
+                startActivity(new Intent(mContext, LoginActivity.class));
+
             }
 
             @Override
             public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 Toast(response.body().getMessage());
+                startActivity(new Intent(mContext, LoginActivity.class));
+
             }
         });
     }
@@ -218,7 +221,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
                 typeInput.setTextColor(getResources().getColor(R.color.color_black));
                 mTypeSelected = which;
                 mTypeDialog.dismiss();
-                if (which == 0) {
+                if (which == 1) {
                     mLlAddress.setVisibility(View.GONE);
                 } else {
                     mLlAddress.setVisibility(View.VISIBLE);
@@ -230,7 +233,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
 
     }
 
-    @OnClick({R.id.sex_input, R.id.gender_ImageButton, R.id.type_input, R.id.type_ImageButton, R.id.btn_next, R.id.iv_location, R.id.iv_back,R.id.avatar_input,R.id.avatar_ImageButton})
+    @OnClick({R.id.sex_input, R.id.gender_ImageButton, R.id.type_input, R.id.type_ImageButton, R.id.btn_next, R.id.iv_location, R.id.iv_back, R.id.avatar_input, R.id.avatar_ImageButton})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -252,8 +255,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
 
                 break;
             case R.id.btn_next:
-//                checkInput();
-                uploadAvatar();
+                checkInput();
 //                Toast("点击下一个按钮");
                 break;
             case R.id.iv_location:
@@ -281,6 +283,10 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             Toast("用户名不能为空");
             return;
         }
+        if (mCurrentPhotoPath == null) {
+            Toast("请先选择你的头像");
+            return;
+        }
         if (mGenderSelected == -1) {
             Toast("请先选择你的性别");
             return;
@@ -295,7 +301,8 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
                 return;
             }
         }
-        if (mLocationClient.isStarted()) {
+
+        if (mLocationClient!=null&&mLocationClient.isStarted()) {
             mLocationClient.stop();
         }
         saveUserInfo();
@@ -312,7 +319,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             @Override
             public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 Toast(response.body().getMessage());
-                startActivity(new Intent(mContext, LoginActivity.class));
+                uploadAvatar();
             }
 
             @Override
@@ -323,7 +330,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
     }
 
     private void showSelectPicture() {
-        tempFile = new File(Environment.getExternalStorageDirectory(),userName+".jpg");
+        tempFile = new File(Environment.getExternalStorageDirectory(), userName + ".jpg");
         if (mCurrentPhotoPath == null) {
             new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
                     .addSheetItem("拍照", SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
@@ -378,6 +385,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             e.printStackTrace();
         }
     }
+
     @SuppressLint("SimpleDateFormat")
     private File createImageFile() throws IOException {
 
@@ -389,8 +397,6 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
-
 
 
     public class MyLocationListener implements BDLocationListener {

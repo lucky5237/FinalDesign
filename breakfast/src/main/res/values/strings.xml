@@ -7,7 +7,7 @@
         <item>我是纯爷们</item>
     </string-array>
     <string-array name="type">
-        <item>我是来送早餐的</item>
         <item>我是来点早餐的</item>
+        <item>我是来送早餐的</item>
     </string-array>
 </resources>

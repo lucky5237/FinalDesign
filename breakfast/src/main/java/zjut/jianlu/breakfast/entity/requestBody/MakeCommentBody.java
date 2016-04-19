@@ -3,7 +3,7 @@ package zjut.jianlu.breakfast.entity.requestBody;
 /**
  * Created by jianlu on 4/18/2016.
  */
-public class OrderCommentBody extends BaseUserBody {
+public class MakeCommentBody extends BaseUserBody {
 
     private Integer score;
 
@@ -17,7 +17,7 @@ public class OrderCommentBody extends BaseUserBody {
 
     private String theOtherUserName;
 
-    public OrderCommentBody(Integer userId, Integer userType, Integer score, String comment, Integer orderId, String userName, Integer otherUserId, String otherUserName) {
+    public MakeCommentBody(Integer userId, Integer userType, Integer score, String comment, Integer orderId, String userName, Integer otherUserId, String otherUserName) {
         super(userId, userType);
         this.score = score;
         this.comment = comment;

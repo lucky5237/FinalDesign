@@ -18,6 +18,9 @@ public class BreakfastUtils {
 
     private static final String IMAGE_FOLDER_NAME = "static/image/";
 
+    private static final String AVATAR_FOLDER_NAME = "static/avatar/";
+
+
     public synchronized static String getOutTradeNo() {
         SimpleDateFormat format = new SimpleDateFormat("MMddHHmmss", Locale.getDefault());
         Date date = new Date();
@@ -33,15 +36,20 @@ public class BreakfastUtils {
         return BreakfastConstant.URL + IMAGE_FOLDER_NAME + imageName + ".jpg";
     }
 
+    public static String getAbsAvatarUrlPath(String userName) {
 
-    public static int getResourseIdByName(Context context,String resourseType,String resourceName){
-
-        return context.getResources().getIdentifier(resourceName,resourseType,context.getPackageName());
+        return BreakfastConstant.URL + AVATAR_FOLDER_NAME + userName + ".jpg";
     }
 
-    public static int getDrawableIdByName(Context context,String resourceName){
 
-        return getResourseIdByName(context,"mipmap",resourceName);
+    public static int getResourseIdByName(Context context, String resourseType, String resourceName) {
+
+        return context.getResources().getIdentifier(resourceName, resourseType, context.getPackageName());
+    }
+
+    public static int getDrawableIdByName(Context context, String resourceName) {
+
+        return getResourseIdByName(context, "mipmap", resourceName);
     }
 
     public static boolean isNetworkAvailable(Context context) {

@@ -24,7 +24,7 @@ import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.requestBody.OrderCommentBody;
+import zjut.jianlu.breakfast.entity.requestBody.MakeCommentBody;
 import zjut.jianlu.breakfast.service.OrderService;
 import zjut.jianlu.breakfast.utils.LogUtil;
 
@@ -91,7 +91,7 @@ public class CommentActivity extends BaseActivity {
     }
 
     private void makeComment() {
-        OrderCommentBody body = new OrderCommentBody(getCurrentUserID(), getCurrentUserType(), mCurrentScore, mEtComment.getText().toString(), orderId, getCurrentUser().getUsername(), userId.intValue(), userName);
+        MakeCommentBody body = new MakeCommentBody(getCurrentUserID(), getCurrentUserType(), mCurrentScore, mEtComment.getText().toString(), orderId, getCurrentUser().getUsername(), userId.intValue(), userName);
         Call<BaseResponse<String>> call = service.comment(body);
         call.enqueue(new BaseCallback<String>() {
             @Override
