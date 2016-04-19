@@ -33,6 +33,19 @@ public class BreakfastConstant {
     public static final int NORMAL = -1;//正常
     public static final int NO_FOOD = 3;//无商品
 
+    /**
+     * Request Code:打开图库
+     */
+    public static final int REQUEST_CODE_OPEN_GALLERY = 2;
+    /**
+     * Request Code:打开相机
+     */
+    public static final int REQUEST_CODE_OPEN_CAMERA = 3;
+    /**
+     * Request Code:照片裁剪
+     */
+    public static final int REQUEST_CODE_CROP_PIC = 1;
+
 
 
 }

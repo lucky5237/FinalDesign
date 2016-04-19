@@ -1,11 +1,19 @@
 package zjut.jianlu.breakfast.activity;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -15,14 +23,23 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.Bind;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -33,12 +50,19 @@ import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.requestBody.RegisterBody;
+import zjut.jianlu.breakfast.listener.OnWheelScrollListener;
 import zjut.jianlu.breakfast.service.UserService;
+import zjut.jianlu.breakfast.utils.CropImageUtil;
+import zjut.jianlu.breakfast.utils.PictureUtil;
+import zjut.jianlu.breakfast.widget.ActionSheetDialog;
+import zjut.jianlu.breakfast.widget.ActionSheetDialog.OnSheetItemClickListener;
+import zjut.jianlu.breakfast.widget.ActionSheetDialog.SheetItemColor;
+import zjut.jianlu.breakfast.widget.WheelView;
 
 /**
  * Created by jianlu on 3/10/2016.
  */
-public class UserInfoActivity extends BaseActivity {
+public class UserInfoActivity extends BaseActivity implements OnWheelScrollListener{
 
     private AlertDialog mGenderDialog;
     private AlertDialog mTypeDialog;
@@ -49,13 +73,26 @@ public class UserInfoActivity extends BaseActivity {
     private String mobile;
     private String password;
     private String address;
-    private String userName;
+    private static String userName;
+    public static File tempFile = new File(Environment.getExternalStorageDirectory(),userName+".jpg");
+    private String mCurrentPhotoPath;
+    private String mCurrentSmallPhotoPath;
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private String mAddress;
     private static final int LOCATION_RESULT_TAG = 1;
     private UserService userService;
     private Retrofit retrofit;
+
+    @Override
+    public void onScrollingStarted(WheelView wheel) {
+
+    }
+
+    @Override
+    public void onScrollingFinished(WheelView wheel) {
+
+    }
 
     private class mHandler extends Handler {
         @Override
@@ -68,6 +105,7 @@ public class UserInfoActivity extends BaseActivity {
 
         }
     }
+
 
 
     @Bind(R.id.iv_back)
@@ -90,6 +128,17 @@ public class UserInfoActivity extends BaseActivity {
     LinearLayout mLlAddress;
     @Bind(R.id.iv_location)
     ImageView mLv_location;
+    @Bind(R.id.avatar_Linear)
+    LinearLayout mLlAvatar;
+    @Bind(R.id.avatar_ImageButton)
+    ImageButton avaterImageButton;
+    @Bind(R.id.avatar_input)
+    Button avatarInput;
+    @Bind(R.id.iv_avatar)
+    ImageView ivAvatar;
+    @Bind(R.id.rlyt_avatar)
+    RelativeLayout mRlAvatar;
+
 
 
     @Override
@@ -108,6 +157,29 @@ public class UserInfoActivity extends BaseActivity {
         retrofit = MyApplication.getRetrofitInstance();
         userService = retrofit.create(UserService.class);
 //        mLocationClient.start();
+    }
+
+
+    private void uploadAvatar(){
+        File file =new File(mCurrentPhotoPath);
+        RequestBody body =RequestBody.create(MediaType.parse("multipart/form-data"),file);
+        Call<BaseResponse<String>> call = userService.uploadImage("lujian.jpg",body);
+        call.enqueue(new BaseCallback<String>() {
+            @Override
+            public void onNetFailure(Throwable t) {
+
+            }
+
+            @Override
+            public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                Toast(response.body().getMessage());
+            }
+
+            @Override
+            public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                Toast(response.body().getMessage());
+            }
+        });
     }
 
     @Override
@@ -158,7 +230,7 @@ public class UserInfoActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.sex_input, R.id.gender_ImageButton, R.id.type_input, R.id.type_ImageButton, R.id.btn_next, R.id.iv_location, R.id.iv_back})
+    @OnClick({R.id.sex_input, R.id.gender_ImageButton, R.id.type_input, R.id.type_ImageButton, R.id.btn_next, R.id.iv_location, R.id.iv_back,R.id.avatar_input,R.id.avatar_ImageButton})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -173,8 +245,15 @@ public class UserInfoActivity extends BaseActivity {
             case R.id.type_ImageButton:
                 mTypeDialog.show();
                 break;
+
+            case R.id.avatar_input:
+            case R.id.avatar_ImageButton:
+                showSelectPicture();
+
+                break;
             case R.id.btn_next:
-                checkInput();
+//                checkInput();
+                uploadAvatar();
 //                Toast("点击下一个按钮");
                 break;
             case R.id.iv_location:
@@ -243,6 +322,77 @@ public class UserInfoActivity extends BaseActivity {
         });
     }
 
+    private void showSelectPicture() {
+        tempFile = new File(Environment.getExternalStorageDirectory(),userName+".jpg");
+        if (mCurrentPhotoPath == null) {
+            new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
+                    .addSheetItem("拍照", SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+
+                        @Override
+                        public void onClick(int which) {
+                            takePhoto();
+                        }
+                    }).addSheetItem("从手机相册选择", SheetItemColor.GRAY, new OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    startActivityForResult(CropImageUtil.gallery(),
+                            BreakfastConstant.REQUEST_CODE_OPEN_GALLERY);
+                }
+            }).show();
+        } else {
+            new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
+                    .addSheetItem("查看大图", SheetItemColor.GRAY, new OnSheetItemClickListener() {
+
+                        @Override
+                        public void onClick(int which) {
+//                            Intent intent = new Intent(mContext, PictureFullScreenActivity.class);
+//                            intent.putExtra(BreakfastConstant.INTENT_EXTRA_OBJECT,
+//                                    mCurrentSmallPhotoPath == null ? mCurrentPhotoPath : mCurrentSmallPhotoPath);
+//                            mContext.startActivity(intent);
+//                            mContext.overridePendingTransition(R.anim.anim_in, R.anim.anim_out);
+                        }
+                    }).addSheetItem("拍照", SheetItemColor.GRAY, new OnSheetItemClickListener() {
+
+                @Override
+                public void onClick(int which) {
+                    takePhoto();
+                }
+            }).addSheetItem("从手机相册选择", SheetItemColor.GRAY, new OnSheetItemClickListener() {
+                @Override
+                public void onClick(int which) {
+                    startActivityForResult(CropImageUtil.gallery(),
+                            BreakfastConstant.REQUEST_CODE_OPEN_GALLERY);
+                }
+            }).show();
+        }
+    }
+
+    private void takePhoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            // 指定存放拍摄照片的位置
+            File f = createImageFile();
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+            startActivityForResult(takePictureIntent, BreakfastConstant.REQUEST_CODE_OPEN_CAMERA);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @SuppressLint("SimpleDateFormat")
+    private File createImageFile() throws IOException {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String timeStamp = format.format(new Date());
+        String imageFileName = "breakfast_" + timeStamp + ".jpg";
+
+        File image = new File(PictureUtil.getAlbumDir(), imageFileName);
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
+
+
     public class MyLocationListener implements BDLocationListener {
 
         @Override
@@ -274,6 +424,63 @@ public class UserInfoActivity extends BaseActivity {
             Log.d("jianlu", sb.toString());
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        if (requestCode == BreakfastConstant.REQUEST_CODE_OPEN_CAMERA) {
+            if (resultCode != Activity.RESULT_OK) {
+                PictureUtil.deleteTempFile(mCurrentPhotoPath);
+                return;
+            }
+            // 添加到图库,这样可以在手机的图库程序中看到程序拍摄的照片
+            PictureUtil.galleryAddPic(mContext, mCurrentPhotoPath);
+
+            ivAvatar.setImageBitmap(PictureUtil.getSmallBitmap(mCurrentPhotoPath));
+//            Picasso.display(mIbtnPhoto, mCurrentPhotoPath);
+//            Picasso.with(mContext).load(mCurrentPhotoPath).into(ivAvatar);
+            mRlAvatar.setVisibility(View.VISIBLE);
+            avatarInput.setVisibility(View.GONE);
+            save();
+        } else if (requestCode == BreakfastConstant.REQUEST_CODE_OPEN_GALLERY) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (intent.getData() != null) {
+                    Uri selectedImage = intent.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = mContext.getContentResolver()
+                            .query(selectedImage, filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    mCurrentPhotoPath = cursor.getString(columnIndex);
+                    mCurrentSmallPhotoPath = null;
+                    cursor.close();
+                    BitmapFactory.Options opts = new BitmapFactory.Options();// 获取缩略图显示到屏幕上
+                    opts.inSampleSize = 2;
+                    Bitmap bitmap = CropImageUtil.rotateBitmap(CropImageUtil.readPicDegree(mCurrentPhotoPath),
+                            BitmapFactory.decodeFile(mCurrentPhotoPath, opts));
+                    ivAvatar.setImageBitmap(bitmap);
+                    mRlAvatar.setVisibility(View.VISIBLE);
+                    avatarInput.setVisibility(View.GONE);
+                    // mBtnTakePhoto.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
+
+    private void save() {
+        if (mCurrentPhotoPath != null) {
+            try {
+                File f = new File(mCurrentPhotoPath);
+                Bitmap bm = PictureUtil.getSmallBitmap(mCurrentPhotoPath);
+                File file = new File(PictureUtil.getAlbumDir(), "small_" + f.getName());
+                mCurrentSmallPhotoPath = file.getAbsolutePath();
+                FileOutputStream fos = new FileOutputStream(file);
+                bm.compress(Bitmap.CompressFormat.JPEG, 40, fos);
+            } catch (Exception e) {
+            }
+        }
+    }
+
 
     @Override
     protected void onDestroy() {

@@ -13,7 +13,15 @@ public class OrderComment implements Serializable {
 
     private float clientScore;
 
-    private String clinetComment;
+    private String clientComment;
+
+    public String getClientComment() {
+        return clientComment;
+    }
+
+    public void setClientComment(String clientComment) {
+        this.clientComment = clientComment;
+    }
 
     private float courierScore;
 
@@ -27,13 +35,33 @@ public class OrderComment implements Serializable {
 
     private Integer courierUserId;
 
+    private String clientUserName;
+
+    public String getClientUserName() {
+        return clientUserName;
+    }
+
+    public void setClientUserName(String clientUserName) {
+        this.clientUserName = clientUserName;
+    }
+
+    public String getCourierUserName() {
+        return courierUserName;
+    }
+
+    public void setCourierUserName(String courierUserName) {
+        this.courierUserName = courierUserName;
+    }
+
+    private String courierUserName;
+
     public OrderComment(Integer id, Integer orderId, float clientScore, String clinetComment, float courierScore,
             String courierComment, String clientCommentTs, String courierCommentTs, Integer clientUserId,
             Integer courierUserId) {
         this.id = id;
         this.orderId = orderId;
         this.clientScore = clientScore;
-        this.clinetComment = clinetComment;
+        this.clientComment = clinetComment;
         this.courierScore = courierScore;
         this.courierComment = courierComment;
         this.clientCommentTs = clientCommentTs;
@@ -66,13 +94,7 @@ public class OrderComment implements Serializable {
         this.clientScore = clientScore;
     }
 
-    public String getClinetComment() {
-        return clinetComment;
-    }
 
-    public void setClinetComment(String clinetComment) {
-        this.clinetComment = clinetComment;
-    }
 
     public float getCourierScore() {
         return courierScore;

@@ -28,10 +28,10 @@ public class CommentDetailAdapter extends BaseAdapter {
 
     private Integer mUserType;
 
-    public CommentDetailAdapter(Context context, List<OrderComment> orderComments,Integer userType) {
+    public CommentDetailAdapter(Context context, List<OrderComment> orderComments, Integer userType) {
         mContext = context;
         mOrderCommentList = orderComments;
-        mUserType=userType;
+        mUserType = userType;
     }
 
     @Override
@@ -60,17 +60,24 @@ public class CommentDetailAdapter extends BaseAdapter {
             convertView.setTag(viewHolder);
         }
 
-
         OrderComment orderComment = (OrderComment) getItem(position);
-        viewHolder.mRatingbar.setStarHalfDrawable(mContext.getResources().getDrawable(R.mipmap.ic_half_star));
-        switch (mUserType){
-            case 0://查看买家的个人中心
-
-
-
-                break;
-            case 1://卖家个人中心
-                break;
+        switch (mUserType) {
+        case 0:// 查看买家的个人中心
+            viewHolder.mTvUserName.setText(orderComment.getCourierUserName());
+            viewHolder.mTvTime.setText(orderComment.getClientCommentTs());
+            // viewHolder.mIvUserImage.setImageResource();
+            viewHolder.mRatingbar.setStar(orderComment.getClientScore());
+            viewHolder.mTvScore.setText(String.valueOf(orderComment.getClientScore()));
+            viewHolder.mTvComment.setText(orderComment.getClientComment());
+            break;
+        case 1:// 卖家个人中心
+            viewHolder.mTvUserName.setText(orderComment.getClientUserName());
+            viewHolder.mTvTime.setText(orderComment.getCourierCommentTs());
+            // viewHolder.mIvUserImage.setImageResource();
+            viewHolder.mRatingbar.setStar(orderComment.getCourierScore());
+            viewHolder.mTvScore.setText(String.valueOf(orderComment.getCourierScore()));
+            viewHolder.mTvComment.setText(orderComment.getCourierComment());
+            break;
         }
 
         return convertView;

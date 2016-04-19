@@ -36,7 +36,8 @@
             android:padding="10dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -58,7 +59,6 @@
                     android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:text="123"
                     android:textSize="14sp" />
 
@@ -72,10 +72,10 @@
                 android:background="@color/gray" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_gravity="right"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <LinearLayout
