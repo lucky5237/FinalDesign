@@ -1,6 +1,7 @@
 package zjut.jianlu.breakfast.adapter;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hedgehog.ratingbar.RatingBar;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.entity.bean.OrderComment;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
+import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 
 /**
  * Created by jianlu on 4/18/2016.
@@ -28,10 +32,13 @@ public class CommentDetailAdapter extends BaseAdapter {
 
     private Integer mUserType;
 
-    public CommentDetailAdapter(Context context, List<OrderComment> orderComments, Integer userType) {
+    private View mView;
+
+    public CommentDetailAdapter(Context context, List<OrderComment> orderComments, Integer userType, View view) {
         mContext = context;
         mOrderCommentList = orderComments;
         mUserType = userType;
+        mView = view;
     }
 
     @Override
@@ -60,25 +67,47 @@ public class CommentDetailAdapter extends BaseAdapter {
             convertView.setTag(viewHolder);
         }
 
-        OrderComment orderComment = (OrderComment) getItem(position);
+        final OrderComment orderComment = (OrderComment) getItem(position);
+        viewHolder.mRatingbar.setmClickable(false);
         switch (mUserType) {
-        case 0:// 查看买家的个人中心
-            viewHolder.mTvUserName.setText(orderComment.getCourierUserName());
-            viewHolder.mTvTime.setText(orderComment.getClientCommentTs());
-            // viewHolder.mIvUserImage.setImageResource();
-            viewHolder.mRatingbar.setStar(orderComment.getClientScore());
-            viewHolder.mTvScore.setText(String.valueOf(orderComment.getClientScore()));
-            viewHolder.mTvComment.setText(orderComment.getClientComment());
-            break;
-        case 1:// 卖家个人中心
-            viewHolder.mTvUserName.setText(orderComment.getClientUserName());
-            viewHolder.mTvTime.setText(orderComment.getCourierCommentTs());
-            // viewHolder.mIvUserImage.setImageResource();
-            viewHolder.mRatingbar.setStar(orderComment.getCourierScore());
-            viewHolder.mTvScore.setText(String.valueOf(orderComment.getCourierScore()));
-            viewHolder.mTvComment.setText(orderComment.getCourierComment());
-            break;
+            case 0:// 查看买家的个人中心
+                viewHolder.mTvUserName.setText(orderComment.getCourierUserName());
+                viewHolder.mTvTime.setText(orderComment.getClientCommentTs());
+                Picasso.with(mContext).load(BreakfastUtils.getAbsAvatarUrlPath(orderComment.getCourierUserName())).into(viewHolder.mIvUserImage);
+                viewHolder.mIvUserImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, BreakfastUtils.getAbsAvatarUrlPath(orderComment.getCourierUserName()));
+                        if (!popWindow.isShowing()) {
+                            popWindow.showAtLocation(mView, Gravity.TOP, 0, 0);
+                        }
+                    }
+                });
+                viewHolder.mRatingbar.setStar(orderComment.getClientScore());
+                viewHolder.mTvScore.setText(String.valueOf(orderComment.getClientScore()));
+                viewHolder.mTvComment.setText(orderComment.getClientComment());
+                break;
+            case 1:// 卖家个人中心
+                viewHolder.mTvUserName.setText(orderComment.getClientUserName());
+                viewHolder.mTvTime.setText(orderComment.getCourierCommentTs());
+                final String mAvatarUrl = BreakfastUtils.getAbsAvatarUrlPath(orderComment.getCourierUserName());
+
+                Picasso.with(mContext).load(BreakfastUtils.getAbsAvatarUrlPath(orderComment.getClientUserName())).into(viewHolder.mIvUserImage);
+                viewHolder.mIvUserImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, BreakfastUtils.getAbsAvatarUrlPath(orderComment.getClientUserName()));
+                        if (!popWindow.isShowing()) {
+                            popWindow.showAtLocation(mView, Gravity.TOP, 0, 0);
+                        }
+                    }
+                });
+                viewHolder.mRatingbar.setStar(orderComment.getCourierScore());
+                viewHolder.mTvScore.setText(String.valueOf(orderComment.getCourierScore()));
+                viewHolder.mTvComment.setText(orderComment.getCourierComment());
+                break;
         }
+
 
         return convertView;
 

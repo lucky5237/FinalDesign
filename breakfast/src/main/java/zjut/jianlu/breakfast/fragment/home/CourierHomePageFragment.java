@@ -50,12 +50,12 @@ public class CourierHomePageFragment extends BaseFragment {
     }
 
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mOrderInfoList = new ArrayList<OrderInfo>();
-        adapter = new NewestOrderAdapter(getActivity(), mOrderInfoList);
+
+        adapter = new NewestOrderAdapter(getActivity(), mOrderInfoList, MainActivicy.getInstance().getmLlytMainContainer());
         mPullToRefreshListview.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         orderService = retrofit.create(OrderService.class);

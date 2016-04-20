@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -49,11 +50,19 @@ public class MainActivicy extends BaseActivity {
     private MyBadgeView badgeView;
     @Bind(R.id.btn_cart)
     RadioButton mRbtnCart;
+    @Bind(R.id.main_cotainer)
+    LinearLayout mLlytMainContainer;
+
+    public LinearLayout getmLlytMainContainer() {
+        return mLlytMainContainer;
+    }
 
     private MenuDrawer menuDrawer;
 
+    private static MainActivicy instance;
 
-    private String[] data ={"menu1","menu2","menu3","menu4"};
+
+    private String[] data = {"menu1", "menu2", "menu3", "menu4"};
 
 
     private FragmentTransaction mTransaction;
@@ -185,19 +194,24 @@ public class MainActivicy extends BaseActivity {
     }
 
 
+    public static MainActivicy getInstance() {
+        return instance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         EventBus.getDefault().register(this);
         mTransitionManager = getSupportFragmentManager();
         onTabSelected(mCurrentIndex);
         badgeView = new MyBadgeView(this);
         badgeView.setTargetView(mRbtnCart);
         badgeView.setBadgeCount(getBadgeViewCount());
-        menuDrawer=MenuDrawer.attach(this);
-        menuDrawer.setMenuView(R.layout.fragment_menu);
-        menuDrawer.setContentView(R.layout.activity_main);
-        menuDrawer.peekDrawer();
+//        menuDrawer=MenuDrawer.attach(this);
+//        menuDrawer.setMenuView(R.layout.fragment_menu);
+//        menuDrawer.setContentView(R.layout.activity_main);
+//        menuDrawer.peekDrawer();
 //        menuDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
 //            @Override
 //            public void onDrawerStateChange(int oldState, int newState) {

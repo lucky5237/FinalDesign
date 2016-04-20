@@ -3,7 +3,7 @@
     android:id="@+id/no_goods_cart"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone" >
+    android:visibility="visible" >
 
 
 

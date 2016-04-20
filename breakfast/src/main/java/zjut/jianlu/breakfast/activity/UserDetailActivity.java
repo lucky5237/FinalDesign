@@ -26,6 +26,7 @@ import zjut.jianlu.breakfast.adapter.CommentDetailAdapter;
 import zjut.jianlu.breakfast.base.BaseActivity;
 import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseResponse;
+import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.OrderComment;
 import zjut.jianlu.breakfast.entity.bean.User;
@@ -39,7 +40,7 @@ import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
  * Created by jianlu on 4/18/2016.
  */
 public class UserDetailActivity extends BaseActivity {
-    @Bind(zjut.jianlu.breakfast.R.id.iv_back)
+    @Bind(R.id.iv_back)
     ImageView mIvBack;
     @Bind(R.id.iv_user_image)
     CircleImageView mIvUserImage;
@@ -86,9 +87,18 @@ public class UserDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent() != null) {
+            userId = getIntent().getIntExtra("userId", -1);
+            userType = getIntent().getIntExtra("userType", -1);
+
+        }
+        retrofit = MyApplication.getRetrofitInstance();
+        service = retrofit.create(UserService.class);
         mOrderCommentList = new ArrayList<OrderComment>();
-        adapter = new CommentDetailAdapter(mContext, mOrderCommentList, userType);
+        adapter = new CommentDetailAdapter(mContext, mOrderCommentList, userType, mLlytMainContainer);
+        mLvComment.setAdapter(adapter);
         mRatingbar.setStarHalfDrawable(getResources().getDrawable(R.mipmap.ic_half_star));
+        mRatingbar.setmClickable(false);
         getUserInfo();
 
     }
@@ -105,6 +115,7 @@ public class UserDetailActivity extends BaseActivity {
 
             @Override
             public void onBizSuccess(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
+                user = response.body().getData();
                 setData();
                 getUserAveScore();
                 getUserCommentList();
@@ -136,6 +147,7 @@ public class UserDetailActivity extends BaseActivity {
                 List<OrderComment> orderComments = response.body().getData();
                 if (orderComments == null || orderComments.size() == 0) {
                     //暂无收到评论 显示view
+                    Toast(response.body().getMessage());
                 } else {
                     if (mOrderCommentList != null) {
                         mOrderCommentList.clear();
@@ -157,7 +169,7 @@ public class UserDetailActivity extends BaseActivity {
     private void setData() {
         mTvUserName.setText(user.getUsername());
         mTvBonus.setText(String.valueOf(user.getBonus()));
-        mTvOrderNum.setText(user.getOrderNum());
+        mTvOrderNum.setText(user.getOrderNum().toString());
         mAvatarUrl = BreakfastUtils.getAbsAvatarUrlPath(user.getUsername());
         Picasso.with(mContext).load(mAvatarUrl).into(mIvUserImage);
 //        mTvScore.setText(String.valueOf(userInfo.getAveScore()));
@@ -191,13 +203,21 @@ public class UserDetailActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.iv_user_image)
+    @OnClick({R.id.iv_user_image, R.id.iv_back})
     public void onClick(View view) {
-        if (!TextUtils.isEmpty(mAvatarUrl)) {
-            ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, mAvatarUrl);
-            if (!popWindow.isShowing()) {
-                popWindow.showAtLocation(mLlytMainContainer, Gravity.TOP, 0, 0);
-            }
+        switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.iv_user_image:
+                if (!TextUtils.isEmpty(mAvatarUrl)) {
+                    ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, mAvatarUrl);
+                    if (!popWindow.isShowing()) {
+                        popWindow.showAtLocation(mLlytMainContainer, Gravity.TOP, 0, 0);
+                    }
+                }
+
+                break;
         }
 
 

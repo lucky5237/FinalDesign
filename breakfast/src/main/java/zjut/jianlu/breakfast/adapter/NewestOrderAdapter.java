@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import butterknife.Bind;
@@ -16,7 +18,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
+import zjut.jianlu.breakfast.listener.OnAvatarClickListener;
 import zjut.jianlu.breakfast.listener.UpdateOrderStatusListener;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 
 /**
  * Created by jianlu on 16/3/16.
@@ -31,9 +35,10 @@ public class NewestOrderAdapter extends BaseAdapter {
 
     private static final String RECEIVE_ORDER_MESSAGE = "是否确认接单";
 
-    public NewestOrderAdapter(Context context, List<OrderInfo> orderInfos) {
+    public NewestOrderAdapter(Context context, List<OrderInfo> orderInfos, View view) {
         mContext = context;
         mlist = orderInfos;
+        this.view = view;
     }
 
 
@@ -77,18 +82,8 @@ public class NewestOrderAdapter extends BaseAdapter {
         viewHolder.tvTime.setText(orderInfo.getCreateTs());
         viewHolder.tvAddress.setText(orderInfo.getClientUser().getAddress());
         viewHolder.btnReceive.setOnClickListener(new UpdateOrderStatusListener(mContext, orderInfo.getId(), 1, RECEIVE_ORDER_MESSAGE));
-
-
-//        Picasso.with(mContext).load(orderInfo.get).placeholder(R.mipmap.ic_launcher).resize(100, 100).centerCrop().into(viewHolder.ivImage);
-//        viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, url);
-//                if (!popWindow.isShowing()) {
-//                    popWindow.showAtLocation(mView, Gravity.TOP, 0, 0);
-//                }
-//            }
-//        });
+        Picasso.with(mContext).load(BreakfastUtils.getAbsAvatarUrlPath(orderInfo.getClientUser().getUsername())).into(viewHolder.ivUserImage);
+        viewHolder.ivUserImage.setOnClickListener(new OnAvatarClickListener(mContext, orderInfo.getClientUser().getUsername(), view));
         return convertView;
 
     }

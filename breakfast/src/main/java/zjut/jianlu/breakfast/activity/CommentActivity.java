@@ -4,13 +4,16 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hedgehog.ratingbar.RatingBar;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -26,7 +29,9 @@ import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.requestBody.MakeCommentBody;
 import zjut.jianlu.breakfast.service.OrderService;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 import zjut.jianlu.breakfast.utils.LogUtil;
+import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 
 /**
  * Created by jianlu on 4/18/2016.
@@ -47,6 +52,8 @@ public class CommentActivity extends BaseActivity {
     Button mBtnCommit;
     @Bind(R.id.tv_score_des)
     TextView mTvScoreDes;
+    @Bind(R.id.llyt_main)
+    LinearLayout mLlytMain;
 
     private int mCurrentScore = 0;
 
@@ -77,6 +84,17 @@ public class CommentActivity extends BaseActivity {
         userName = getIntent().getStringExtra("otherUserName");
         userId = getIntent().getLongExtra("otherUserId", 0);
         mTvUserName.setText(userName == null ? "" : userName);
+        final String mAvatarUrl = BreakfastUtils.getAbsAvatarUrlPath(userName);
+        Picasso.with(mContext).load(mAvatarUrl).into(mIvUserImage);
+        mIvUserImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScanPicPopWindow popWindow = new ScanPicPopWindow(mContext, mAvatarUrl);
+                if (!popWindow.isShowing()) {
+                    popWindow.showAtLocation(mLlytMain, Gravity.TOP, 0, 0);
+                }
+            }
+        });
         mRatingbar.setOnRatingChangeListener(new RatingBar.OnRatingChangeListener() {
             @Override
             public void onRatingChange(int RatingCount) {

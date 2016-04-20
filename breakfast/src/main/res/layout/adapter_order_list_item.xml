@@ -33,14 +33,13 @@
             />
 
         <ImageView
-            android:visibility="gone"
             android:id="@+id/iv_delete"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
-            android:src="@mipmap/ic_delete"
             android:layout_marginRight="5dp"
-            />
+            android:src="@mipmap/ic_delete"
+            android:visibility="gone" />
 
 
     </RelativeLayout>
@@ -59,6 +58,7 @@
         android:padding="5dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_avatar"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@mipmap/ic_man"
@@ -165,9 +165,9 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:text="+"
-                    android:visibility="gone"
                     android:textColor="@color/orange"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -202,17 +202,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        >
+        android:padding="5dp">
 
         <Button
             android:id="@+id/btn_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/btn_right"
             android:background="@drawable/shape_border_orange"
             android:text="立即评价"
-            android:layout_marginRight="5dp"
             android:textColor="@color/orange"
             android:visibility="gone" />
 
@@ -222,9 +221,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
             android:background="@drawable/shape_border_blue"
             android:text="再来一单"
-            android:layout_marginRight="5dp"
             android:textColor="@color/btn_blue"
             android:visibility="gone" />
 

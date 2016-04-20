@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +21,15 @@ import butterknife.ButterKnife;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.activity.CommentActivity;
 import zjut.jianlu.breakfast.activity.MakeOrderActivity;
+import zjut.jianlu.breakfast.activity.UserDetailActivity;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
+import zjut.jianlu.breakfast.entity.bean.User;
 import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.enums.OrderStatus;
 import zjut.jianlu.breakfast.listener.OrderClickListener;
 import zjut.jianlu.breakfast.listener.UpdateOrderStatusListener;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 
 /**
  * Created by jianlu on 16/3/17.
@@ -105,6 +110,18 @@ public class MyOrderAdapter extends BaseAdapter {
         viewHolder.tvMoney.setText("¥" + orderinfo.getAmount() + "");
         viewHolder.tvBonus.setText("¥" + orderinfo.getBonus() + "");
         viewHolder.tvStatus.setText(OrderStatus.getOrderDesByCode(orderinfo.getStatus(), userType));
+        final User theOtherUser = userType == 0 ? orderinfo.getCourierUser() : orderinfo.getClientUser();
+        String avatarUrl = BreakfastUtils.getAbsAvatarUrlPath(theOtherUser.getUsername());
+        Picasso.with(mContext).load(avatarUrl).into(viewHolder.ivAvatar);
+        viewHolder.ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, UserDetailActivity.class);
+                intent.putExtra("userId", theOtherUser.getId().intValue());
+                intent.putExtra("userType", theOtherUser.getType());
+                mContext.startActivity(intent);
+            }
+        });
         switch (orderinfo.getStatus()) {
 
             case 0:// 待卖家接单
@@ -222,6 +239,8 @@ public class MyOrderAdapter extends BaseAdapter {
         Button btnLeft;
         @Bind(R.id.btn_right)
         Button btnRight;
+        @Bind(R.id.iv_avatar)
+        ImageView ivAvatar;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
