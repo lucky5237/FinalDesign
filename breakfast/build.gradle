@@ -41,7 +41,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -58,9 +58,8 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.hedgehog.ratingbar:app:1.0.4'
     compile files('libs/BaiduLBS_Android.jar')
-    compile(name:'PullToRefresh', ext:'aar')
-    compile(name:'TabViewPager', ext:'aar')
-    compile(name:'SMSSDK-2.0.2', ext:'aar')
-
-
+    compile(name: 'PullToRefresh', ext: 'aar')
+    compile(name: 'TabViewPager', ext: 'aar')
+    compile(name: 'SMSSDK-2.0.2', ext: 'aar')
+    compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
 }

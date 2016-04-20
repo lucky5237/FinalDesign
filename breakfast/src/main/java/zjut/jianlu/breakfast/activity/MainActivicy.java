@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import net.simonvt.menudrawer.MenuDrawer;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -47,6 +49,11 @@ public class MainActivicy extends BaseActivity {
     private MyBadgeView badgeView;
     @Bind(R.id.btn_cart)
     RadioButton mRbtnCart;
+
+    private MenuDrawer menuDrawer;
+
+
+    private String[] data ={"menu1","menu2","menu3","menu4"};
 
 
     private FragmentTransaction mTransaction;
@@ -187,6 +194,53 @@ public class MainActivicy extends BaseActivity {
         badgeView = new MyBadgeView(this);
         badgeView.setTargetView(mRbtnCart);
         badgeView.setBadgeCount(getBadgeViewCount());
+        menuDrawer=MenuDrawer.attach(this);
+        menuDrawer.setMenuView(R.layout.fragment_menu);
+        menuDrawer.setContentView(R.layout.activity_main);
+        menuDrawer.peekDrawer();
+//        menuDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
+//            @Override
+//            public void onDrawerStateChange(int oldState, int newState) {
+//
+//            }
+//
+//            @Override
+//            public void onDrawerSlide(float openRatio, int offsetPixels) {
+//
+//            }
+//        });
+//        mLeftListItem.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data));
+//        mLeftListItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast(data[position]);
+//                mDlytMain.closeDrawer(mLeftListItem);
+//            }
+//        });
+//        mDlytMain.setDrawerListener(new DrawerLayout.DrawerListener() {
+//            @Override
+//            public void onDrawerSlide(View drawerView, float slideOffset) {
+//
+//            }
+//
+//            @Override
+//            public void onDrawerOpened(View drawerView) {
+//                    Toast("侧栏打开");
+//            }
+//
+//            @Override
+//            public void onDrawerClosed(View drawerView) {
+//                Toast("侧栏关闭");
+//
+//            }
+//
+//            @Override
+//            public void onDrawerStateChanged(int newState) {
+//
+//            }
+//        });
+
+
 //        
 
 
