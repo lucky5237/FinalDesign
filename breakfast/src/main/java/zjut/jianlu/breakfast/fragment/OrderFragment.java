@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -33,6 +32,7 @@ import zjut.jianlu.breakfast.entity.event.UpdateOrderStatusEvent;
 import zjut.jianlu.breakfast.entity.requestBody.BaseUserBody;
 import zjut.jianlu.breakfast.entity.requestBody.UpdateOrderStatusBody;
 import zjut.jianlu.breakfast.service.OrderService;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 
 /**
  * Created by jianlu on 16/3/12.
@@ -56,26 +56,34 @@ public class OrderFragment extends BaseFragment
         return R.layout.fragment_order;
     }
 
-
     public void getMyorder() {
-        Call<BaseResponse<List<OrderInfo>>> call = orderService.getMyorderList(new BaseUserBody(getCurrentUserID(), getCurrentUserType()));
+        Call<BaseResponse<List<OrderInfo>>> call = orderService
+                .getMyorderList(new BaseUserBody(getCurrentUserID(), getCurrentUserType()));
         call.enqueue(new BaseCallback<List<OrderInfo>>() {
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
+                ShowUI(BreakfastConstant.NO_NET);
             }
 
             @Override
-            public void onBizSuccess(Call<BaseResponse<List<OrderInfo>>> call, Response<BaseResponse<List<OrderInfo>>> response) {
+            public void onBizSuccess(Call<BaseResponse<List<OrderInfo>>> call,
+                    Response<BaseResponse<List<OrderInfo>>> response) {
+                if (response.body().getData() == null || response.body().getData().size() == 0){
+                    ShowUI(BreakfastConstant.NO_ORDER);
+                    return;
+                }
                 if (mOrderInfos != null && mOrderInfos.size() > 0) {
                     mOrderInfos.clear();
                 }
+                ShowUI(BreakfastConstant.NORMAL);
                 mOrderInfos.addAll(response.body().getData());
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onBizFailure(Call<BaseResponse<List<OrderInfo>>> call, Response<BaseResponse<List<OrderInfo>>> response) {
+            public void onBizFailure(Call<BaseResponse<List<OrderInfo>>> call,
+                    Response<BaseResponse<List<OrderInfo>>> response) {
                 Toast(response.body().getMessage());
             }
         });
@@ -95,23 +103,33 @@ public class OrderFragment extends BaseFragment
             }
         });
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-                                           @Override
-                                           public void onRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
-                                               getMyorder();
-                                               new Handler().postDelayed(new Runnable() {
-                                                   @Override
-                                                   public void run() {
-                                                       mListView.onRefreshComplete();
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+                getMyorder();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListView.onRefreshComplete();
 
-                                                   }
-                                               }, 500);
-                                           }
-                                       }
-        );
+                    }
+                }, 500);
+            }
+        });
+        if (BreakfastUtils.isNetworkAvailable(mContext)) {
+            getMyorder();
 
-        getMyorder();
+        } else {
+            ShowUI(BreakfastConstant.NO_NET);
+        }
+        btnLoadAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getMyorder();
+
+            }
+        });
+
     }
-
 
     @Override
     public void onStart() {
@@ -128,12 +146,13 @@ public class OrderFragment extends BaseFragment
 
     @Subscribe
     public void updateOrderStatus(UpdateOrderStatusEvent event) {
-        UpdateOrderStatusBody body = new UpdateOrderStatusBody(event.getStatus(), getCurrentUserType(), event.getOrderId());
+        UpdateOrderStatusBody body = new UpdateOrderStatusBody(event.getStatus(), getCurrentUserType(),
+                event.getOrderId());
         Call<BaseResponse<String>> call = orderService.updateOrderStatus(body);
         call.enqueue(new BaseCallback<String>() {
             @Override
             public void onNetFailure(Throwable t) {
-                Toast.makeText(mContext, BreakfastConstant.NO_NET_MESSAGE, Toast.LENGTH_SHORT).show();
+                Toast(BreakfastConstant.NO_NET_MESSAGE);
             }
 
             @Override
@@ -143,14 +162,11 @@ public class OrderFragment extends BaseFragment
 
             @Override
             public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-
-                Toast.makeText(mContext, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast(response.body().getData());
                 getMyorder();
-
 
             }
         });
-
 
     }
 }

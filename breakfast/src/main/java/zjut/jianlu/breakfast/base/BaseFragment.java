@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public abstract class BaseFragment extends Fragment {
     public RelativeLayout mRlltNoGoodInShopCart;
     public RelativeLayout mRlltNoOrder;
     public RelativeLayout mRlltNoFood;
+    public Button btnLoadAgain;
 
     public View view;
 
@@ -44,16 +46,9 @@ public abstract class BaseFragment extends Fragment {
         mRlltNoGoodInShopCart = (RelativeLayout) view.findViewById(R.id.no_goods_cart);
         mRlltNoOrder = (RelativeLayout) view.findViewById(R.id.no_orders);
         mRlltNoFood = (RelativeLayout) view.findViewById(R.id.no_relation_goods);
+        btnLoadAgain= (Button) view.findViewById(R.id.bt_again_load);
         ButterKnife.bind(this, view);
         return view;
-
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        LogUtil.d(mPageName + " onActivityCreated is called");
-
 
     }
 

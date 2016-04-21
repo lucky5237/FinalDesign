@@ -41,24 +41,7 @@ public class ClientHomePageFragment extends BaseFragment {
         mViewPager.setOffscreenPageLimit(2);
         mtabPageIndicator.setViewPager(mViewPager);
         mtabPageIndicator.setCurrentItem(0);
-        mtabPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                Toast("当前选中了第" + position);
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
     }
 

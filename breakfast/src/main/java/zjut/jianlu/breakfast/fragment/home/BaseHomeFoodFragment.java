@@ -3,6 +3,7 @@ package zjut.jianlu.breakfast.fragment.home;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -46,6 +47,8 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
 
     private boolean isFirstRequest = true;
 
+//    private Button mBtnLoadAgain;
+
 
     private static final int SHOW_NUM = 10;
 
@@ -69,8 +72,14 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
         if (BreakfastUtils.isNetworkAvailable(mContext)) {
             getallFood(placeId, flag);
         } else {
-            getlocalFood();
+            ShowUI(BreakfastConstant.NO_NET);
         }
+        btnLoadAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getallFood(placeId, flag);
+            }
+        });
 
     }
 
@@ -109,6 +118,7 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
+                ShowUI(BreakfastConstant.NO_NET);
 
             }
 
@@ -117,6 +127,7 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
                 if (foodList != null || foodList.size() > 0) {
                     foodList.clear();
                 }
+                ShowUI(BreakfastConstant.NORMAL);
 
                 foodList.addAll(response.body().getData());
                 updateLocalDB(placeId, foodList);
@@ -135,7 +146,8 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
 
             @Override
             public void onBizFailure(Call<BaseResponse<List<Food>>> call, Response<BaseResponse<List<Food>>> response) {
-
+                Toast(response.body().getMessage());
+                getlocalFood();
             }
         });
     }

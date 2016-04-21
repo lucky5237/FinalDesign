@@ -2,6 +2,7 @@ package zjut.jianlu.breakfast.fragment.rank;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -21,6 +22,7 @@ import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.User;
 import zjut.jianlu.breakfast.entity.requestBody.UserRankBody;
 import zjut.jianlu.breakfast.service.UserService;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 
 import static zjut.jianlu.breakfast.R.layout.fragment_bonus_rank;
 
@@ -33,9 +35,9 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
 
     private List<User> userList;
 
-    public Integer userType;//默认显示买家发出的悬赏金
+    public Integer userType;// 默认显示买家发出的悬赏金
 
-    public Integer flag = 0;//0-悬赏金，1-订单数
+    public Integer flag = 0;// 0-悬赏金，1-订单数
 
     private Retrofit retrofit;
 
@@ -50,7 +52,6 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
         return fragment_bonus_rank;
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -59,6 +60,18 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
         mListView.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         userService = retrofit.create(UserService.class);
+        if (BreakfastUtils.isNetworkAvailable(mContext)) {
+            getBonusRank(userType, flag);
+
+        } else {
+            ShowUI(BreakfastConstant.NO_NET);
+        }
+        btnLoadAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getBonusRank(userType, flag);
+            }
+        });
 
     }
 
@@ -70,6 +83,7 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
+                ShowUI(BreakfastConstant.NO_NET);
             }
 
             @Override
@@ -77,6 +91,7 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
                 if (userList != null || userList.size() > 0) {
                     userList.clear();
                 }
+                ShowUI(BreakfastConstant.NORMAL);
                 userList.addAll(response.body().getData());
                 adapter.notifyDataSetChanged();
                 mListView.onRefreshComplete();
@@ -85,7 +100,7 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
 
             @Override
             public void onBizFailure(Call<BaseResponse<List<User>>> call, Response<BaseResponse<List<User>>> response) {
-
+                Toast(response.body().getMessage());
             }
         });
     }

@@ -23,14 +23,14 @@ import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.Food;
 import zjut.jianlu.breakfast.entity.requestBody.FoodRankBody;
 import zjut.jianlu.breakfast.service.FoodService;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 
 /**
  * Created by jianlu on 16/3/12.
  */
 public class FoodSalesRankFragment extends BaseRefreshableFragment {
-//    @Bind(R.id.pull_to_refresh_listview)
-//    PullToRefreshListView listView;
-
+    // @Bind(R.id.pull_to_refresh_listview)
+    // PullToRefreshListView listView;
 
     private List<Food> mFoodList = new ArrayList<Food>();
     private HotFoodAdapter adapter;
@@ -50,18 +50,31 @@ public class FoodSalesRankFragment extends BaseRefreshableFragment {
         mListView.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         foodService = retrofit.create(FoodService.class);
-        getHotFood();
+        if (BreakfastUtils.isNetworkAvailable(mContext)) {
+            getHotFood();
+
+        } else {
+            ShowUI(BreakfastConstant.NO_NET);
+        }
+        btnLoadAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getHotFood();
+
+            }
+        });
 
     }
 
-
     private void getHotFood() {
 
-        Call<BaseResponse<List<Food>>> call = foodService.getSalesRank(new FoodRankBody(BreakfastConstant.FOOD_SALES_RANK_NUM, false));
+        Call<BaseResponse<List<Food>>> call = foodService
+                .getSalesRank(new FoodRankBody(BreakfastConstant.FOOD_SALES_RANK_NUM, false));
         call.enqueue(new BaseCallback<List<Food>>() {
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
+                ShowUI(BreakfastConstant.NO_NET);
             }
 
             @Override
@@ -71,6 +84,7 @@ public class FoodSalesRankFragment extends BaseRefreshableFragment {
                     if (mFoodList != null && mFoodList.size() > 0) {
                         mFoodList.clear();
                     }
+                    ShowUI(BreakfastConstant.NORMAL);
                     mFoodList.addAll(foodList);
                     adapter.notifyDataSetChanged();
                 } else {
@@ -80,15 +94,13 @@ public class FoodSalesRankFragment extends BaseRefreshableFragment {
 
             @Override
             public void onBizFailure(Call<BaseResponse<List<Food>>> call, Response<BaseResponse<List<Food>>> response) {
-
+                Toast(response.body().getMessage());
             }
         });
     }
 
-
     @Override
     public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-//        Toast.makeText(getActivity(),"正在刷新",Toast.LENGTH_SHORT).show();
         getHotFood();
         mListView.postDelayed(new Runnable() {
             @Override
@@ -96,7 +108,6 @@ public class FoodSalesRankFragment extends BaseRefreshableFragment {
                 mListView.onRefreshComplete();
             }
         }, 1000);
-
 
     }
 }

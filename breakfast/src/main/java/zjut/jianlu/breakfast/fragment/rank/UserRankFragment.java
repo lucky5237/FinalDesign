@@ -38,24 +38,6 @@ public class UserRankFragment extends BaseFragment {
 
         mViewPager.setAdapter(new UserRankPagerAdapter(getChildFragmentManager(), mFragmentList));
         mIconPageIndicator.setViewPager(mViewPager);
-        mIconPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                Toast("当前选中了第" + position);
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
     }
 

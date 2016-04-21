@@ -37,25 +37,6 @@ public class RankFragment extends BaseFragment {
         mFragmentList.add(new UserRankFragment());
         mViewPager.setAdapter(new RankPagerAdapter(getChildFragmentManager(), mFragmentList));
         mtabPageIndicator.setViewPager(mViewPager);
-        mtabPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                Toast("当前选中了第" + position);
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
     }
 
 
