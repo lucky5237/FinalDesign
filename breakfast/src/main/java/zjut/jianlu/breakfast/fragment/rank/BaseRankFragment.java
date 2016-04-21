@@ -78,8 +78,14 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
     public abstract void setUserType();
 
     private void getBonusRank(Integer userType, Integer flag) {
+        showMyDialog();
         Call<BaseResponse<List<User>>> call = userService.getUserRank(new UserRankBody(SHOW_NUM, userType, flag));
         call.enqueue(new BaseCallback<List<User>>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);

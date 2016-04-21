@@ -57,9 +57,15 @@ public class OrderFragment extends BaseFragment
     }
 
     public void getMyorder() {
+        showMyDialog();
         Call<BaseResponse<List<OrderInfo>>> call = orderService
                 .getMyorderList(new BaseUserBody(getCurrentUserID(), getCurrentUserType()));
         call.enqueue(new BaseCallback<List<OrderInfo>>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
@@ -146,10 +152,16 @@ public class OrderFragment extends BaseFragment
 
     @Subscribe
     public void updateOrderStatus(UpdateOrderStatusEvent event) {
+        showMyDialog();
         UpdateOrderStatusBody body = new UpdateOrderStatusBody(event.getStatus(), getCurrentUserType(),
                 event.getOrderId());
         Call<BaseResponse<String>> call = orderService.updateOrderStatus(body);
         call.enqueue(new BaseCallback<String>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);

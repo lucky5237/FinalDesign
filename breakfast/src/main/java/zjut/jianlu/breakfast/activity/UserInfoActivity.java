@@ -166,6 +166,11 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
         Call<BaseResponse<String>> call = userService.uploadImage(body);
         call.enqueue(new BaseCallback<String>() {
             @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
+            @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
             }
@@ -309,8 +314,14 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
     }
 
     private void saveUserInfo() {
+        showMyDialog();
         Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName, mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
         call.enqueue(new BaseCallback<String>() {
+            @Override
+            public void onFinally() {
+
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);

@@ -1,5 +1,6 @@
 package zjut.jianlu.breakfast.base;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -103,6 +106,35 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public abstract int getLayoutId();
+
+    protected Dialog dialog;
+
+    private View loadingView;
+
+    /**
+     * 显示进度弹出框
+     */
+    public void showMyDialog() {
+        if (dialog == null) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_progress, null);
+            loadingView=view.findViewById(R.id.pd_base);
+            dialog = new Dialog(mContext, R.style.dialog);
+            dialog.setContentView(view, new WindowManager.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+            dialog.setCanceledOnTouchOutside(false);
+        }
+        loadingView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.progress));
+        dialog.show();
+    }
+
+    /**
+     * 关闭进度弹出框
+     */
+    public void dismissMyDialog() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
 
     public static Integer getCurrentUserType() {
 

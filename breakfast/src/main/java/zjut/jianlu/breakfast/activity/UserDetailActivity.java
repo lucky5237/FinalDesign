@@ -105,9 +105,14 @@ public class UserDetailActivity extends BaseActivity {
 
 
     private void getUserInfo() {
-
+        showMyDialog();
         Call<BaseResponse<User>> call = service.getUserInfo(userId);
         call.enqueue(new BaseCallback<User>() {
+            @Override
+            public void onFinally() {
+
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
@@ -137,6 +142,11 @@ public class UserDetailActivity extends BaseActivity {
 
         Call<BaseResponse<List<OrderComment>>> call = service.getCommentList(body);
         call.enqueue(new BaseCallback<List<OrderComment>>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
@@ -180,6 +190,11 @@ public class UserDetailActivity extends BaseActivity {
 
         Call<BaseResponse<Float>> call = service.getAveScore(new BaseUserBody(userId, userType));
         call.enqueue(new BaseCallback<Float>() {
+            @Override
+            public void onFinally() {
+
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
 

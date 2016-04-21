@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <include layout="@layout/no_data_tips"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <include layout="@layout/no_data_tips" />
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/pull_to_refresh_listview"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
+    <com.victor.loading.rotate.RotateLoading
+        android:id="@+id/rotateloading"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:loading_color="#1abc9c"
+        app:loading_width="2dp" />
 </LinearLayout>

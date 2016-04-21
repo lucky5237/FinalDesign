@@ -190,9 +190,15 @@ public class MakeOrderActivity extends BaseActivity {
     }
 
     private void makeOrder(Float amount, Float bonus, List<BuyFood> orderDetails) {
+        showMyDialog();
         String orderNumber = BreakfastUtils.getOutTradeNo();
         Call<BaseResponse<String>> call = orderService.makeOrder(new MakeOrderBody(orderNumber, amount, bonus, getCurrentUserID(), orderDetails));
         call.enqueue(new BaseCallback<String>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);

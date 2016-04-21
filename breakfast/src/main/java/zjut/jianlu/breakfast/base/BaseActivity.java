@@ -1,11 +1,18 @@
 package zjut.jianlu.breakfast.base;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -13,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
+import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.entity.db.UserDB;
 import zjut.jianlu.breakfast.utils.SharedPreferencesUtil;
 
@@ -23,6 +31,9 @@ public abstract class BaseActivity extends FragmentActivity {
 
     private String TAG;
     public static Context mContext;
+    protected Dialog dialog;
+
+
     public Toast mToast;
 
 
@@ -36,7 +47,6 @@ public abstract class BaseActivity extends FragmentActivity {
         Log.d(TAG, "onCreate() is called");
     }
 
-
     public void Toast(String content) {
         if (content != null) {
             if (mToast == null) {
@@ -47,6 +57,7 @@ public abstract class BaseActivity extends FragmentActivity {
             mToast.show();
         }
     }
+
 
     public void ToastCenter(String content) {
         if (content != null) {
@@ -60,8 +71,46 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
-
     public abstract int getLayoutId();
+
+    /**
+     * 显示进度弹出框
+     */
+    public void showMyDialog() {
+        if (dialog == null) {
+            View view = LayoutInflater.from(this).inflate(R.layout.dialog_progress, null);
+            view.findViewById(R.id.pd_base).startAnimation(AnimationUtils.loadAnimation(this, R.anim.progress));
+            dialog = new Dialog(this, R.style.dialog);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.setContentView(view, new WindowManager.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+        dialog.show();
+
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+
+            @Override
+            public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    finish();
+                }
+                return false;
+            }
+        });
+    }
+
+    /**
+     * 关闭进度弹出框
+     */
+    public void dismissMyDialog() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
 
     /**
      * 验证手机号是否合法
@@ -91,8 +140,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     public static Integer getCurrentUserType() {
 
-        return SharedPreferencesUtil.getInstance(mContext).getUserType();
-
+//        return SharedPreferencesUtil.getInstance(mContext).getUserType();
+        return 0;
     }
 
     public static Integer getCurrentUserID() {

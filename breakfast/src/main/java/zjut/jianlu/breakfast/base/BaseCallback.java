@@ -8,7 +8,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 /**
  * Created by jianlu on 4/6/2016.
  */
@@ -20,9 +19,6 @@ public abstract class BaseCallback<T> implements Callback<BaseResponse<T>> {
     private String url;
     private static final String ACK_CODE = "ACK";
     private static final String NACK_CODE = "NACK";
-
-
-
 
     @Override
     public void onResponse(Call<BaseResponse<T>> call, Response<BaseResponse<T>> response) {
@@ -39,9 +35,11 @@ public abstract class BaseCallback<T> implements Callback<BaseResponse<T>> {
                     Log.d("jianlu", "Data: " + data.toString());
                 }
                 onBizSuccess(call, response);
+                onFinally();
             }
             if (NACK_CODE.equals(code)) {
                 onBizFailure(call, response);
+                onFinally();
             }
         }
 
@@ -52,9 +50,11 @@ public abstract class BaseCallback<T> implements Callback<BaseResponse<T>> {
         if (t instanceof IOException) {
             Log.d("jianlu", "Error Message: " + t.getMessage());
             onNetFailure(t);
-
         }
+        onFinally();
     }
+
+    public abstract void onFinally();
 
     public abstract void onNetFailure(Throwable t);
 

@@ -75,9 +75,14 @@ public class CourierHomePageFragment extends BaseFragment {
     }
 
     private void getNewestOrder() {
-
+        showMyDialog();
         Call<BaseResponse<List<OrderInfo>>> call = orderService.getNewestOrders(new NewestOrderBody(null, 0));
         call.enqueue(new BaseCallback<List<OrderInfo>>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
@@ -110,9 +115,15 @@ public class CourierHomePageFragment extends BaseFragment {
     }
 
     private void takeOrder(Integer orderId) {
+        showMyDialog();
         TakeOrderBody body = new TakeOrderBody(orderId, getCurrentUserID());
         Call<BaseResponse<String>> call = orderService.takeOrder(body);
         call.enqueue(new BaseCallback<String>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);

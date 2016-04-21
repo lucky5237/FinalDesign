@@ -12,7 +12,6 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.OnClick;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import zjut.jianlu.breakfast.R;
@@ -69,8 +68,14 @@ public class SettingPasswordActivity extends BaseActivity {
                 }
                 if (isChangePwd) {//从忘记密码跳转过来的
                     // TODO: 3/10/2016 重置密码成功！
+                    showMyDialog();
                     Call<BaseResponse<String>> call = userService.changePassword(new ChangePasswordBody(mobile, mEtPasswordContent));
                     call.enqueue(new BaseCallback<String>() {
+                        @Override
+                        public void onFinally() {
+                            dismissMyDialog();
+                        }
+
                         @Override
                         public void onNetFailure(Throwable t) {
                             Toast(BreakfastConstant.NO_NET_MESSAGE);

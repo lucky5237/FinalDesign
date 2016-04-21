@@ -91,15 +91,12 @@
     </style>
 
 
-
-
     <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     <style name="title_bar_bottom_border_style2">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">0.5dp</item>
         <item name="android:background">#bebebe</item>
     </style>
-
 
 
     <!-- S M L XL XXL XXXL -->
@@ -295,7 +292,5 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
-
-
 
 </resources>

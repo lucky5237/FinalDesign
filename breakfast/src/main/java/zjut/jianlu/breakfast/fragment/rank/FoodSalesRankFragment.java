@@ -67,10 +67,15 @@ public class FoodSalesRankFragment extends BaseRefreshableFragment {
     }
 
     private void getHotFood() {
-
+        showMyDialog();
         Call<BaseResponse<List<Food>>> call = foodService
                 .getSalesRank(new FoodRankBody(BreakfastConstant.FOOD_SALES_RANK_NUM, false));
         call.enqueue(new BaseCallback<List<Food>>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);

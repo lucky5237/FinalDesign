@@ -85,8 +85,14 @@ public class LoginActivity extends BaseActivity {
                     Toast("密码的长度至少为6位");
                     return;
                 }
+                showMyDialog();
                 Call<BaseResponse<User>> call = userService.login(new LoginBody(mobile, password));
                 call.enqueue(new BaseCallback<User>() {
+                    @Override
+                    public void onFinally() {
+                        dismissMyDialog();
+                    }
+
                     @Override
                     public void onNetFailure(Throwable t) {
                         ToastCenter("网络连接出错，请重试");

@@ -61,9 +61,7 @@ public class MainActivicy extends BaseActivity {
 
     private static MainActivicy instance;
 
-
     private String[] data = {"menu1", "menu2", "menu3", "menu4"};
-
 
     private FragmentTransaction mTransaction;
     private Fragment[] fragments;
@@ -208,6 +206,7 @@ public class MainActivicy extends BaseActivity {
         badgeView = new MyBadgeView(this);
         badgeView.setTargetView(mRbtnCart);
         badgeView.setBadgeCount(getBadgeViewCount());
+
 //        menuDrawer=MenuDrawer.attach(this);
 //        menuDrawer.setMenuView(R.layout.fragment_menu);
 //        menuDrawer.setContentView(R.layout.activity_main);

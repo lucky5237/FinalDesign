@@ -109,9 +109,15 @@ public class CommentActivity extends BaseActivity {
     }
 
     private void makeComment() {
+        showMyDialog();
         MakeCommentBody body = new MakeCommentBody(getCurrentUserID(), getCurrentUserType(), mCurrentScore, mEtComment.getText().toString(), orderId, getCurrentUser().getUsername(), userId.intValue(), userName);
         Call<BaseResponse<String>> call = service.comment(body);
         call.enqueue(new BaseCallback<String>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);

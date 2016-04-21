@@ -14,6 +14,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import zjut.jianlu.breakfast.activity.MainActivicy;
 import zjut.jianlu.breakfast.adapter.HomeFoodAdapter;
 import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
@@ -47,6 +48,7 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
 
     private boolean isFirstRequest = true;
 
+
 //    private Button mBtnLoadAgain;
 
 
@@ -65,7 +67,7 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
         super.onActivityCreated(savedInstanceState);
 
         foodList = new ArrayList<Food>();
-        adapter = new HomeFoodAdapter(mContext, foodList);
+        adapter = new HomeFoodAdapter(mContext, foodList, MainActivicy.getInstance().getmLlytMainContainer());
         mListView.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         foodService = retrofit.create(FoodService.class);
@@ -113,8 +115,14 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
     public abstract void setPlaceId();
 
     private void getallFood(final Integer placeId, Integer flag) {
+        showMyDialog();
         Call<BaseResponse<List<Food>>> call = foodService.getAllFood(new HomeFoodBody(SHOW_NUM, placeId, flag));
         call.enqueue(new BaseCallback<List<Food>>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);

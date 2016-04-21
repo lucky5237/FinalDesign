@@ -106,8 +106,14 @@ public class CheckMobileActivity extends BaseActivity {
     }
 
     private void checkMobile() {
+        showMyDialog();
         Call<BaseResponse<String>> call = userService.checkMobile(new CheckMobileBody(mobile, isChangePwd));
         call.enqueue(new BaseCallback<String>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
