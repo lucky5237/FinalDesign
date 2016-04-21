@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hedgehog.ratingbar.RatingBar;
@@ -34,6 +35,7 @@ import zjut.jianlu.breakfast.entity.requestBody.BaseUserBody;
 import zjut.jianlu.breakfast.entity.requestBody.OrderCommentListBody;
 import zjut.jianlu.breakfast.service.UserService;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
+import zjut.jianlu.breakfast.utils.LogUtil;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 
 /**
@@ -58,6 +60,8 @@ public class UserDetailActivity extends BaseActivity {
     ListView mLvComment;
     @Bind(R.id.main_cotainer)
     LinearLayout mLlytMainContainer;
+    @Bind(R.id.no_comment)
+    RelativeLayout mRlytNoComment;
 
     private User user;
 
@@ -101,6 +105,7 @@ public class UserDetailActivity extends BaseActivity {
         mRatingbar.setmClickable(false);
         getUserInfo();
 
+
     }
 
 
@@ -110,12 +115,13 @@ public class UserDetailActivity extends BaseActivity {
         call.enqueue(new BaseCallback<User>() {
             @Override
             public void onFinally() {
-
+                LogUtil.d("userInfo end ");
             }
 
             @Override
             public void onNetFailure(Throwable t) {
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
+
             }
 
             @Override
@@ -124,14 +130,11 @@ public class UserDetailActivity extends BaseActivity {
                 setData();
                 getUserAveScore();
                 getUserCommentList();
-
-//
-
             }
 
             @Override
             public void onBizFailure(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
-
+                Toast(response.body().getMessage());
             }
         });
     }
@@ -155,21 +158,22 @@ public class UserDetailActivity extends BaseActivity {
             @Override
             public void onBizSuccess(Call<BaseResponse<List<OrderComment>>> call, Response<BaseResponse<List<OrderComment>>> response) {
                 List<OrderComment> orderComments = response.body().getData();
-                if (orderComments == null || orderComments.size() == 0) {
-                    //暂无收到评论 显示view
-                    Toast(response.body().getMessage());
-                } else {
-                    if (mOrderCommentList != null) {
-                        mOrderCommentList.clear();
-                    }
-                    mOrderCommentList.addAll(orderComments);
-                    adapter.notifyDataSetChanged();
+
+                if (mOrderCommentList != null) {
+                    mOrderCommentList.clear();
                 }
+                mRlytNoComment.setVisibility(View.GONE);
+                mLvComment.setVisibility(View.VISIBLE);
+                mOrderCommentList.addAll(orderComments);
+                adapter.notifyDataSetChanged();
+
             }
 
             @Override
             public void onBizFailure(Call<BaseResponse<List<OrderComment>>> call, Response<BaseResponse<List<OrderComment>>> response) {
 
+                mRlytNoComment.setVisibility(View.VISIBLE);
+                mLvComment.setVisibility(View.GONE);
             }
         });
 

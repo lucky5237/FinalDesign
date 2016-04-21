@@ -1,5 +1,6 @@
 package zjut.jianlu.breakfast.base;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,8 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +35,7 @@ public abstract class BaseActivity extends FragmentActivity {
     private String TAG;
     public static Context mContext;
     protected Dialog dialog;
-
+    private static List<Activity> mActivityList = new ArrayList<Activity>();
 
     public Toast mToast;
 
@@ -40,6 +43,7 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivityList.add(this);
         TAG = this.getClass().getSimpleName();
         this.setContentView(getLayoutId());
         ButterKnife.bind(this);
@@ -164,4 +168,22 @@ public abstract class BaseActivity extends FragmentActivity {
         return userDB;
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mActivityList.remove(this);
+    }
+
+    public static void exit() {
+        if (mActivityList != null && mActivityList.size() > 0) {
+            for (Activity activity : mActivityList) {
+                if (!activity.isFinishing()) {
+                    activity.finish();
+                }
+            }
+
+        }
+        System.exit(0);
+    }
 }

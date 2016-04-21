@@ -1,16 +1,21 @@
 package zjut.jianlu.breakfast.activity;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,12 +33,15 @@ import zjut.jianlu.breakfast.fragment.ShopCartFragment;
 import zjut.jianlu.breakfast.fragment.home.ClientHomePageFragment;
 import zjut.jianlu.breakfast.fragment.home.CourierHomePageFragment;
 import zjut.jianlu.breakfast.fragment.rank.RankFragment;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
+import zjut.jianlu.breakfast.utils.SharedPreferencesUtil;
+import zjut.jianlu.breakfast.widget.MyAlertDialog;
 import zjut.jianlu.breakfast.widget.MyBadgeView;
 
 /**
  * Created by jianlu on 16/3/12.
  */
-public class MainActivicy extends BaseActivity {
+public class MainActivity extends BaseActivity {
 
     private int mCurrentIndex = 0; //当前选中的索引
     private Fragment mHomePageFragment;
@@ -41,13 +49,14 @@ public class MainActivicy extends BaseActivity {
     private OrderFragment mOrderFragment;
     private ShopCartFragment mShopCartFragment;
     private FragmentManager mTransitionManager;
+    private MyBadgeView badgeView;
     public static final int HOME_INDEX = 0;
     public static final int RANK_INDEX = 3;
     public static final int ORDER_INDEX = 1;
     public static final int CART_INDEX = 2;
+    private long mExitTime;
     @Bind(R.id.tv_topbar)
     TextView mTvTopBar;
-    private MyBadgeView badgeView;
     @Bind(R.id.btn_cart)
     RadioButton mRbtnCart;
     @Bind(R.id.main_cotainer)
@@ -58,12 +67,20 @@ public class MainActivicy extends BaseActivity {
     CircleImageView mIvAvatar;
     @Bind(R.id.tv_user_name)
     TextView mTvUserName;
+    @Bind(R.id.llyt_me)
+    LinearLayout mLlytMe;
+    @Bind(R.id.llyt_profile)
+    LinearLayout mLlytProfile;
+    @Bind(R.id.llyt_password)
+    LinearLayout mLlytPassword;
+    @Bind(R.id.llyt_logout)
+    LinearLayout mLlytLogout;
 
     public LinearLayout getmLlytMainContainer() {
         return mLlytMainContainer;
     }
 
-    private static MainActivicy instance;
+    private static MainActivity instance;
 
     private String[] data = {"menu1", "menu2", "menu3", "menu4"};
 
@@ -71,8 +88,7 @@ public class MainActivicy extends BaseActivity {
     private Fragment[] fragments;
 
 
-
-    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart,R.id.iv_user_image,R.id.tv_user_name})
+    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart, R.id.llyt_me, R.id.llyt_profile, R.id.llyt_password, R.id.llyt_logout, R.id.iv_user_image})
     public void onclick(View view) {
         FragmentTransaction transation = mTransitionManager.beginTransaction();
         switch (view.getId()) {
@@ -98,10 +114,28 @@ public class MainActivicy extends BaseActivity {
                 mTvTopBar.setText("购物车");
                 showFragment(CART_INDEX, transation);
                 break;
+            case R.id.llyt_me:
             case R.id.iv_user_image:
-                Toast("点击了头像");
+                Intent intent = new Intent(this, UserDetailActivity.class);
+                intent.putExtra("userId", getCurrentUserID());
+                intent.putExtra("userType", getCurrentUserType());
+                mContext.startActivity(intent);
                 break;
-            case R.id.tv_user_name:
+            case R.id.llyt_profile:
+                break;
+            case R.id.llyt_password:
+                startActivity(new Intent(MainActivity.this, ChangePasswordActvity.class));
+                break;
+            case R.id.llyt_logout:
+                final MyAlertDialog dialog = new MyAlertDialog(mContext, "温馨提示", "是否确定要退出登录", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SharedPreferencesUtil.getInstance(mContext).clear();
+                        startActivity(new Intent(MainActivity.this, LoginOrRegisterActivity.class));
+                        finish();
+                    }
+                });
+                dialog.show();
                 break;
             default:
                 break;
@@ -203,7 +237,7 @@ public class MainActivicy extends BaseActivity {
     }
 
 
-    public static MainActivicy getInstance() {
+    public static MainActivity getInstance() {
         return instance;
     }
 
@@ -217,58 +251,8 @@ public class MainActivicy extends BaseActivity {
         badgeView = new MyBadgeView(this);
         badgeView.setTargetView(mRbtnCart);
         badgeView.setBadgeCount(getBadgeViewCount());
-        mDrawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
-
-//        menuDrawer=MenuDrawer.attach(this);
-//        menuDrawer.setMenuView(R.layout.fragment_menu);
-//        menuDrawer.setContentView(R.layout.activity_main);
-//        menuDrawer.peekDrawer();
-//        menuDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
-//            @Override
-//            public void onDrawerStateChange(int oldState, int newState) {
-//
-//            }
-//
-//            @Override
-//            public void onDrawerSlide(float openRatio, int offsetPixels) {
-//
-//            }
-//        });
-//        mLeftListItem.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data));
-//        mLeftListItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast(data[position]);
-//                mDlytMain.closeDrawer(mLeftListItem);
-//            }
-//        });
-//        mDlytMain.setDrawerListener(new DrawerLayout.DrawerListener() {
-//            @Override
-//            public void onDrawerSlide(View drawerView, float slideOffset) {
-//
-//            }
-//
-//            @Override
-//            public void onDrawerOpened(View drawerView) {
-//                    Toast("侧栏打开");
-//            }
-//
-//            @Override
-//            public void onDrawerClosed(View drawerView) {
-//                Toast("侧栏关闭");
-//
-//            }
-//
-//            @Override
-//            public void onDrawerStateChanged(int newState) {
-//
-//            }
-//        });
-
-
-//        
-
-
+        mTvUserName.setText(getCurrentUser().getUsername());
+        Picasso.with(this).load(BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername())).into(mIvAvatar);
     }
 
     private int getBadgeViewCount() {
@@ -317,5 +301,21 @@ public class MainActivicy extends BaseActivity {
     @Override
     public int getLayoutId() {
         return R.layout.activity_main;
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_LONG).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                BaseActivity.exit();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

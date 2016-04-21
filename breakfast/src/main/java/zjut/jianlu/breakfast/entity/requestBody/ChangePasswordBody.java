@@ -9,6 +9,16 @@ public class ChangePasswordBody {
 
     private String password;
 
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    private String oldPassword;
+
     public ChangePasswordBody(String mobile, String password) {
         this.mobile = mobile;
         this.password = password;

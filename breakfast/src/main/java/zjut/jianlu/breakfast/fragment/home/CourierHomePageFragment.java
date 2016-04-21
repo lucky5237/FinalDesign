@@ -17,7 +17,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.activity.MainActivicy;
+import zjut.jianlu.breakfast.activity.MainActivity;
 import zjut.jianlu.breakfast.adapter.NewestOrderAdapter;
 import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseFragment;
@@ -56,7 +56,7 @@ public class CourierHomePageFragment extends BaseFragment {
         mOrderInfoList = new ArrayList<OrderInfo>();
 
         adapter = new NewestOrderAdapter(getActivity(), mOrderInfoList,
-                MainActivicy.getInstance().getmLlytMainContainer());
+                MainActivity.getInstance().getmLlytMainContainer());
         mPullToRefreshListview.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         orderService = retrofit.create(OrderService.class);
@@ -135,7 +135,7 @@ public class CourierHomePageFragment extends BaseFragment {
                 Toast(response.body().getMessage());
                 getNewestOrder();
                 // 接单成功,跳转到我的订单页面查看
-                EventBus.getDefault().post(new ChangeIndexEvent(MainActivicy.ORDER_INDEX));
+                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX));
 
             }
 

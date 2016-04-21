@@ -38,7 +38,7 @@ public class LoginOrRegisterActivity extends BaseActivity {
         sharedPreferencesUtil = SharedPreferencesUtil.getInstance(mContext);
         if (!TextUtils.isEmpty(sharedPreferencesUtil.getMobile()) && !TextUtils.isEmpty(sharedPreferencesUtil.getPassword())) {
             //登录过的用户直接跳转首页
-            startActivity(new Intent(mContext, MainActivicy.class));
+            startActivity(new Intent(mContext, MainActivity.class));
         }
 
     }

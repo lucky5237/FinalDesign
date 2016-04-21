@@ -31,6 +31,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/divider_line_lightgray</item>
     </style>
+    <style name="divider_style_border">
+        <item name="android:layout_height">5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/divider_line_lightgray</item>
+    </style>
+
     <!--登录文本-->
     <style name="login_textview_style">
         <item name="android:layout_width">80dp</item>

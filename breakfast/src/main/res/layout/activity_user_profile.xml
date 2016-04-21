@@ -16,7 +16,7 @@
         <TextView
             android:id="@+id/tv_topbar"
             style="@style/topbar_text_style"
-            android:text="设置个人信息" />
+            android:text="修改个人信息" />
 
     </RelativeLayout>
 
@@ -42,11 +42,23 @@
 
                 />
 
-            <EditText
-                android:id="@+id/et_username"
-                style="@style/login_editText_style"
-                android:hint="取一个可爱的昵称吧"
-                android:maxLength="18" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@color/color_white"
+                android:gravity="right|center_vertical"
+                android:paddingLeft="15dp"
+                android:text="用户名"
+                android:textColor="@color/btn_gray"
+                android:textSize="@dimen/normal_textsize" />
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:src="@mipmap/extend_rightarrow"
+                android:visibility="invisible" />
         </LinearLayout>
 
         <View style="@style/divider_style" />
@@ -60,12 +72,12 @@
 
             <TextView
                 style="@style/login_textview_style"
-                android:text="头像"
+                android:text="用户类型"
 
                 />
 
             <LinearLayout
-                android:id="@+id/avatar_Linear"
+                android:id="@+id/type_Linear"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
@@ -73,54 +85,29 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:visibility="visible"
-                    android:id="@+id/avatar_input"
+                    android:id="@+id/type_input"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
                     android:background="@color/color_white"
                     android:gravity="right|center_vertical"
                     android:paddingLeft="15dp"
-                    android:text="请选择你的头像"
+                    android:text="请选择你的类型"
                     android:textColor="@color/btn_gray"
                     android:textSize="@dimen/normal_textsize" />
-               <RelativeLayout
-                   android:layout_width="0dp"
-                   android:layout_height="50dp"
-                   android:layout_weight="1"
-                   android:visibility="gone"
-                   android:id="@+id/rlyt_avatar"
-
-                   >
-                   <de.hdodenhof.circleimageview.CircleImageView
-                       android:id="@+id/iv_avatar"
-                       android:layout_width="50dp"
-                       android:layout_height="50dp"
-                       android:layout_alignParentRight="true"
-                       app:civ_border_color="@color/color_topic_gray"
-                       app:civ_border_width="2dp" />
-
-               </RelativeLayout>
-
-
-
-
-
-
-
 
                 <ImageButton
-                    android:id="@+id/avatar_ImageButton"
+                    android:id="@+id/type_ImageButton"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@null"
-                    android:src="@mipmap/extend_rightarrow" />
+                    android:src="@mipmap/extend_rightarrow"
+                    android:visibility="invisible" />
             </LinearLayout>
 
         </LinearLayout>
 
-        <View style="@style/divider_style" />
-
+        <View style="@style/divider_style_border" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -165,7 +152,9 @@
 
         </LinearLayout>
 
+
         <View style="@style/divider_style" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -176,41 +165,50 @@
 
             <TextView
                 style="@style/login_textview_style"
-                android:text="用户类型"
+                android:text="更换头像"
 
                 />
 
             <LinearLayout
-                android:id="@+id/type_Linear"
+                android:id="@+id/avatar_Linear"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@color/color_white"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/type_input"
+
+                <RelativeLayout
+                    android:id="@+id/rlyt_avatar"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:background="@color/color_white"
-                    android:gravity="right|center_vertical"
-                    android:paddingLeft="15dp"
-                    android:text="请选择你的类型"
-                    android:textColor="@color/btn_gray"
-                    android:textSize="@dimen/normal_textsize" />
+                    android:visibility="visible">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_avatar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentRight="true"
+                        app:civ_border_color="@color/color_topic_gray"
+                        app:civ_border_width="2dp" />
+
+                </RelativeLayout>
+
 
                 <ImageButton
-                    android:id="@+id/type_ImageButton"
+                    android:id="@+id/avatar_ImageButton"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@null"
+
                     android:src="@mipmap/extend_rightarrow" />
             </LinearLayout>
 
         </LinearLayout>
 
         <View style="@style/divider_style" />
+
 
         <LinearLayout
             android:id="@+id/address_Linear"

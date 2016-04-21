@@ -48,26 +48,19 @@ import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.requestBody.RegisterBody;
 import zjut.jianlu.breakfast.listener.OnWheelScrollListener;
 import zjut.jianlu.breakfast.service.UserService;
 import zjut.jianlu.breakfast.utils.CropImageUtil;
 import zjut.jianlu.breakfast.utils.PictureUtil;
 import zjut.jianlu.breakfast.widget.ActionSheetDialog;
-import zjut.jianlu.breakfast.widget.ActionSheetDialog.OnSheetItemClickListener;
-import zjut.jianlu.breakfast.widget.ActionSheetDialog.SheetItemColor;
 import zjut.jianlu.breakfast.widget.ScanPicPopWindow;
 import zjut.jianlu.breakfast.widget.WheelView;
 
 /**
- * Created by jianlu on 3/10/2016.
+ * Created by jianlu on 16/4/21.
  */
-public class UserInfoActivity extends BaseActivity implements OnWheelScrollListener {
-
+public class UserProfileActivity extends BaseActivity implements OnWheelScrollListener {
     private int mGenderSelected = -1;
-    private int mTypeSelected = -1;
-    private String mobile;
-    private String password;
     private String address;
     private static String userName;
     public static File tempFile = new File(Environment.getExternalStorageDirectory(), userName + ".jpg");
@@ -138,14 +131,8 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        if (intent != null) {
-            mobile = intent.getStringExtra(BreakfastConstant.MOBILE_TAG);
-            password = intent.getStringExtra(BreakfastConstant.PASSWORD_TAG);
-        }
         retrofit = MyApplication.getRetrofitInstance();
         userService = retrofit.create(UserService.class);
-        // mLocationClient.start();
     }
 
     private void uploadAvatar() {
@@ -207,11 +194,11 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             case R.id.gender_ImageButton:
                 showGenderDialog();
                 break;
-            case R.id.type_input:
-            case R.id.type_ImageButton:
-//                mTypeDialog.show();
-                showTypeDialog();
-                break;
+//            case R.id.type_input:
+//            case R.id.type_ImageButton:
+////                mTypeDialog.show();
+//                showTypeDialog();
+//                break;
 
             case R.id.avatar_input:
             case R.id.rlyt_avatar:
@@ -241,33 +228,9 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
         }
     }
 
-    private void showTypeDialog() {
-        new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
-                .addSheetItem("我来买早餐的", SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
-
-                    @Override
-                    public void onClick(int which) {
-                        typeInput.setText("买家");
-                        typeInput.setTextColor(getResources().getColor(R.color.color_black));
-                        mTypeSelected = 0;
-                        mLlAddress.setVisibility(View.VISIBLE);
-                    }
-                }).addSheetItem("我来送早餐的", SheetItemColor.GRAY, new OnSheetItemClickListener() {
-            @Override
-            public void onClick(int which) {
-                typeInput.setText("送客");
-                mTypeSelected = 1;
-                typeInput.setTextColor(getResources().getColor(R.color.color_black));
-                mLlAddress.setVisibility(View.GONE);
-            }
-        }).show();
-
-
-    }
-
     private void showGenderDialog() {
         new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
-                .addSheetItem("男", SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+                .addSheetItem("男", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
 
                     @Override
                     public void onClick(int which) {
@@ -275,7 +238,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
                         mGenderSelected = 1;
                         sexInput.setTextColor(getResources().getColor(R.color.color_black));
                     }
-                }).addSheetItem("女", SheetItemColor.GRAY, new OnSheetItemClickListener() {
+                }).addSheetItem("女", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
             public void onClick(int which) {
                 sexInput.setText("女");
@@ -300,16 +263,6 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             Toast("请先选择你的性别");
             return;
         }
-        if (mTypeSelected == -1) {
-            Toast("请先选择你的用户类型");
-            return;
-        }
-        if (mTypeSelected == 1) {
-            if (TextUtils.isEmpty(address)) {
-                Toast("请输入你的收货地址");
-                return;
-            }
-        }
 
         if (mLocationClient != null && mLocationClient.isStarted()) {
             mLocationClient.stop();
@@ -319,80 +272,67 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
 
     private void saveUserInfo() {
         showMyDialog();
-        Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName,
-                mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
-        call.enqueue(new BaseCallback<String>() {
-            @Override
-            public void onFinally() {
-
-            }
-
-            @Override
-            public void onNetFailure(Throwable t) {
-                Toast(BreakfastConstant.NO_NET_MESSAGE);
-            }
-
-            @Override
-            public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                Toast(response.body().getMessage());
-                uploadAvatar();
-            }
-
-            @Override
-            public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                Toast(response.body().getMessage());
-            }
-        });
+//        Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName,
+//                mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
+//        call.enqueue(new BaseCallback<String>() {
+//            @Override
+//            public void onFinally() {
+//
+//            }
+//
+//            @Override
+//            public void onNetFailure(Throwable t) {
+//                Toast(BreakfastConstant.NO_NET_MESSAGE);
+//            }
+//
+//            @Override
+//            public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+//                Toast(response.body().getMessage());
+//                uploadAvatar();
+//            }
+//
+//            @Override
+//            public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+//                Toast(response.body().getMessage());
+//            }
+//        });
     }
 
     private void showSelectPicture() {
-        tempFile = new File(Environment.getExternalStorageDirectory(), userName + ".jpg");
-        if (mCurrentPhotoPath == null) {
-            new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
-                    .addSheetItem("拍照", SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+        new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
+                .addSheetItem("查看大图", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
 
-                        @Override
-                        public void onClick(int which) {
-                            takePhoto();
+                    @Override
+                    public void onClick(int which) {
+                        ScanPicPopWindow popWindow = null;
+                        if (mCurrentPhotoPath == null) {
+                            popWindow = new ScanPicPopWindow(UserProfileActivity.this, getCurrentUser().getUsername());
+                        } else {
+                            popWindow = new ScanPicPopWindow(UserProfileActivity.this, new File(mCurrentPhotoPath));
                         }
-                    }).addSheetItem("从手机相册选择", SheetItemColor.GRAY, new OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    startActivityForResult(CropImageUtil.gallery(),
-                            BreakfastConstant.REQUEST_CODE_OPEN_GALLERY);
-                }
-            }).show();
-        } else {
-            new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
-                    .addSheetItem("查看大图", SheetItemColor.GRAY, new OnSheetItemClickListener() {
-
-                        @Override
-                        public void onClick(int which) {
-                            ScanPicPopWindow popWindow = new ScanPicPopWindow(UserInfoActivity.this, new File(mCurrentPhotoPath));
-                            if (!popWindow.isShowing()) {
-                                popWindow.showAtLocation(mLlytMain, Gravity.TOP, 0, 0);
-                            }
+                        if (!popWindow.isShowing()) {
+                            popWindow.showAtLocation(mLlytMain, Gravity.TOP, 0, 0);
                         }
-                    }).addSheetItem("拍照", SheetItemColor.GRAY, new OnSheetItemClickListener() {
+                    }
+                }).addSheetItem("拍照", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
 
-                @Override
-                public void onClick(int which) {
-                    takePhoto();
-                }
-            }).addSheetItem("从手机相册选择", SheetItemColor.GRAY, new OnSheetItemClickListener() {
-                @Override
-                public void onClick(int which) {
-                    startActivityForResult(CropImageUtil.gallery(),
-                            BreakfastConstant.REQUEST_CODE_OPEN_GALLERY);
-                }
-            }).show();
-        }
+            @Override
+            public void onClick(int which) {
+                takePhoto();
+            }
+        }).addSheetItem("从手机相册选择", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                startActivityForResult(CropImageUtil.gallery(),
+                        BreakfastConstant.REQUEST_CODE_OPEN_GALLERY);
+            }
+        }).show();
+
     }
 
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
-            // 指定存放拍摄照片的位置
             File f = createImageFile();
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
             startActivityForResult(takePictureIntent, BreakfastConstant.REQUEST_CODE_OPEN_CAMERA);
@@ -457,8 +397,6 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             PictureUtil.galleryAddPic(mContext, mCurrentPhotoPath);
 
             ivAvatar.setImageBitmap(PictureUtil.getSmallBitmap(mCurrentPhotoPath));
-            // Picasso.display(mIbtnPhoto, mCurrentPhotoPath);
-            // Picasso.with(mContext).load(mCurrentPhotoPath).into(ivAvatar);
             mRlAvatar.setVisibility(View.VISIBLE);
             avatarInput.setVisibility(View.GONE);
             save();

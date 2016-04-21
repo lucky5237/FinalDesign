@@ -39,12 +39,13 @@
         tools:replace="android:theme">
         <activity
             android:name=".activity.LoginOrRegisterActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <meta-data
@@ -82,12 +83,16 @@
             android:name=".activity.UserInfoActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 
         <activity
-            android:name=".activity.MainActivicy"
+            android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StyledIndicators"
             android:windowSoftInputMode="adjustPan|stateHidden">
@@ -106,6 +111,9 @@
             android:screenOrientation="portrait">
 
         </activity>
+        <activity
+            android:name=".activity.ChangePasswordActvity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.baidu.location.f"

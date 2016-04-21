@@ -8,13 +8,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zjut.jianlu.breakfast.R;
+import zjut.jianlu.breakfast.activity.MainActivity;
 import zjut.jianlu.breakfast.entity.bean.User;
+import zjut.jianlu.breakfast.listener.OnAvatarClickListener;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
 
 /**
@@ -58,7 +62,9 @@ public class RankAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         User user = (User) getItem(position);
-        String genderChinese = user.getGender() == 0 ? "他" : "她";
+        String genderChinese = user.getGender() == 1 ? "他" : "她";
+        Picasso.with(mContext).load(BreakfastUtils.getAbsAvatarUrlPath(user.getUsername())).into(viewHolder.ivUserImage);
+        viewHolder.ivUserImage.setOnClickListener(new OnAvatarClickListener(mContext, user.getUsername(), MainActivity.getInstance().getmLlytMainContainer()));
         switch (userType) {
             case 0:
                 viewHolder.tvUserName.setText(user.getUsername());

@@ -111,19 +111,19 @@
 
     <LinearLayout
         android:layout_width="150dp"
-        android:layout_gravity="start"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:layout_height="match_parent"
+        android:layout_gravity="start"
         android:background="@color/activity_background_gray"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="10dp">
 
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_marginTop="20dp"
             android:id="@+id/iv_user_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginTop="20dp"
             android:src="@mipmap/ic_man"
             app:civ_border_color="@color/color_topic_gray"
             app:civ_border_width="2dp" />
@@ -132,106 +132,121 @@
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="123"
             android:layout_marginTop="10dp"
+            android:textColor="@color/black"
             android:textSize="18sp"
 
             />
 
 
-
         <LinearLayout
-
-            android:layout_marginTop="20dp"
+            android:id="@+id/llyt_me"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
-            >
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_me"
-                />
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@mipmap/ic_me" />
 
             <TextView
-                android:layout_marginLeft="5dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:padding="5dp"
-                android:textSize="16sp"
                 android:text="我的主页"
-                android:textColor="@color/black"
+                android:textColor="@color/orange"
+                android:textSize="16sp"
 
                 />
 
         </LinearLayout>
 
         <LinearLayout
-
-            android:layout_marginTop="20dp"
+            android:id="@+id/llyt_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
-            >
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_me"
-                />
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@mipmap/ic_profile" />
 
             <TextView
-                android:layout_marginLeft="5dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:padding="5dp"
-                android:textSize="16sp"
                 android:text="个人资料"
-                android:textColor="@color/black"
+                android:textColor="@color/orange"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llyt_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@mipmap/ic_lock" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:text="修改密码"
+                android:textColor="@color/orange"
+                android:textSize="16sp"
+
                 />
 
         </LinearLayout>
 
         <LinearLayout
-
-            android:layout_marginTop="20dp"
+            android:id="@+id/llyt_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
-            >
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_me"
-                />
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@mipmap/ic_logout" />
 
             <TextView
-                android:layout_marginLeft="5dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:padding="5dp"
+                android:text="退出登录"
+                android:textColor="@color/orange"
                 android:textSize="16sp"
-                android:text="修改密码"
-                android:textColor="@color/black"
 
                 />
 
         </LinearLayout>
 
 
-
-
-        </LinearLayout>
-
-
+    </LinearLayout>
 
 
 </android.support.v4.widget.DrawerLayout>

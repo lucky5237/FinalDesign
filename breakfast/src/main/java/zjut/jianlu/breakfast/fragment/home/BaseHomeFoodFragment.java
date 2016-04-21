@@ -14,7 +14,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import zjut.jianlu.breakfast.activity.MainActivicy;
+import zjut.jianlu.breakfast.activity.MainActivity;
 import zjut.jianlu.breakfast.adapter.HomeFoodAdapter;
 import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
@@ -67,7 +67,7 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
         super.onActivityCreated(savedInstanceState);
 
         foodList = new ArrayList<Food>();
-        adapter = new HomeFoodAdapter(mContext, foodList, MainActivicy.getInstance().getmLlytMainContainer());
+        adapter = new HomeFoodAdapter(mContext, foodList, MainActivity.getInstance().getmLlytMainContainer());
         mListView.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
         foodService = retrofit.create(FoodService.class);

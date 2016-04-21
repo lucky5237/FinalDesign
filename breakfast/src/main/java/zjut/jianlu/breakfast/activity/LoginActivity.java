@@ -110,9 +110,7 @@ public class LoginActivity extends BaseActivity {
                         sharedPreferencesUtil.setUserType(user.getType());
                         sharedPreferencesUtil.setMobile(user.getMobile());
                         sharedPreferencesUtil.setPassword(user.getPassword());
-                        startActivity(new Intent(mContext, MainActivicy.class));
-                        Toast("登录成功");
-                        // TODO: 16/3/25 登录成功处理
+                        startActivity(new Intent(mContext, MainActivity.class));
 
                     }
 
