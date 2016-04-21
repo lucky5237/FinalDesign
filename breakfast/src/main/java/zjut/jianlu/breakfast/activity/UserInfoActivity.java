@@ -2,8 +2,6 @@ package zjut.jianlu.breakfast.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,7 +15,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -65,8 +62,6 @@ import zjut.jianlu.breakfast.widget.WheelView;
  */
 public class UserInfoActivity extends BaseActivity implements OnWheelScrollListener {
 
-    private AlertDialog mGenderDialog;
-    private AlertDialog mTypeDialog;
     private int mGenderSelected = -1;
     private int mTypeSelected = -1;
     private String[] genders;
@@ -107,7 +102,6 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
         }
     }
 
-
     @Bind(R.id.iv_back)
     ImageView ivBack;
     @Bind(R.id.et_username)
@@ -139,15 +133,13 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
     @Bind(R.id.rlyt_avatar)
     RelativeLayout mRlAvatar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_user_info);
-//        ButterKnife.bind(this);
+        // setContentView(R.layout.activity_user_info);
+        // ButterKnife.bind(this);
         genders = getResources().getStringArray(R.array.gender);
         types = getResources().getStringArray(R.array.type);
-        initView();
         Intent intent = getIntent();
         if (intent != null) {
             mobile = intent.getStringExtra(BreakfastConstant.MOBILE_TAG);
@@ -155,14 +147,14 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
         }
         retrofit = MyApplication.getRetrofitInstance();
         userService = retrofit.create(UserService.class);
-//        mLocationClient.start();
+        // mLocationClient.start();
     }
-
 
     private void uploadAvatar() {
         File file = new File(mCurrentPhotoPath);
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", etUsername.getText().toString().trim() + ".jpg", requestBody);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("avatar",
+                etUsername.getText().toString().trim() + ".jpg", requestBody);
         Call<BaseResponse<String>> call = userService.uploadImage(body);
         call.enqueue(new BaseCallback<String>() {
             @Override
@@ -197,48 +189,17 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
 
     private void initLoctaion() {
         LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
-        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
-        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
-        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
-        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);// 可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");// 可选，默认gcj02，设置返回的定位结果坐标系
+        option.setIsNeedAddress(true);// 可选，设置是否需要地址信息，默认不需要
+        option.SetIgnoreCacheException(false);// 可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);// 可选，默认false，设置是否需要过滤gps仿真结果，默认需要
         mLocationClient.setLocOption(option);
     }
 
-    private void initView() {
-        mGenderDialog = new AlertDialog.Builder(UserInfoActivity.this).setAdapter(new ArrayAdapter<String>(UserInfoActivity.this, R.layout.adapter_dialog_item, genders), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                sexInput.setText(genders[which]);
-                sexInput.setTextColor(getResources().getColor(R.color.color_black));
-                mGenderSelected = which;
-                mGenderDialog.dismiss();
-            }
-        }).create();
-        mGenderDialog.setCancelable(true);
-        mGenderDialog.setCanceledOnTouchOutside(true);
 
-        mTypeDialog = new AlertDialog.Builder(UserInfoActivity.this).setAdapter(new ArrayAdapter<String>(UserInfoActivity.this, R.layout.adapter_dialog_item, types), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                typeInput.setText(types[which]);
-                typeInput.setTextColor(getResources().getColor(R.color.color_black));
-                mTypeSelected = which;
-                mTypeDialog.dismiss();
-                if (which == 1) {
-                    mLlAddress.setVisibility(View.GONE);
-                } else {
-                    mLlAddress.setVisibility(View.VISIBLE);
-                }
-            }
-        }).create();
-        mTypeDialog.setCancelable(true);
-        mTypeDialog.setCanceledOnTouchOutside(true);
-
-    }
-
-    @OnClick({R.id.sex_input, R.id.gender_ImageButton, R.id.type_input, R.id.type_ImageButton, R.id.btn_next, R.id.iv_location, R.id.iv_back, R.id.avatar_input, R.id.avatar_ImageButton})
+    @OnClick({R.id.sex_input, R.id.gender_ImageButton, R.id.type_input, R.id.type_ImageButton, R.id.btn_next,
+            R.id.iv_location, R.id.iv_back, R.id.avatar_input, R.id.avatar_ImageButton})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -246,12 +207,12 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
                 break;
             case R.id.sex_input:
             case R.id.gender_ImageButton:
-                mGenderDialog.show();
-
+                showGenderDialog();
                 break;
             case R.id.type_input:
             case R.id.type_ImageButton:
-                mTypeDialog.show();
+//                mTypeDialog.show();
+                showTypeDialog();
                 break;
 
             case R.id.avatar_input:
@@ -261,9 +222,10 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
                 break;
             case R.id.btn_next:
                 checkInput();
-//                Toast("点击下一个按钮");
+                // Toast("点击下一个按钮");
                 break;
             case R.id.iv_location:
+                showMyDialog();
                 if (mLocationClient == null) {
                     mLocationClient = new LocationClient(getApplicationContext());
                     mLocationClient.registerLocationListener(myListener);
@@ -276,9 +238,52 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
                     mLocationClient.start();
                 }
 
-
                 break;
         }
+    }
+
+    private void showTypeDialog() {
+        new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
+                .addSheetItem("我来买早餐的", SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+
+                    @Override
+                    public void onClick(int which) {
+                        typeInput.setText("买家");
+                        typeInput.setTextColor(getResources().getColor(R.color.color_black));
+                        mTypeSelected = 0;
+                        mLlAddress.setVisibility(View.VISIBLE);
+                    }
+                }).addSheetItem("我来送早餐的", SheetItemColor.GRAY, new OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                typeInput.setText("送客");
+                mTypeSelected = 1;
+                typeInput.setTextColor(getResources().getColor(R.color.color_black));
+                mLlAddress.setVisibility(View.GONE);
+            }
+        }).show();
+
+
+    }
+
+    private void showGenderDialog() {
+        new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
+                .addSheetItem("男", SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+
+                    @Override
+                    public void onClick(int which) {
+                        sexInput.setText("男");
+                        mGenderSelected = 1;
+                        sexInput.setTextColor(getResources().getColor(R.color.color_black));
+                    }
+                }).addSheetItem("女", SheetItemColor.GRAY, new OnSheetItemClickListener() {
+            @Override
+            public void onClick(int which) {
+                sexInput.setText("女");
+                mGenderSelected = 0;
+                sexInput.setTextColor(getResources().getColor(R.color.color_black));
+            }
+        }).show();
     }
 
     private void checkInput() {
@@ -307,7 +312,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             }
         }
 
-        if (mLocationClient!=null&&mLocationClient.isStarted()) {
+        if (mLocationClient != null && mLocationClient.isStarted()) {
             mLocationClient.stop();
         }
         saveUserInfo();
@@ -315,7 +320,8 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
 
     private void saveUserInfo() {
         showMyDialog();
-        Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName, mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
+        Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName,
+                mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
         call.enqueue(new BaseCallback<String>() {
             @Override
             public void onFinally() {
@@ -363,11 +369,11 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
 
                         @Override
                         public void onClick(int which) {
-//                            Intent intent = new Intent(mContext, PictureFullScreenActivity.class);
-//                            intent.putExtra(BreakfastConstant.INTENT_EXTRA_OBJECT,
-//                                    mCurrentSmallPhotoPath == null ? mCurrentPhotoPath : mCurrentSmallPhotoPath);
-//                            mContext.startActivity(intent);
-//                            mContext.overridePendingTransition(R.anim.anim_in, R.anim.anim_out);
+                            // Intent intent = new Intent(mContext, PictureFullScreenActivity.class);
+                            // intent.putExtra(BreakfastConstant.INTENT_EXTRA_OBJECT,
+                            // mCurrentSmallPhotoPath == null ? mCurrentPhotoPath : mCurrentSmallPhotoPath);
+                            // mContext.startActivity(intent);
+                            // mContext.overridePendingTransition(R.anim.anim_in, R.anim.anim_out);
                         }
                     }).addSheetItem("拍照", SheetItemColor.GRAY, new OnSheetItemClickListener() {
 
@@ -409,12 +415,11 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
         return image;
     }
 
-
     public class MyLocationListener implements BDLocationListener {
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            //Receive Location
+            // Receive Location
             StringBuffer sb = new StringBuffer(256);
             if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 网络定位结果
                 sb.append("\naddr : ");
@@ -422,22 +427,22 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
                 if (!TextUtils.isEmpty(location.getAddrStr())) {
                     Toast("定位成功");
                     Message message = Message.obtain();
-                    message.obj = location.getAddrStr().substring(2);//去掉中国
+                    message.obj = location.getAddrStr().substring(2);// 去掉中国
                     message.what = LOCATION_RESULT_TAG;
                     new mHandler().sendMessage(message);
                 }
-                //运营商信息
+                // 运营商信息
                 sb.append("\noperationers : ");
                 sb.append(location.getOperators());
                 sb.append("\ndescribe : ");
                 sb.append("网络定位成功");
             } else {
-                Toast("网络异常,请先打开网络连接");
+                Toast(BreakfastConstant.NO_NET_MESSAGE);
                 if (mLocationClient.isStarted()) {
                     mLocationClient.stop();
                 }
             }
-
+            dismissMyDialog();
             Log.d("jianlu", sb.toString());
         }
     }
@@ -454,8 +459,8 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             PictureUtil.galleryAddPic(mContext, mCurrentPhotoPath);
 
             ivAvatar.setImageBitmap(PictureUtil.getSmallBitmap(mCurrentPhotoPath));
-//            Picasso.display(mIbtnPhoto, mCurrentPhotoPath);
-//            Picasso.with(mContext).load(mCurrentPhotoPath).into(ivAvatar);
+            // Picasso.display(mIbtnPhoto, mCurrentPhotoPath);
+            // Picasso.with(mContext).load(mCurrentPhotoPath).into(ivAvatar);
             mRlAvatar.setVisibility(View.VISIBLE);
             avatarInput.setVisibility(View.GONE);
             save();
@@ -464,8 +469,8 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
                 if (intent.getData() != null) {
                     Uri selectedImage = intent.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = mContext.getContentResolver()
-                            .query(selectedImage, filePathColumn, null, null, null);
+                    Cursor cursor = mContext.getContentResolver().query(selectedImage, filePathColumn, null, null,
+                            null);
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     mCurrentPhotoPath = cursor.getString(columnIndex);
@@ -497,7 +502,6 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             }
         }
     }
-
 
     @Override
     protected void onDestroy() {

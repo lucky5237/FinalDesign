@@ -6,18 +6,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
-import net.simonvt.menudrawer.MenuDrawer;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
 import zjut.jianlu.breakfast.entity.db.ShoppingCartDB;
@@ -52,12 +52,16 @@ public class MainActivicy extends BaseActivity {
     RadioButton mRbtnCart;
     @Bind(R.id.main_cotainer)
     LinearLayout mLlytMainContainer;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @Bind(R.id.iv_user_image)
+    CircleImageView mIvAvatar;
+    @Bind(R.id.tv_user_name)
+    TextView mTvUserName;
 
     public LinearLayout getmLlytMainContainer() {
         return mLlytMainContainer;
     }
-
-    private MenuDrawer menuDrawer;
 
     private static MainActivicy instance;
 
@@ -66,7 +70,9 @@ public class MainActivicy extends BaseActivity {
     private FragmentTransaction mTransaction;
     private Fragment[] fragments;
 
-    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart})
+
+
+    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart,R.id.iv_user_image,R.id.tv_user_name})
     public void onclick(View view) {
         FragmentTransaction transation = mTransitionManager.beginTransaction();
         switch (view.getId()) {
@@ -91,6 +97,11 @@ public class MainActivicy extends BaseActivity {
             case R.id.btn_cart:
                 mTvTopBar.setText("购物车");
                 showFragment(CART_INDEX, transation);
+                break;
+            case R.id.iv_user_image:
+                Toast("点击了头像");
+                break;
+            case R.id.tv_user_name:
                 break;
             default:
                 break;
@@ -206,6 +217,7 @@ public class MainActivicy extends BaseActivity {
         badgeView = new MyBadgeView(this);
         badgeView.setTargetView(mRbtnCart);
         badgeView.setBadgeCount(getBadgeViewCount());
+        mDrawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
 
 //        menuDrawer=MenuDrawer.attach(this);
 //        menuDrawer.setMenuView(R.layout.fragment_menu);
