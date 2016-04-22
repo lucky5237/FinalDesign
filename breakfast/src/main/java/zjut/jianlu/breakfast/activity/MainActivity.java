@@ -43,13 +43,14 @@ import zjut.jianlu.breakfast.widget.MyBadgeView;
  */
 public class MainActivity extends BaseActivity {
 
-    private int mCurrentIndex = 0; //当前选中的索引
+    private int mCurrentIndex = 0; // 当前选中的索引
     private Fragment mHomePageFragment;
     private RankFragment mRankFragment;
     private OrderFragment mOrderFragment;
     private ShopCartFragment mShopCartFragment;
     private FragmentManager mTransitionManager;
     private MyBadgeView badgeView;
+    private static final int MAINACTIVITY_REQUEST_CODE = 1;
     public static final int HOME_INDEX = 0;
     public static final int RANK_INDEX = 3;
     public static final int ORDER_INDEX = 1;
@@ -82,66 +83,66 @@ public class MainActivity extends BaseActivity {
 
     private static MainActivity instance;
 
-    private String[] data = {"menu1", "menu2", "menu3", "menu4"};
+    private String[] data = { "menu1", "menu2", "menu3", "menu4" };
 
     private FragmentTransaction mTransaction;
     private Fragment[] fragments;
 
-
-    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart, R.id.llyt_me, R.id.llyt_profile, R.id.llyt_password, R.id.llyt_logout, R.id.iv_user_image})
+    @OnClick({ R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart, R.id.llyt_me, R.id.llyt_profile,
+            R.id.llyt_password, R.id.llyt_logout, R.id.iv_user_image })
     public void onclick(View view) {
         FragmentTransaction transation = mTransitionManager.beginTransaction();
         switch (view.getId()) {
-            case R.id.btn_home:
-                if (getCurrentUserType() == 0) {
-                    mTvTopBar.setText("美食广场");
+        case R.id.btn_home:
+            if (getCurrentUserType() == 0) {
+                mTvTopBar.setText("美食广场");
 
-                } else {
-                    mTvTopBar.setText("最新订单");
+            } else {
+                mTvTopBar.setText("最新订单");
 
+            }
+            showFragment(HOME_INDEX, transation);
+            break;
+        case R.id.btn_rank:
+            mTvTopBar.setText("热门榜单");
+            showFragment(RANK_INDEX, transation);
+            break;
+        case R.id.btn_order:
+            mTvTopBar.setText("我的订单");
+            showFragment(ORDER_INDEX, transation);
+            break;
+        case R.id.btn_cart:
+            mTvTopBar.setText("购物车");
+            showFragment(CART_INDEX, transation);
+            break;
+        case R.id.llyt_me:
+        case R.id.iv_user_image:
+            Intent intent = new Intent(this, UserDetailActivity.class);
+            intent.putExtra("userId", getCurrentUserID());
+            intent.putExtra("userType", getCurrentUserType());
+            mContext.startActivity(intent);
+            break;
+        case R.id.llyt_profile:
+            startActivityForResult(new Intent(MainActivity.this, UserProfileActivity.class), MAINACTIVITY_REQUEST_CODE);
+            break;
+        case R.id.llyt_password:
+            startActivity(new Intent(MainActivity.this, ChangePasswordActvity.class));
+            break;
+        case R.id.llyt_logout:
+            final MyAlertDialog dialog = new MyAlertDialog(mContext, "温馨提示", "是否确定要退出登录", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPreferencesUtil.getInstance(mContext).clear();
+                    startActivity(new Intent(MainActivity.this, LoginOrRegisterActivity.class));
+                    finish();
                 }
-                showFragment(HOME_INDEX, transation);
-                break;
-            case R.id.btn_rank:
-                mTvTopBar.setText("热门榜单");
-                showFragment(RANK_INDEX, transation);
-                break;
-            case R.id.btn_order:
-                mTvTopBar.setText("我的订单");
-                showFragment(ORDER_INDEX, transation);
-                break;
-            case R.id.btn_cart:
-                mTvTopBar.setText("购物车");
-                showFragment(CART_INDEX, transation);
-                break;
-            case R.id.llyt_me:
-            case R.id.iv_user_image:
-                Intent intent = new Intent(this, UserDetailActivity.class);
-                intent.putExtra("userId", getCurrentUserID());
-                intent.putExtra("userType", getCurrentUserType());
-                mContext.startActivity(intent);
-                break;
-            case R.id.llyt_profile:
-                break;
-            case R.id.llyt_password:
-                startActivity(new Intent(MainActivity.this, ChangePasswordActvity.class));
-                break;
-            case R.id.llyt_logout:
-                final MyAlertDialog dialog = new MyAlertDialog(mContext, "温馨提示", "是否确定要退出登录", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        SharedPreferencesUtil.getInstance(mContext).clear();
-                        startActivity(new Intent(MainActivity.this, LoginOrRegisterActivity.class));
-                        finish();
-                    }
-                });
-                dialog.show();
-                break;
-            default:
-                break;
+            });
+            dialog.show();
+            break;
+        default:
+            break;
         }
         transation.commitAllowingStateLoss();
-
 
     }
 
@@ -159,83 +160,82 @@ public class MainActivity extends BaseActivity {
 
         mCurrentIndex = index;
         switch (index) {
-            case HOME_INDEX:
-                if (null != mRankFragment) {
-                    transaction.hide(mRankFragment);
+        case HOME_INDEX:
+            if (null != mRankFragment) {
+                transaction.hide(mRankFragment);
+            }
+            if (null != mOrderFragment) {
+                transaction.hide(mOrderFragment);
+            }
+            if (null != mShopCartFragment) {
+                transaction.hide(mShopCartFragment);
+            }
+            if (null == mHomePageFragment) {
+                if (getCurrentUserType() == 0) {
+                    mHomePageFragment = new ClientHomePageFragment();
                 }
-                if (null != mOrderFragment) {
-                    transaction.hide(mOrderFragment);
+                if (getCurrentUserType() == 1) {
+                    mHomePageFragment = new CourierHomePageFragment();
                 }
-                if (null != mShopCartFragment) {
-                    transaction.hide(mShopCartFragment);
-                }
-                if (null == mHomePageFragment) {
-                    if (getCurrentUserType() == 0) {
-                        mHomePageFragment = new ClientHomePageFragment();
-                    }
-                    if (getCurrentUserType() == 1) {
-                        mHomePageFragment = new CourierHomePageFragment();
-                    }
-                    transaction.add(R.id.flyt_container, mHomePageFragment);
-                } else {
-                    transaction.show(mHomePageFragment);
-                }
-                break;
-            case ORDER_INDEX:
-                if (null != mRankFragment) {
-                    transaction.hide(mRankFragment);
-                }
-                if (null != mHomePageFragment) {
-                    transaction.hide(mHomePageFragment);
-                }
-                if (null != mShopCartFragment) {
-                    transaction.hide(mShopCartFragment);
-                }
-                if (null == mOrderFragment) {
-                    mOrderFragment = new OrderFragment();
-                    transaction.add(R.id.flyt_container, mOrderFragment);
-                } else {
-                    transaction.show(mOrderFragment);
-                }
-                break;
-            case RANK_INDEX:
-                if (null != mHomePageFragment) {
-                    transaction.hide(mHomePageFragment);
-                }
-                if (null != mOrderFragment) {
-                    transaction.hide(mOrderFragment);
-                }
-                if (null != mShopCartFragment) {
-                    transaction.hide(mShopCartFragment);
-                }
-                if (null == mRankFragment) {
-                    mRankFragment = new RankFragment();
-                    transaction.add(R.id.flyt_container, mRankFragment);
-                } else {
-                    transaction.show(mRankFragment);
-                }
-                break;
-            case CART_INDEX:
-                if (null != mRankFragment) {
-                    transaction.hide(mRankFragment);
-                }
-                if (null != mOrderFragment) {
-                    transaction.hide(mOrderFragment);
-                }
-                if (null != mHomePageFragment) {
-                    transaction.hide(mHomePageFragment);
-                }
-                if (null == mShopCartFragment) {
-                    mShopCartFragment = new ShopCartFragment();
-                    transaction.add(R.id.flyt_container, mShopCartFragment);
-                } else {
-                    transaction.show(mShopCartFragment);
-                }
-                break;
+                transaction.add(R.id.flyt_container, mHomePageFragment);
+            } else {
+                transaction.show(mHomePageFragment);
+            }
+            break;
+        case ORDER_INDEX:
+            if (null != mRankFragment) {
+                transaction.hide(mRankFragment);
+            }
+            if (null != mHomePageFragment) {
+                transaction.hide(mHomePageFragment);
+            }
+            if (null != mShopCartFragment) {
+                transaction.hide(mShopCartFragment);
+            }
+            if (null == mOrderFragment) {
+                mOrderFragment = new OrderFragment();
+                transaction.add(R.id.flyt_container, mOrderFragment);
+            } else {
+                transaction.show(mOrderFragment);
+            }
+            break;
+        case RANK_INDEX:
+            if (null != mHomePageFragment) {
+                transaction.hide(mHomePageFragment);
+            }
+            if (null != mOrderFragment) {
+                transaction.hide(mOrderFragment);
+            }
+            if (null != mShopCartFragment) {
+                transaction.hide(mShopCartFragment);
+            }
+            if (null == mRankFragment) {
+                mRankFragment = new RankFragment();
+                transaction.add(R.id.flyt_container, mRankFragment);
+            } else {
+                transaction.show(mRankFragment);
+            }
+            break;
+        case CART_INDEX:
+            if (null != mRankFragment) {
+                transaction.hide(mRankFragment);
+            }
+            if (null != mOrderFragment) {
+                transaction.hide(mOrderFragment);
+            }
+            if (null != mHomePageFragment) {
+                transaction.hide(mHomePageFragment);
+            }
+            if (null == mShopCartFragment) {
+                mShopCartFragment = new ShopCartFragment();
+                transaction.add(R.id.flyt_container, mShopCartFragment);
+            } else {
+                transaction.show(mShopCartFragment);
+            }
+            break;
 
         }
     }
-
 
     public static MainActivity getInstance() {
         return instance;
@@ -256,10 +256,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private int getBadgeViewCount() {
-        // TODO: 16/4/15 购物车的数目 
+        // TODO: 16/4/15 购物车的数目
         return (int) ShoppingCartDB.count(ShoppingCartDB.class);
     }
-
 
     @Override
     protected void onDestroy() {
@@ -297,12 +296,10 @@ public class MainActivity extends BaseActivity {
         mShopCartFragment.adapter.notifyDataSetChanged();
     }
 
-
     @Override
     public int getLayoutId() {
         return R.layout.activity_main;
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -317,5 +314,15 @@ public class MainActivity extends BaseActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RESULT_OK) {
+            if (requestCode == MAINACTIVITY_REQUEST_CODE) {
+                Picasso.with(this).load(BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername())).into(mIvAvatar);
+            }
+        }
+
     }
 }

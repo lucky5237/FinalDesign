@@ -43,13 +43,13 @@
                 />
 
             <Button
+                android:id="@+id/btn_user_name"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@color/color_white"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="15dp"
-                android:text="用户名"
                 android:textColor="@color/btn_gray"
                 android:textSize="@dimen/normal_textsize" />
 
@@ -85,14 +85,13 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/type_input"
+                    android:id="@+id/btn_user_type"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
                     android:background="@color/color_white"
                     android:gravity="right|center_vertical"
                     android:paddingLeft="15dp"
-                    android:text="请选择你的类型"
                     android:textColor="@color/btn_gray"
                     android:textSize="@dimen/normal_textsize" />
 
@@ -131,7 +130,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/sex_input"
+                    android:id="@+id/btn_user_gender"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
@@ -143,7 +142,7 @@
                     android:textSize="@dimen/normal_textsize" />
 
                 <ImageButton
-                    android:id="@+id/gender_ImageButton"
+                    android:id="@+id/ibtn_user_gender"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@null"
@@ -179,14 +178,13 @@
 
 
                 <RelativeLayout
-                    android:id="@+id/rlyt_avatar"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
                     android:visibility="visible">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/iv_avatar"
+                        android:id="@+id/iv_user_avatar"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_alignParentRight="true"
@@ -197,7 +195,7 @@
 
 
                 <ImageButton
-                    android:id="@+id/avatar_ImageButton"
+                    android:id="@+id/ibtn_user_avatar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@null"
@@ -211,7 +209,6 @@
 
 
         <LinearLayout
-            android:id="@+id/address_Linear"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/color_white"
@@ -229,7 +226,7 @@
                 android:id="@+id/et_address"
                 style="@style/login_editText_style"
                 android:hint="请输入常用的收货地址"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/iv_location"

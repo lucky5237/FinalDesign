@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -18,15 +17,14 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,6 +34,7 @@ import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -50,6 +49,7 @@ import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.listener.OnWheelScrollListener;
 import zjut.jianlu.breakfast.service.UserService;
+import zjut.jianlu.breakfast.utils.BreakfastUtils;
 import zjut.jianlu.breakfast.utils.CropImageUtil;
 import zjut.jianlu.breakfast.utils.PictureUtil;
 import zjut.jianlu.breakfast.widget.ActionSheetDialog;
@@ -60,10 +60,26 @@ import zjut.jianlu.breakfast.widget.WheelView;
  * Created by jianlu on 16/4/21.
  */
 public class UserProfileActivity extends BaseActivity implements OnWheelScrollListener {
+    @Bind(R.id.iv_back)
+    ImageView ivBack;
+    @Bind(R.id.btn_user_name)
+    Button btnUserName;
+    @Bind(R.id.btn_user_type)
+    Button btnUserType;
+    @Bind(R.id.btn_user_gender)
+    Button btnUserGender;
+    @Bind(R.id.iv_user_avatar)
+    CircleImageView ivAvatar;
+    @Bind(R.id.et_address)
+    EditText etAddress;
+    @Bind(R.id.iv_location)
+    ImageView ivLocation;
+    @Bind(R.id.btn_next)
+    Button btnNext;
+    @Bind(R.id.llyt_main)
+    LinearLayout llytMain;
     private int mGenderSelected = -1;
     private String address;
-    private static String userName;
-    public static File tempFile = new File(Environment.getExternalStorageDirectory(), userName + ".jpg");
     private String mCurrentPhotoPath;
     private String mCurrentSmallPhotoPath;
     public LocationClient mLocationClient = null;
@@ -87,59 +103,34 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case LOCATION_RESULT_TAG:
-                    address = (String) msg.obj;
-                    etAddress.setText(address);
+            case LOCATION_RESULT_TAG:
+                address = (String) msg.obj;
+                etAddress.setText(address);
             }
 
         }
     }
-
-    @Bind(R.id.iv_back)
-    ImageView ivBack;
-    @Bind(R.id.et_username)
-    EditText etUsername;
-    @Bind(R.id.sex_input)
-    Button sexInput;
-    @Bind(R.id.gender_ImageButton)
-    ImageButton genderImageButton;
-    @Bind(R.id.type_input)
-    Button typeInput;
-    @Bind(R.id.type_ImageButton)
-    ImageButton typeImageButton;
-    @Bind(R.id.et_address)
-    EditText etAddress;
-    @Bind(R.id.btn_next)
-    Button btnNext;
-    @Bind(R.id.address_Linear)
-    LinearLayout mLlAddress;
-    @Bind(R.id.iv_location)
-    ImageView mLv_location;
-    @Bind(R.id.avatar_Linear)
-    LinearLayout mLlAvatar;
-    @Bind(R.id.avatar_ImageButton)
-    ImageButton avaterImageButton;
-    @Bind(R.id.avatar_input)
-    Button avatarInput;
-    @Bind(R.id.iv_avatar)
-    ImageView ivAvatar;
-    @Bind(R.id.rlyt_avatar)
-    RelativeLayout mRlAvatar;
-    @Bind(R.id.llyt_main)
-    LinearLayout mLlytMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         retrofit = MyApplication.getRetrofitInstance();
         userService = retrofit.create(UserService.class);
+        btnUserName.setText(getCurrentUser().getUsername());
+        btnUserType.setText(getCurrentUserType() == 0 ? "买家" : "送客");
+        mGenderSelected = getCurrentUser().getGender();
+        btnUserGender.setText(mGenderSelected == 1 ? "男" : "女");
+        etAddress.setText(getCurrentUser().getAddress());
+        Picasso.with(this).load(BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername())).into(ivAvatar);
+
     }
 
     private void uploadAvatar() {
+        showMyDialog();
         File file = new File(mCurrentPhotoPath);
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("avatar",
-                etUsername.getText().toString().trim() + ".jpg", requestBody);
+                btnUserName.getText().toString().trim() + ".jpg", requestBody);
         Call<BaseResponse<String>> call = userService.uploadImage(body);
         call.enqueue(new BaseCallback<String>() {
             @Override
@@ -154,14 +145,12 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
 
             @Override
             public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                startActivity(new Intent(mContext, LoginActivity.class));
-
+                Toast("头像上传成功");
             }
 
             @Override
             public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 Toast(response.body().getMessage());
-                startActivity(new Intent(mContext, LoginActivity.class));
 
             }
         });
@@ -169,7 +158,7 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_user_info;
+        return R.layout.activity_user_profile;
     }
 
     private void initLoctaion() {
@@ -182,85 +171,69 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
         mLocationClient.setLocOption(option);
     }
 
-
-    @OnClick({R.id.sex_input, R.id.gender_ImageButton, R.id.type_input, R.id.type_ImageButton, R.id.btn_next,
-            R.id.iv_location, R.id.iv_back, R.id.avatar_input, R.id.avatar_ImageButton, R.id.rlyt_avatar})
+    @OnClick({ R.id.btn_next, R.id.iv_location, R.id.iv_back, R.id.ibtn_user_gender, R.id.ibtn_user_avatar,
+            R.id.btn_user_gender, R.id.avatar_Linear })
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_back:
-                finish();
-                break;
-            case R.id.sex_input:
-            case R.id.gender_ImageButton:
-                showGenderDialog();
-                break;
-//            case R.id.type_input:
-//            case R.id.type_ImageButton:
-////                mTypeDialog.show();
-//                showTypeDialog();
-//                break;
+        case R.id.iv_back:
+            finish();
+            break;
+        case R.id.ibtn_user_gender:
+        case R.id.btn_user_gender:
+            showGenderDialog();
+            break;
 
-            case R.id.avatar_input:
-            case R.id.rlyt_avatar:
-            case R.id.avatar_ImageButton:
-                showSelectPicture();
-
-                break;
-            case R.id.btn_next:
-                checkInput();
-                // Toast("点击下一个按钮");
-                break;
-            case R.id.iv_location:
-                showMyDialog();
-                if (mLocationClient == null) {
-                    mLocationClient = new LocationClient(getApplicationContext());
-                    mLocationClient.registerLocationListener(myListener);
-                    initLoctaion();
-                    mLocationClient.start();
-                } else {
-                    if (mLocationClient.isStarted()) {
-                        mLocationClient.stop();
-                    }
-                    mLocationClient.start();
+        case R.id.ibtn_user_avatar:
+        case R.id.avatar_Linear:
+            showSelectPicture();
+            break;
+        case R.id.btn_next:
+            checkInput();
+            break;
+        case R.id.iv_location:
+            showMyDialog();
+            if (mLocationClient == null) {
+                mLocationClient = new LocationClient(getApplicationContext());
+                mLocationClient.registerLocationListener(myListener);
+                initLoctaion();
+                mLocationClient.start();
+            } else {
+                if (mLocationClient.isStarted()) {
+                    mLocationClient.stop();
                 }
+                mLocationClient.start();
+            }
 
-                break;
+            break;
         }
     }
 
     private void showGenderDialog() {
-        new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
-                .addSheetItem("男", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+        new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true).addSheetItem("男",
+                ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
 
                     @Override
                     public void onClick(int which) {
-                        sexInput.setText("男");
+                        btnUserGender.setText("男");
                         mGenderSelected = 1;
-                        sexInput.setTextColor(getResources().getColor(R.color.color_black));
+                        btnUserGender.setTextColor(getResources().getColor(R.color.color_black));
                     }
-                }).addSheetItem("女", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
-            @Override
-            public void onClick(int which) {
-                sexInput.setText("女");
-                mGenderSelected = 0;
-                sexInput.setTextColor(getResources().getColor(R.color.color_black));
-            }
-        }).show();
+                }).addSheetItem("女", ActionSheetDialog.SheetItemColor.GRAY,
+                        new ActionSheetDialog.OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                btnUserGender.setText("女");
+                                mGenderSelected = 0;
+                                btnUserGender.setTextColor(getResources().getColor(R.color.color_black));
+                            }
+                        })
+                .show();
     }
 
     private void checkInput() {
-        userName = etUsername.getText().toString().trim();
         address = etAddress.getText().toString().trim();
-        if (TextUtils.isEmpty(userName)) {
-            Toast("用户名不能为空");
-            return;
-        }
-        if (mCurrentPhotoPath == null) {
-            Toast("请先选择你的头像");
-            return;
-        }
-        if (mGenderSelected == -1) {
-            Toast("请先选择你的性别");
+        if (TextUtils.isEmpty(address)) {
+            Toast("收货地址不能为空");
             return;
         }
 
@@ -271,62 +244,72 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
     }
 
     private void saveUserInfo() {
-        showMyDialog();
-//        Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName,
-//                mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
-//        call.enqueue(new BaseCallback<String>() {
-//            @Override
-//            public void onFinally() {
-//
-//            }
-//
-//            @Override
-//            public void onNetFailure(Throwable t) {
-//                Toast(BreakfastConstant.NO_NET_MESSAGE);
-//            }
-//
-//            @Override
-//            public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-//                Toast(response.body().getMessage());
-//                uploadAvatar();
-//            }
-//
-//            @Override
-//            public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-//                Toast(response.body().getMessage());
-//            }
-//        });
+        // showMyDialog();
+        // Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName,
+        // mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
+        // call.enqueue(new BaseCallback<String>() {
+        // @Override
+        // public void onFinally() {
+        //
+        // }
+        //
+        // @Override
+        // public void onNetFailure(Throwable t) {
+        // Toast(BreakfastConstant.NO_NET_MESSAGE);
+        // }
+        //
+        // @Override
+        // public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+        // Toast(response.body().getMessage());
+        // uploadAvatar();
+        // }
+        //
+        // @Override
+        // public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+        // Toast(response.body().getMessage());
+        // }
+        // });
     }
 
     private void showSelectPicture() {
         new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true)
-                .addSheetItem("查看大图", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+                .addSheetItem("查看大图", ActionSheetDialog.SheetItemColor.GRAY,
+                        new ActionSheetDialog.OnSheetItemClickListener() {
 
-                    @Override
-                    public void onClick(int which) {
-                        ScanPicPopWindow popWindow = null;
-                        if (mCurrentPhotoPath == null) {
-                            popWindow = new ScanPicPopWindow(UserProfileActivity.this, getCurrentUser().getUsername());
-                        } else {
-                            popWindow = new ScanPicPopWindow(UserProfileActivity.this, new File(mCurrentPhotoPath));
-                        }
-                        if (!popWindow.isShowing()) {
-                            popWindow.showAtLocation(mLlytMain, Gravity.TOP, 0, 0);
-                        }
-                    }
-                }).addSheetItem("拍照", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                ScanPicPopWindow popWindow = null;
+                                if (mCurrentPhotoPath == null) {
+                                    // popWindow = new ScanPicPopWindow(UserProfileActivity.this,
+                                    // getCurrentUser().getUsername());
+                                    popWindow = new ScanPicPopWindow(UserProfileActivity.this,
+                                            BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername()));
+                                } else {
+                                    popWindow = new ScanPicPopWindow(UserProfileActivity.this,
+                                            new File(mCurrentPhotoPath));
+                                }
+                                if (!popWindow.isShowing()) {
+                                    popWindow.showAtLocation(llytMain, Gravity.TOP, 0, 0);
+                                }
+                            }
+                        })
+                .addSheetItem("拍照", ActionSheetDialog.SheetItemColor.GRAY,
+                        new ActionSheetDialog.OnSheetItemClickListener() {
 
-            @Override
-            public void onClick(int which) {
-                takePhoto();
-            }
-        }).addSheetItem("从手机相册选择", ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
-            @Override
-            public void onClick(int which) {
-                startActivityForResult(CropImageUtil.gallery(),
-                        BreakfastConstant.REQUEST_CODE_OPEN_GALLERY);
-            }
-        }).show();
+                            @Override
+                            public void onClick(int which) {
+                                takePhoto();
+                            }
+                        })
+                .addSheetItem("从手机相册选择", ActionSheetDialog.SheetItemColor.GRAY,
+                        new ActionSheetDialog.OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                startActivityForResult(CropImageUtil.gallery(),
+                                        BreakfastConstant.REQUEST_CODE_OPEN_GALLERY);
+                            }
+                        })
+                .show();
 
     }
 
@@ -397,14 +380,13 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
             PictureUtil.galleryAddPic(mContext, mCurrentPhotoPath);
 
             ivAvatar.setImageBitmap(PictureUtil.getSmallBitmap(mCurrentPhotoPath));
-            mRlAvatar.setVisibility(View.VISIBLE);
-            avatarInput.setVisibility(View.GONE);
+
             save();
         } else if (requestCode == BreakfastConstant.REQUEST_CODE_OPEN_GALLERY) {
             if (resultCode == Activity.RESULT_OK) {
                 if (intent.getData() != null) {
                     Uri selectedImage = intent.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
                     Cursor cursor = mContext.getContentResolver().query(selectedImage, filePathColumn, null, null,
                             null);
                     cursor.moveToFirst();
@@ -417,12 +399,12 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
                     Bitmap bitmap = CropImageUtil.rotateBitmap(CropImageUtil.readPicDegree(mCurrentPhotoPath),
                             BitmapFactory.decodeFile(mCurrentPhotoPath, opts));
                     ivAvatar.setImageBitmap(bitmap);
-                    mRlAvatar.setVisibility(View.VISIBLE);
-                    avatarInput.setVisibility(View.GONE);
-                    // mBtnTakePhoto.setVisibility(View.GONE);
+
                 }
             }
         }
+
+        uploadAvatar();
     }
 
     private void save() {
