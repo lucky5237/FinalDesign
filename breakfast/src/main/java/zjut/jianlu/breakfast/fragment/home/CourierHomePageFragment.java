@@ -135,7 +135,7 @@ public class CourierHomePageFragment extends BaseFragment {
                 Toast(response.body().getMessage());
                 getNewestOrder();
                 // 接单成功,跳转到我的订单页面查看
-                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX));
+                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX,1));
 
             }
 

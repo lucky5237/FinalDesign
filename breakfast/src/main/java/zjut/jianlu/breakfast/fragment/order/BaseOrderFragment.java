@@ -1,4 +1,4 @@
-package zjut.jianlu.breakfast.fragment;
+package zjut.jianlu.breakfast.fragment.order;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +21,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import zjut.jianlu.breakfast.R;
+import zjut.jianlu.breakfast.activity.MainActivity;
 import zjut.jianlu.breakfast.adapter.MyOrderAdapter;
 import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseFragment;
@@ -28,8 +29,9 @@ import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
+import zjut.jianlu.breakfast.entity.event.ChangeIndexEvent;
 import zjut.jianlu.breakfast.entity.event.UpdateOrderStatusEvent;
-import zjut.jianlu.breakfast.entity.requestBody.BaseUserBody;
+import zjut.jianlu.breakfast.entity.requestBody.MyOrderListBody;
 import zjut.jianlu.breakfast.entity.requestBody.UpdateOrderStatusBody;
 import zjut.jianlu.breakfast.service.OrderService;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
@@ -37,7 +39,7 @@ import zjut.jianlu.breakfast.utils.BreakfastUtils;
 /**
  * Created by jianlu on 16/3/12.
  */
-public class OrderFragment extends BaseFragment
+public abstract class BaseOrderFragment extends BaseFragment
 
 {
     @Bind(R.id.pull_to_refresh_listview)
@@ -51,6 +53,16 @@ public class OrderFragment extends BaseFragment
 
     private List<OrderInfo> mOrderInfos;
 
+    public Integer status;
+
+    public PullToRefreshListView getmListView() {
+        return mListView;
+    }
+
+    public void setmListView(PullToRefreshListView mListView) {
+        this.mListView = mListView;
+    }
+
     @Override
     public int getLayoutId() {
         return R.layout.fragment_order;
@@ -59,7 +71,7 @@ public class OrderFragment extends BaseFragment
     public void getMyorder() {
         showMyDialog();
         Call<BaseResponse<List<OrderInfo>>> call = orderService
-                .getMyorderList(new BaseUserBody(getCurrentUserID(), getCurrentUserType()));
+                .getMyorderList(new MyOrderListBody(getCurrentUserID(), getCurrentUserType(), status));
         call.enqueue(new BaseCallback<List<OrderInfo>>() {
             @Override
             public void onFinally() {
@@ -74,8 +86,8 @@ public class OrderFragment extends BaseFragment
 
             @Override
             public void onBizSuccess(Call<BaseResponse<List<OrderInfo>>> call,
-                    Response<BaseResponse<List<OrderInfo>>> response) {
-                if (response.body().getData() == null || response.body().getData().size() == 0){
+                                     Response<BaseResponse<List<OrderInfo>>> response) {
+                if (response.body().getData() == null || response.body().getData().size() == 0) {
                     ShowUI(BreakfastConstant.NO_ORDER);
                     return;
                 }
@@ -89,7 +101,7 @@ public class OrderFragment extends BaseFragment
 
             @Override
             public void onBizFailure(Call<BaseResponse<List<OrderInfo>>> call,
-                    Response<BaseResponse<List<OrderInfo>>> response) {
+                                     Response<BaseResponse<List<OrderInfo>>> response) {
                 Toast(response.body().getMessage());
             }
         });
@@ -98,6 +110,7 @@ public class OrderFragment extends BaseFragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setOrderStatus();
         retrofit = MyApplication.getRetrofitInstance();
         orderService = retrofit.create(OrderService.class);
         mOrderInfos = new ArrayList<OrderInfo>();
@@ -137,18 +150,26 @@ public class OrderFragment extends BaseFragment
 
     }
 
+    public abstract void setOrderStatus();
+
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
 
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
+
     }
+
+//    @Subscribe
+//    public void RefreshMyOrder() {
+//        getMyorder();
+//    }
 
     @Subscribe
     public void updateOrderStatus(UpdateOrderStatusEvent event) {
@@ -169,13 +190,15 @@ public class OrderFragment extends BaseFragment
 
             @Override
             public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                getMyorder();
+//                getMyorder();
+                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX, status));
             }
 
             @Override
             public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 Toast(response.body().getData());
-                getMyorder();
+//                getMyorder();
+                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX, status));
 
             }
         });

@@ -210,7 +210,7 @@ public class MakeOrderActivity extends BaseActivity {
                 if (fromWhere == 1) {
                     EventBus.getDefault().post(new DeleteShopCartEvent(mConfirmFoodlist));
                 }
-                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX));
+                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX,0));
                 finish();
 
             }

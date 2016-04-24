@@ -144,8 +144,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
     public static Integer getCurrentUserType() {
 
-//        return SharedPreferencesUtil.getInstance(mContext).getUserType();
-        return 0;
+        return SharedPreferencesUtil.getInstance(mContext).getUserType();
     }
 
     public static Integer getCurrentUserID() {

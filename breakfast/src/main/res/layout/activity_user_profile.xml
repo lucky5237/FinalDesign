@@ -209,6 +209,7 @@
 
 
         <LinearLayout
+            android:id="@+id/llyt_address"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/color_white"
@@ -224,19 +225,33 @@
 
             <EditText
                 android:id="@+id/et_address"
+                android:enabled="false"
                 style="@style/login_editText_style"
+                android:gravity="right"
                 android:hint="请输入常用的收货地址"
-                android:textSize="12sp" />
+                android:textColor="@color/gray"
+                android:textSize="12sp"
+
+                />
+
+
+
+            <ImageButton
+                android:id="@+id/ibtn_user_address"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+
+                android:src="@mipmap/extend_rightarrow" />
 
             <ImageView
                 android:id="@+id/iv_location"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="15dp"
                 android:background="@null"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/location" />
+                android:src="@mipmap/location"
+                android:visibility="gone" />
         </LinearLayout>
 
         <View style="@style/divider_style" />

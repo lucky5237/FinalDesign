@@ -1,11 +1,13 @@
 package zjut.jianlu.breakfast.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hedgehog.ratingbar.RatingBar;
@@ -34,11 +36,25 @@ public class CommentDetailAdapter extends BaseAdapter {
 
     private View mView;
 
-    public CommentDetailAdapter(Context context, List<OrderComment> orderComments, Integer userType, View view) {
+    private Integer mOrderId;//寻找的orderId,如果=-1不寻找
+
+    public Integer getmCommentPosition() {
+        return mCommentPosition;
+    }
+
+    public void setmCommentPosition(Integer mCommentPosition) {
+        this.mCommentPosition = mCommentPosition;
+    }
+
+    private Integer mCommentPosition;
+
+    public CommentDetailAdapter(Context context, List<OrderComment> orderComments, Integer userType, View view, Integer orderId) {
         mContext = context;
         mOrderCommentList = orderComments;
         mUserType = userType;
         mView = view;
+        mOrderId = orderId;
+
     }
 
     @Override
@@ -68,6 +84,10 @@ public class CommentDetailAdapter extends BaseAdapter {
         }
 
         final OrderComment orderComment = (OrderComment) getItem(position);
+        if (mOrderId != -1 && orderComment.getOrderId() == mOrderId) {
+            mCommentPosition = position;
+            viewHolder.mLlytMain.setBackgroundColor(Color.parseColor("#B2EBF2"));
+        }
         viewHolder.mRatingbar.setmClickable(false);
         switch (mUserType) {
             case 0:// 查看买家的个人中心
@@ -126,6 +146,8 @@ public class CommentDetailAdapter extends BaseAdapter {
         TextView mTvTime;
         @Bind(R.id.tv_comment)
         TextView mTvComment;
+        @Bind(R.id.llyt_main)
+        LinearLayout mLlytMain;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

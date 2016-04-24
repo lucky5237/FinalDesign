@@ -15,6 +15,7 @@ import zjut.jianlu.breakfast.entity.requestBody.BaseUserBody;
 import zjut.jianlu.breakfast.entity.requestBody.ChangePasswordBody;
 import zjut.jianlu.breakfast.entity.requestBody.CheckMobileBody;
 import zjut.jianlu.breakfast.entity.requestBody.LoginBody;
+import zjut.jianlu.breakfast.entity.requestBody.ModifyProfileBody;
 import zjut.jianlu.breakfast.entity.requestBody.OrderCommentListBody;
 import zjut.jianlu.breakfast.entity.requestBody.RegisterBody;
 import zjut.jianlu.breakfast.entity.requestBody.UserRankBody;
@@ -51,4 +52,7 @@ public interface UserService {
     @Multipart
     @POST("user/uploadAvatar")
     Call<BaseResponse<String>> uploadImage(@Part MultipartBody.Part file);
+
+    @POST("user/modifyProfile")
+    Call<BaseResponse<String>> modifyProfile(@Body ModifyProfileBody body);
 }

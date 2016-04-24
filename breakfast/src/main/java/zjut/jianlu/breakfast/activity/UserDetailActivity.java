@@ -83,6 +83,8 @@ public class UserDetailActivity extends BaseActivity {
 
     private List<OrderComment> mOrderCommentList;
 
+    private Integer orderId;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_user_detatil;
@@ -94,12 +96,13 @@ public class UserDetailActivity extends BaseActivity {
         if (getIntent() != null) {
             userId = getIntent().getIntExtra("userId", -1);
             userType = getIntent().getIntExtra("userType", -1);
+            orderId = getIntent().getIntExtra("orderId", -1);
 
         }
         retrofit = MyApplication.getRetrofitInstance();
         service = retrofit.create(UserService.class);
         mOrderCommentList = new ArrayList<OrderComment>();
-        adapter = new CommentDetailAdapter(mContext, mOrderCommentList, userType, mLlytMainContainer);
+        adapter = new CommentDetailAdapter(mContext, mOrderCommentList, userType, mLlytMainContainer, orderId);
         mLvComment.setAdapter(adapter);
         mRatingbar.setStarHalfDrawable(getResources().getDrawable(R.mipmap.ic_half_star));
         mRatingbar.setmClickable(false);
@@ -165,7 +168,11 @@ public class UserDetailActivity extends BaseActivity {
                 mRlytNoComment.setVisibility(View.GONE);
                 mLvComment.setVisibility(View.VISIBLE);
                 mOrderCommentList.addAll(orderComments);
+
                 adapter.notifyDataSetChanged();
+                if (orderId != -1 && adapter.getmCommentPosition() != null) {
+                    mLvComment.setSelection(adapter.getmCommentPosition());
+                }
 
             }
 

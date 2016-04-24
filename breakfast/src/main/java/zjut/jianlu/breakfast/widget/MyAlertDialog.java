@@ -61,7 +61,6 @@ public class MyAlertDialog {
         this.positiveListener = positiveListener;
     }
 
-
     public void show() {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_confirm, null);
         set = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT).create();
@@ -94,6 +93,5 @@ public class MyAlertDialog {
             set.dismiss();
         }
     }
-
 
 }

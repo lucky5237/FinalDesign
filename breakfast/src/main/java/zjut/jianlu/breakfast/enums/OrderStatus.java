@@ -11,7 +11,7 @@ public enum OrderStatus {
 
     WAIT_CONFIRM(2, "对方正在配送", "待对方确认收货"),//卖家开始配送，待买家确认收货
 
-    FINISH(3, "订单已完成", "订单已完成"),
+    FINISH(3, "交易完成", "交易完成"),
 
     CANCEL(4, "订单已取消", "订单已取消");
 

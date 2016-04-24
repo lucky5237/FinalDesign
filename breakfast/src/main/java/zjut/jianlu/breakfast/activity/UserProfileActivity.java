@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,6 +48,8 @@ import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.entity.db.UserDB;
+import zjut.jianlu.breakfast.entity.requestBody.ModifyProfileBody;
 import zjut.jianlu.breakfast.listener.OnWheelScrollListener;
 import zjut.jianlu.breakfast.service.UserService;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
@@ -78,6 +81,8 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
     Button btnNext;
     @Bind(R.id.llyt_main)
     LinearLayout llytMain;
+    @Bind(R.id.llyt_address)
+    LinearLayout llytAddress;
     private int mGenderSelected = -1;
     private String address;
     private String mCurrentPhotoPath;
@@ -103,9 +108,9 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case LOCATION_RESULT_TAG:
-                address = (String) msg.obj;
-                etAddress.setText(address);
+                case LOCATION_RESULT_TAG:
+                    address = (String) msg.obj;
+                    etAddress.setText(address);
             }
 
         }
@@ -120,7 +125,22 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
         btnUserType.setText(getCurrentUserType() == 0 ? "买家" : "送客");
         mGenderSelected = getCurrentUser().getGender();
         btnUserGender.setText(mGenderSelected == 1 ? "男" : "女");
-        etAddress.setText(getCurrentUser().getAddress());
+        if (getCurrentUserType() == 0) {
+            etAddress.setText(getCurrentUser().getAddress());
+            etAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        etAddress.setEnabled(false);
+                    }
+                }
+            });
+            llytAddress.setVisibility(View.VISIBLE);
+        } else {
+            llytAddress.setVisibility(View.GONE);
+        }
+
+
         Picasso.with(this).load(BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername())).into(ivAvatar);
 
     }
@@ -171,41 +191,74 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
         mLocationClient.setLocOption(option);
     }
 
-    @OnClick({ R.id.btn_next, R.id.iv_location, R.id.iv_back, R.id.ibtn_user_gender, R.id.ibtn_user_avatar,
-            R.id.btn_user_gender, R.id.avatar_Linear })
+    @OnClick({R.id.btn_next, R.id.iv_location, R.id.iv_back, R.id.ibtn_user_gender, R.id.ibtn_user_avatar,
+            R.id.btn_user_gender, R.id.avatar_Linear, R.id.ibtn_user_address})
     public void onClick(View view) {
         switch (view.getId()) {
-        case R.id.iv_back:
-            finish();
-            break;
-        case R.id.ibtn_user_gender:
-        case R.id.btn_user_gender:
-            showGenderDialog();
-            break;
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.ibtn_user_gender:
+            case R.id.btn_user_gender:
+                showGenderDialog();
+                break;
 
-        case R.id.ibtn_user_avatar:
-        case R.id.avatar_Linear:
-            showSelectPicture();
-            break;
-        case R.id.btn_next:
-            checkInput();
-            break;
-        case R.id.iv_location:
-            showMyDialog();
-            if (mLocationClient == null) {
-                mLocationClient = new LocationClient(getApplicationContext());
-                mLocationClient.registerLocationListener(myListener);
-                initLoctaion();
-                mLocationClient.start();
-            } else {
-                if (mLocationClient.isStarted()) {
-                    mLocationClient.stop();
+            case R.id.ibtn_user_avatar:
+            case R.id.avatar_Linear:
+                showSelectPicture();
+                break;
+            case R.id.btn_next:
+                checkInput();
+                break;
+            case R.id.iv_location:
+                showMyDialog();
+                if (mLocationClient == null) {
+                    mLocationClient = new LocationClient(getApplicationContext());
+                    mLocationClient.registerLocationListener(myListener);
+                    initLoctaion();
+                    mLocationClient.start();
+                } else {
+                    if (mLocationClient.isStarted()) {
+                        mLocationClient.stop();
+                    }
+                    mLocationClient.start();
                 }
-                mLocationClient.start();
-            }
 
-            break;
+                break;
+            case R.id.ibtn_user_address:
+                showAddressDialog();
         }
+    }
+
+    private void showAddressDialog() {
+        new ActionSheetDialog(mContext).builder().setCancelable(true).setCanceledOnTouchOutside(true).addSheetItem("重新定位",
+                ActionSheetDialog.SheetItemColor.GRAY, new ActionSheetDialog.OnSheetItemClickListener() {
+
+                    @Override
+                    public void onClick(int which) {
+                        showMyDialog();
+                        if (mLocationClient == null) {
+                            mLocationClient = new LocationClient(getApplicationContext());
+                            mLocationClient.registerLocationListener(myListener);
+                            initLoctaion();
+                            mLocationClient.start();
+                        } else {
+                            if (mLocationClient.isStarted()) {
+                                mLocationClient.stop();
+                            }
+                            mLocationClient.start();
+                        }
+                    }
+                }).addSheetItem("编辑地址", ActionSheetDialog.SheetItemColor.GRAY,
+                new ActionSheetDialog.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int which) {
+                        etAddress.setEnabled(true);
+                        etAddress.setTextColor(Color.parseColor("#000000"));
+                        etAddress.setSelection(etAddress.getText().length());
+                    }
+                })
+                .show();
     }
 
     private void showGenderDialog() {
@@ -219,20 +272,20 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
                         btnUserGender.setTextColor(getResources().getColor(R.color.color_black));
                     }
                 }).addSheetItem("女", ActionSheetDialog.SheetItemColor.GRAY,
-                        new ActionSheetDialog.OnSheetItemClickListener() {
-                            @Override
-                            public void onClick(int which) {
-                                btnUserGender.setText("女");
-                                mGenderSelected = 0;
-                                btnUserGender.setTextColor(getResources().getColor(R.color.color_black));
-                            }
-                        })
+                new ActionSheetDialog.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int which) {
+                        btnUserGender.setText("女");
+                        mGenderSelected = 0;
+                        btnUserGender.setTextColor(getResources().getColor(R.color.color_black));
+                    }
+                })
                 .show();
     }
 
     private void checkInput() {
         address = etAddress.getText().toString().trim();
-        if (TextUtils.isEmpty(address)) {
+        if (TextUtils.isEmpty(address) && getCurrentUserType() == 0) {
             Toast("收货地址不能为空");
             return;
         }
@@ -244,31 +297,41 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
     }
 
     private void saveUserInfo() {
-        // showMyDialog();
-        // Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName,
-        // mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
-        // call.enqueue(new BaseCallback<String>() {
-        // @Override
-        // public void onFinally() {
-        //
-        // }
-        //
-        // @Override
-        // public void onNetFailure(Throwable t) {
-        // Toast(BreakfastConstant.NO_NET_MESSAGE);
-        // }
-        //
-        // @Override
-        // public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-        // Toast(response.body().getMessage());
-        // uploadAvatar();
-        // }
-        //
-        // @Override
-        // public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-        // Toast(response.body().getMessage());
-        // }
-        // });
+        showMyDialog();
+        Call<BaseResponse<String>> call = userService.modifyProfile(new ModifyProfileBody(getCurrentUserID(), mGenderSelected, address));
+        call.enqueue(new BaseCallback<String>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
+            @Override
+            public void onNetFailure(Throwable t) {
+                Toast(BreakfastConstant.NO_NET_MESSAGE);
+            }
+
+            @Override
+            public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                Toast(response.body().getMessage());
+                UserDB userDB = UserDB.listAll(UserDB.class).get(0);
+                if (getCurrentUserType() == 0) {
+                    userDB.setAddress(address);
+                }
+                userDB.setGender(mGenderSelected);
+
+                userDB.save();
+                setResult(RESULT_OK);
+                finish();
+
+            }
+
+            @Override
+            public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                Toast(response.body().getMessage());
+
+            }
+        });
+
     }
 
     private void showSelectPicture() {
@@ -386,7 +449,7 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
             if (resultCode == Activity.RESULT_OK) {
                 if (intent.getData() != null) {
                     Uri selectedImage = intent.getData();
-                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = mContext.getContentResolver().query(selectedImage, filePathColumn, null, null,
                             null);
                     cursor.moveToFirst();
@@ -424,7 +487,7 @@ public class UserProfileActivity extends BaseActivity implements OnWheelScrollLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mLocationClient.isStarted()) {
+        if (mLocationClient != null && mLocationClient.isStarted()) {
             mLocationClient.stop();
         }
 
