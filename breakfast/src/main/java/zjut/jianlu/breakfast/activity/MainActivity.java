@@ -297,7 +297,20 @@ public class MainActivity extends BaseActivity {
                             case 1://接单代配送刷新
                                 mOrderFragment.getMyWaitDeliveryFragment().getMyorder();
                                 mOrderFragment.getMyWaitDeliveryFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
-
+                                break;
+                            case 2://开始配送
+                                mOrderFragment.getMyWaitConfirmFragment().getMyorder();
+                                mOrderFragment.getMyWaitConfirmFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
+                                break;
+                            case 3://确认收货
+                                mOrderFragment.getMyFinishOrderFragment().getMyorder();
+                                mOrderFragment.getMyFinishOrderFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
+                                break;
+                            case 4://取消订单
+                                mOrderFragment.getMyCancelOrderFragment().getMyorder();
+                                mOrderFragment.getMyCancelOrderFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
+                                break;
+// TODO: 4/25/2016 跳转逻辑优化 
 
                         }
                     }
