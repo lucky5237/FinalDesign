@@ -62,6 +62,10 @@ public class UserDetailActivity extends BaseActivity {
     LinearLayout mLlytMainContainer;
     @Bind(R.id.no_comment)
     RelativeLayout mRlytNoComment;
+    @Bind(R.id.tv_order_num_des)
+    TextView mTvOrderNumDes;
+    @Bind(R.id.tv_bonus_des)
+    TextView mTvBonusDes;
 
     private User user;
 
@@ -106,7 +110,11 @@ public class UserDetailActivity extends BaseActivity {
         mLvComment.setAdapter(adapter);
         mRatingbar.setStarHalfDrawable(getResources().getDrawable(R.mipmap.ic_half_star));
         mRatingbar.setmClickable(false);
-        getUserInfo();
+        if (userType == 1){
+            mTvOrderNumDes.setText("总接单数：");
+            mTvBonusDes.setText("获取的悬赏金总额：");
+        }
+            getUserInfo();
 
 
     }

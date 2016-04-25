@@ -147,6 +147,12 @@ public abstract class BaseOrderFragment extends BaseFragment
 
             }
         });
+        btnLoadAgainOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getMyorder();
+            }
+        });
 
     }
 

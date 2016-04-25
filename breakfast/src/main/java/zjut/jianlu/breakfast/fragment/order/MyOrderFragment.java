@@ -21,8 +21,18 @@ public class MyOrderFragment extends BaseFragment {
 
     @Bind(R.id.titles)
     TabPageIndicator mtabPageIndicator;
+
     @Bind(R.id.pages)
     ViewPager mViewPager;
+
+    public List<Fragment> getmFragmentList() {
+        return mFragmentList;
+    }
+
+    public void setmFragmentList(List<Fragment> mFragmentList) {
+        this.mFragmentList = mFragmentList;
+    }
+
     private List<Fragment> mFragmentList;
     private MyAllOrderFragment myAllOrderFragment;
     private MyWaitReceiveFragment myWaitReceiveFragment;
@@ -30,6 +40,14 @@ public class MyOrderFragment extends BaseFragment {
     private MyWaitConfirmFragment myWaitConfirmFragment;
     private MyFinishOrderFragment myFinishOrderFragment;
     private MyCancelOrderFragment myCancelOrderFragment;
+
+    public TabPageIndicator getMtabPageIndicator() {
+        return mtabPageIndicator;
+    }
+
+    public void setMtabPageIndicator(TabPageIndicator mtabPageIndicator) {
+        this.mtabPageIndicator = mtabPageIndicator;
+    }
 
     public MyAllOrderFragment getMyAllOrderFragment() {
         return myAllOrderFragment;

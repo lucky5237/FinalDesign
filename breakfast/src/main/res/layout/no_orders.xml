@@ -24,4 +24,18 @@
         android:textColor="@color/gray_show"
         android:textSize="16sp" />
 
+    <Button
+        android:id="@+id/bt_again_load_order"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@id/tv_show_relation_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_back_home_shape"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:text="点击重新加载"
+        android:textColor="@color/white" />
+
 </RelativeLayout>

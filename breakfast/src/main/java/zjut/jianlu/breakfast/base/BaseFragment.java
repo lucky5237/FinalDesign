@@ -33,6 +33,10 @@ public abstract class BaseFragment extends Fragment {
     public RelativeLayout mRlltNoOrder;
     public RelativeLayout mRlltNoFood;
     public Button btnLoadAgain;
+    public Button btnLoadAgainFood;
+    public Button btnLoadAgainOrder;
+
+
 
     public View view;
 
@@ -50,6 +54,9 @@ public abstract class BaseFragment extends Fragment {
         mRlltNoOrder = (RelativeLayout) view.findViewById(R.id.no_orders);
         mRlltNoFood = (RelativeLayout) view.findViewById(R.id.no_relation_goods);
         btnLoadAgain= (Button) view.findViewById(R.id.bt_again_load);
+        btnLoadAgainFood= (Button) view.findViewById(R.id.btn_again_load_food);
+        btnLoadAgainOrder= (Button) view.findViewById(R.id.bt_again_load_order);
+
         ButterKnife.bind(this, view);
         return view;
 

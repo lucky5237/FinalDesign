@@ -165,9 +165,6 @@ public class MainActivity extends BaseActivity {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void showFragment(int index, FragmentTransaction transaction) {
-        if (mCurrentIndex == CART_INDEX) {
-            mRbtnCart.setSelected(false);
-        }
 
         mCurrentIndex = index;
         switch (index) {
@@ -288,28 +285,47 @@ public class MainActivity extends BaseActivity {
                 if (mOrderFragment != null) {
                     mOrderFragment.getMyAllOrderFragment().getMyorder();
                     mOrderFragment.getMyAllOrderFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
+
                     if (status != null) {
                         switch (status) {
                             case 0://下单刷新待接单界面
                                 mOrderFragment.getMyWaitReceiveFragment().getMyorder();
                                 mOrderFragment.getMyWaitReceiveFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
+                                mOrderFragment.getMtabPageIndicator().setCurrentItem(1);
                                 break;
                             case 1://接单代配送刷新
                                 mOrderFragment.getMyWaitDeliveryFragment().getMyorder();
                                 mOrderFragment.getMyWaitDeliveryFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
+                                mOrderFragment.getMtabPageIndicator().setCurrentItem(1);
                                 break;
                             case 2://开始配送
+                                mOrderFragment.getMyWaitDeliveryFragment().getMyorder();
                                 mOrderFragment.getMyWaitConfirmFragment().getMyorder();
                                 mOrderFragment.getMyWaitConfirmFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
+                                mOrderFragment.getMtabPageIndicator().setCurrentItem(2);
+
                                 break;
                             case 3://确认收货
+                                mOrderFragment.getMyWaitConfirmFragment().getMyorder();
                                 mOrderFragment.getMyFinishOrderFragment().getMyorder();
                                 mOrderFragment.getMyFinishOrderFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
+                                mOrderFragment.getMtabPageIndicator().setCurrentItem(4);
+
                                 break;
                             case 4://取消订单
+                                if (mOrderFragment.getMyWaitReceiveFragment() != null) {
+                                    mOrderFragment.getMyWaitReceiveFragment().getMyorder();
+                                }
+                                mOrderFragment.getMyWaitDeliveryFragment().getMyorder();
                                 mOrderFragment.getMyCancelOrderFragment().getMyorder();
                                 mOrderFragment.getMyCancelOrderFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
+                                mOrderFragment.getMtabPageIndicator().setCurrentItem(mOrderFragment.getmFragmentList().size() - 1);
+
                                 break;
+                            case -1://并不存在的状态，自己定义评论完更新
+                                if (mOrderFragment.getMyFinishOrderFragment()!=null){
+                                    mOrderFragment.getMyFinishOrderFragment().getMyorder();
+                                }
 // TODO: 4/25/2016 跳转逻辑优化 
 
                         }
@@ -364,6 +380,7 @@ public class MainActivity extends BaseActivity {
         if (requestCode == MAINACTIVITY_REQUEST_CODE) {
             Picasso.with(this).load(BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername())).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE).into(mIvAvatar);
         }
+
 
     }
 }

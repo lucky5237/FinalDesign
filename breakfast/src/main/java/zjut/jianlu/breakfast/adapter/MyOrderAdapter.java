@@ -139,8 +139,8 @@ public class MyOrderAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 }
             });
-        }else {
-            viewHolder.ivAvatar.setImageResource(BreakfastUtils.getDrawableIdByName(mContext,"ic_question"));
+        } else {
+            viewHolder.ivAvatar.setImageResource(BreakfastUtils.getDrawableIdByName(mContext, "ic_question"));
         }
         switch (orderinfo.getStatus()) {
 

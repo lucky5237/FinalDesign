@@ -48,10 +48,6 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
 
     private boolean isFirstRequest = true;
 
-
-//    private Button mBtnLoadAgain;
-
-
     private static final int SHOW_NUM = 10;
 
     @Override
@@ -80,8 +76,16 @@ public abstract class BaseHomeFoodFragment extends BaseRefreshableFragment {
             @Override
             public void onClick(View v) {
                 getallFood(placeId, flag);
+
             }
         });
+        btnLoadAgainFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getallFood(placeId, flag);
+            }
+        });
+
 
     }
 

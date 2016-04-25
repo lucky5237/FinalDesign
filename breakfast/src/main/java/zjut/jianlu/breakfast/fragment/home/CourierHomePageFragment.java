@@ -1,9 +1,12 @@
 package zjut.jianlu.breakfast.fragment.home;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ListView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -71,6 +74,24 @@ public class CourierHomePageFragment extends BaseFragment {
                 getNewestOrder();
             }
         });
+        btnLoadAgainOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getNewestOrder();
+            }
+        });
+        mPullToRefreshListview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+                getNewestOrder();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPullToRefreshListview.onRefreshComplete();
+                    }
+                }, 500);
+            }
+        });
 
     }
 
@@ -91,24 +112,23 @@ public class CourierHomePageFragment extends BaseFragment {
 
             @Override
             public void onBizSuccess(Call<BaseResponse<List<OrderInfo>>> call,
-                    Response<BaseResponse<List<OrderInfo>>> response) {
+                                     Response<BaseResponse<List<OrderInfo>>> response) {
                 if (mOrderInfoList != null || mOrderInfoList.size() > 0) {
                     mOrderInfoList.clear();
                 }
                 if (response.body().getData().size() == 0) {
-                    mPullToRefreshListview.onRefreshComplete();
                     ShowUI(BreakfastConstant.NO_ORDER);
+                    Toast("目前暂无新订单");
                     return;
                 }
                 ShowUI(BreakfastConstant.NORMAL);
                 mOrderInfoList.addAll(response.body().getData());
                 adapter.notifyDataSetChanged();
-                mPullToRefreshListview.onRefreshComplete();
             }
 
             @Override
             public void onBizFailure(Call<BaseResponse<List<OrderInfo>>> call,
-                    Response<BaseResponse<List<OrderInfo>>> response) {
+                                     Response<BaseResponse<List<OrderInfo>>> response) {
                 Toast(response.body().getMessage());
             }
         });
@@ -135,7 +155,7 @@ public class CourierHomePageFragment extends BaseFragment {
                 Toast(response.body().getMessage());
                 getNewestOrder();
                 // 接单成功,跳转到我的订单页面查看
-                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX,1));
+                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX, 1));
 
             }
 

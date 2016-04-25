@@ -82,7 +82,6 @@ public class ShopCartFragment extends BaseFragment {
                 adapter.setAllChecked(isChecked);
             }
         });
-
     }
 
     @Override

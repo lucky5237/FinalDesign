@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.hedgehog.ratingbar.RatingBar;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -27,6 +29,7 @@ import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.entity.event.ChangeIndexEvent;
 import zjut.jianlu.breakfast.entity.requestBody.MakeCommentBody;
 import zjut.jianlu.breakfast.service.OrderService;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
@@ -126,6 +129,7 @@ public class CommentActivity extends BaseActivity {
             @Override
             public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 Toast(response.body().getMessage());
+                EventBus.getDefault().post(new ChangeIndexEvent(MainActivity.ORDER_INDEX,-1));
                 finish();
             }
 
