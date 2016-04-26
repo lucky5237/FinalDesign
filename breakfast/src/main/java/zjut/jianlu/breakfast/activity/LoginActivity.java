@@ -9,6 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -52,76 +57,105 @@ public class LoginActivity extends BaseActivity {
     EditText mEtMobile;
     @Bind(R.id.et_password)
 
-
     EditText mEtPassword;
     @Bind(R.id.btn_login)
     Button mBtnLogin;
     @Bind(R.id.tv_forget_password)
     TextView mTvForgetPassword;
 
-
-    @OnClick({R.id.iv_back, R.id.btn_login, R.id.tv_forget_password})
+    @OnClick({ R.id.iv_back, R.id.btn_login, R.id.tv_forget_password })
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_back:
-                finish();
-                break;
-            case R.id.tv_forget_password:
-                Intent intent = new Intent(LoginActivity.this, CheckMobileActivity.class);
-                intent.putExtra(BreakfastConstant.TAG_IS_CHANGEPASSWORD, true);
-                startActivity(intent);
-                break;
-            case R.id.btn_login:
-                mobile = mEtMobile.getText().toString().trim();
-                password = mEtPassword.getText().toString().trim();
-                if (TextUtils.isEmpty(mobile) || TextUtils.isEmpty(password)) {
-                    Toast("手机号或密码不能为空");
-                    return;
-                } else if (mobile.length() < 11 || !isMobilePhone(mobile)) {
-                    Toast("请输入合法的手机号");
-                    return;
+        case R.id.iv_back:
+            finish();
+            break;
+        case R.id.tv_forget_password:
+            Intent intent = new Intent(LoginActivity.this, CheckMobileActivity.class);
+            intent.putExtra(BreakfastConstant.TAG_IS_CHANGEPASSWORD, true);
+            startActivity(intent);
+            break;
+        case R.id.btn_login:
+            mobile = mEtMobile.getText().toString().trim();
+            password = mEtPassword.getText().toString().trim();
+            if (TextUtils.isEmpty(mobile) || TextUtils.isEmpty(password)) {
+                Toast("手机号或密码不能为空");
+                return;
+            } else if (mobile.length() < 11 || !isMobilePhone(mobile)) {
+                Toast("请输入合法的手机号");
+                return;
 
-                } else if (password.length() < 6) {
-                    Toast("密码的长度至少为6位");
-                    return;
+            } else if (password.length() < 6) {
+                Toast("密码的长度至少为6位");
+                return;
+            }
+            // doLogin();
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        // 调用sdk注册方法
+                        EMClient.getInstance().createAccount(mobile, password);
+
+                    } catch (final HyphenateException e) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                int errorCode=e.getErrorCode();
+                                if(errorCode== EMError.NETWORK_ERROR){
+                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.network_anomalies), Toast.LENGTH_SHORT).show();
+                                }else if(errorCode == EMError.USER_ALREADY_EXIST){
+                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.User_already_exists), Toast.LENGTH_SHORT).show();
+                                }else if(errorCode == EMError.USER_AUTHENTICATION_FAILED){
+                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.registration_failed_without_permission), Toast.LENGTH_SHORT).show();
+                                }else if(errorCode == EMError.USER_ILLEGAL_ARGUMENT){
+                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.illegal_user_name),Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registration_failed) + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
                 }
-                showMyDialog();
-                Call<BaseResponse<User>> call = userService.login(new LoginBody(mobile, password));
-                call.enqueue(new BaseCallback<User>() {
-                    @Override
-                    public void onFinally() {
-                        dismissMyDialog();
-                    }
 
-                    @Override
-                    public void onNetFailure(Throwable t) {
-                        ToastCenter("网络连接出错，请重试");
-                    }
-
-                    @Override
-                    public void onBizSuccess(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
-                        if (UserDB.count(UserDB.class) > 0) {
-                            UserDB.deleteAll(UserDB.class);
-                        }
-                        User user = response.body().getData();
-                        UserDB userDB = new UserDB(user);
-                        userDB.save();
-                        sharedPreferencesUtil.setUserId(user.getId().intValue());
-                        sharedPreferencesUtil.setUserType(user.getType());
-                        sharedPreferencesUtil.setMobile(user.getMobile());
-                        sharedPreferencesUtil.setPassword(user.getPassword());
-                        startActivity(new Intent(mContext, MainActivity.class));
-
-                    }
-
-                    @Override
-                    public void onBizFailure(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
-                        Toast(response.body().getMessage());
-
-                    }
-                });
-
+            }).start();
+            //
         }
+    }
+
+    private void doLogin() {
+        showMyDialog();
+        Call<BaseResponse<User>> call = userService.login(new LoginBody(mobile, password));
+        call.enqueue(new BaseCallback<User>() {
+            @Override
+            public void onFinally() {
+                dismissMyDialog();
+            }
+
+            @Override
+            public void onNetFailure(Throwable t) {
+                ToastCenter("网络连接出错，请重试");
+            }
+
+            @Override
+            public void onBizSuccess(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
+                if (UserDB.count(UserDB.class) > 0) {
+                    UserDB.deleteAll(UserDB.class);
+                }
+                User user = response.body().getData();
+                UserDB userDB = new UserDB(user);
+                userDB.save();
+                sharedPreferencesUtil.setUserId(user.getId().intValue());
+                sharedPreferencesUtil.setUserType(user.getType());
+                sharedPreferencesUtil.setMobile(user.getMobile());
+                sharedPreferencesUtil.setPassword(user.getPassword());
+                startActivity(new Intent(mContext, MainActivity.class));
+
+            }
+
+            @Override
+            public void onBizFailure(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
+                Toast(response.body().getMessage());
+
+            }
+        });
     }
 
     @Override
