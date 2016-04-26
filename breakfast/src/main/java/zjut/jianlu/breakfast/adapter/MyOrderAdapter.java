@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,7 +127,10 @@ public class MyOrderAdapter extends BaseAdapter {
         viewHolder.tvMoney.setText("¥" + orderinfo.getAmount() + "");
         viewHolder.tvBonus.setText("¥" + orderinfo.getBonus() + "");
         viewHolder.tvStatus.setText(OrderStatus.getOrderDesByCode(orderinfo.getStatus(), userType));
-        if (orderinfo.getStatus() != 0) {
+        if (orderinfo.getStatus() == 0 || (orderinfo.getStatus() == 4 && TextUtils.isEmpty(orderinfo.getReceivedTs()))) {
+            viewHolder.ivAvatar.setImageResource(BreakfastUtils.getDrawableIdByName(mContext, "ic_question"));
+
+        } else {
             final User theOtherUser = userType == 0 ? orderinfo.getCourierUser() : orderinfo.getClientUser();
             String avatarUrl = BreakfastUtils.getAbsAvatarUrlPath(theOtherUser.getUsername());
             Picasso.with(mContext).load(avatarUrl).into(viewHolder.ivAvatar);
@@ -139,8 +143,6 @@ public class MyOrderAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 }
             });
-        } else {
-            viewHolder.ivAvatar.setImageResource(BreakfastUtils.getDrawableIdByName(mContext, "ic_question"));
         }
         switch (orderinfo.getStatus()) {
 

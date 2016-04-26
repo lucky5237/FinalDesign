@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,6 +16,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -134,22 +137,54 @@ public class MainActivity extends BaseActivity {
             case R.id.llyt_password:
                 startActivity(new Intent(MainActivity.this, ChangePasswordActvity.class));
                 mDrawerLayout.closeDrawers();
-                ;
                 break;
             case R.id.llyt_logout:
-                dialog = new MyAlertDialog(MainActivity.this, "温馨提示", "是否确定要退出登录", new View.OnClickListener() {
+                showMyDialog();
+                new MyAlertDialog(MainActivity.this, "温馨提示", "是否确定要退出登录", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SharedPreferencesUtil.getInstance(mContext).clear();
-                        startActivity(new Intent(MainActivity.this, LoginOrRegisterActivity.class));
-                        finish();
+                        EMClient.getInstance().logout(true, new EMCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dismissMyDialog();
+                                        Log.d("jianlu", "成功登出");
+                                        SharedPreferencesUtil.getInstance(mContext).clear();
+                                        startActivity(new Intent(MainActivity.this, LoginOrRegisterActivity.class));
+                                        finish();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onError(int code, String message) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Log.d("jianlu", "登出失败");
+                                        dismissMyDialog();
+
+                                    }
+                                });
+
+
+                            }
+
+                            @Override
+                            public void onProgress(int i, String s) {
+
+                            }
+                        });
                     }
-                });
-                dialog.show();
+                }).show();
+
                 break;
             default:
                 break;
         }
+
         transation.commitAllowingStateLoss();
 
     }
@@ -271,7 +306,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dialog.dismiss();
+        if (dialog != null) {
+            dialog.dismiss();
+        }
         EventBus.getDefault().unregister(this);
     }
 
@@ -323,7 +360,7 @@ public class MainActivity extends BaseActivity {
 
                                 break;
                             case -1://并不存在的状态，自己定义评论完更新
-                                if (mOrderFragment.getMyFinishOrderFragment()!=null){
+                                if (mOrderFragment.getMyFinishOrderFragment() != null) {
                                     mOrderFragment.getMyFinishOrderFragment().getMyorder();
                                 }
 // TODO: 4/25/2016 跳转逻辑优化 
