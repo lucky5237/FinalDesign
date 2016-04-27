@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -81,6 +82,8 @@ public class MainActivity extends BaseActivity {
     LinearLayout mLlytPassword;
     @Bind(R.id.llyt_logout)
     LinearLayout mLlytLogout;
+    @Bind(R.id.iv_message)
+    ImageView mIvMessage;
 
 
     private MyAlertDialog dialog;
@@ -97,7 +100,7 @@ public class MainActivity extends BaseActivity {
     private Fragment[] fragments;
 
     @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart, R.id.llyt_me, R.id.llyt_profile,
-            R.id.llyt_password, R.id.llyt_logout, R.id.iv_user_image})
+            R.id.llyt_password, R.id.llyt_logout, R.id.iv_user_image, R.id.iv_message})
     public void onclick(View view) {
         FragmentTransaction transation = mTransitionManager.beginTransaction();
         switch (view.getId()) {
@@ -180,6 +183,9 @@ public class MainActivity extends BaseActivity {
                     }
                 }).show();
 
+                break;
+            case R.id.iv_message:
+                startActivity(new Intent(MainActivity.this, MessageActivity.class));
                 break;
             default:
                 break;

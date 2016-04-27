@@ -18,6 +18,14 @@
                 android:id="@+id/tv_topbar"
                 style="@style/topbar_text_style"
                 android:text="首页" />
+            <ImageView
+                android:id="@+id/iv_message"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:src="@mipmap/ic_chat"
+                />
 
 
         </RelativeLayout>

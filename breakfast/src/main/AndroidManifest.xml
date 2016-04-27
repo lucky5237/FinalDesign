@@ -55,18 +55,22 @@
         </activity>
 
         <!-- 设置环信应用的appkey -->
-        <meta-data android:name="EASEMOB_APPKEY"  android:value="150711#breakfast" />
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="150711#breakfast" />
         <!-- 声明sdk所需的service SDK核心功能-->
-        <service android:name="com.hyphenate.chat.EMChatService" android:exported="true"/>
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
+            android:exported="true" />
         <!-- 声明sdk所需的receiver -->
         <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-                <data android:scheme="package"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
             </intent-filter>
             <!-- 可选filter -->
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
@@ -142,6 +146,17 @@
 
         <activity
             android:name=".activity.UserProfileActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activity.ChatActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".activity.MessageActivity"
             android:screenOrientation="portrait">
 
         </activity>
