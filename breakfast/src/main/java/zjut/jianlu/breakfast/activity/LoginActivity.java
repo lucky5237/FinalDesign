@@ -4,18 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
-
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.bean.BmobIMUserInfo;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.LogInListener;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -25,8 +25,10 @@ import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.entity.bean.MyUser;
 import zjut.jianlu.breakfast.entity.bean.User;
 import zjut.jianlu.breakfast.entity.db.UserDB;
+import zjut.jianlu.breakfast.entity.model.UserModel;
 import zjut.jianlu.breakfast.entity.requestBody.LoginBody;
 import zjut.jianlu.breakfast.service.UserService;
 import zjut.jianlu.breakfast.utils.SharedPreferencesUtil;
@@ -94,8 +96,8 @@ public class LoginActivity extends BaseActivity {
 
     private void doLogin() {
         showMyDialog();
-        Call<BaseResponse<User>> call = userService.login(new LoginBody(mobile, password));
-        call.enqueue(new BaseCallback<User>() {
+        Call<BaseResponse<MyUser>> call = userService.login(new LoginBody(mobile, password));
+        call.enqueue(new BaseCallback<MyUser>() {
             @Override
             public void onFinally() {
                 dismissMyDialog();
@@ -107,44 +109,50 @@ public class LoginActivity extends BaseActivity {
             }
 
             @Override
-            public void onBizSuccess(Call<BaseResponse<User>> call, final Response<BaseResponse<User>> response) {
-                EMClient.getInstance().login(mobile, password, new EMCallBack() {//回调
+            public void onBizSuccess(Call<BaseResponse<MyUser>> call, final Response<BaseResponse<MyUser>> response) {
+
+//                if (UserDB.count(UserDB.class) > 0) {
+//                    UserDB.deleteAll(UserDB.class);
+//                }
+//                MyUser user = response.body().getData();
+//                UserDB userDB = new UserDB(user);
+//                userDB.save();
+//                sharedPreferencesUtil.setUserId(user.getId().intValue());
+//                sharedPreferencesUtil.setUserType(user.getType());
+//                sharedPreferencesUtil.setMobile(user.getMobile());
+//                sharedPreferencesUtil.setPassword(user.getPassword());
+//                startActivity(new Intent(mContext, MainActivity.class));
+
+                UserModel.getInstance().login(mobile, password, new LogInListener() {
+
                     @Override
-                    public void onSuccess() {
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                if (UserDB.count(UserDB.class) > 0) {
-                                    UserDB.deleteAll(UserDB.class);
-                                }
-                                User user = response.body().getData();
-                                UserDB userDB = new UserDB(user);
-                                userDB.save();
-                                sharedPreferencesUtil.setUserId(user.getId().intValue());
-                                sharedPreferencesUtil.setUserType(user.getType());
-                                sharedPreferencesUtil.setMobile(user.getMobile());
-                                sharedPreferencesUtil.setPassword(user.getPassword());
-                                startActivity(new Intent(mContext, MainActivity.class));
-                                Log.d("main", "登陆聊天服务器成功！");
+                    public void done(Object o, BmobException e) {
+                        if (e == null) {
+                            if (UserDB.count(UserDB.class) > 0) {
+                                UserDB.deleteAll(UserDB.class);
                             }
-                        });
-                    }
+                            MyUser myUser = response.body().getData();
+                            UserDB userDB = new UserDB(myUser);
+                            userDB.save();
+                            sharedPreferencesUtil.setUserId(myUser.getId().intValue());
+                            sharedPreferencesUtil.setUserType(myUser.getType());
+                            sharedPreferencesUtil.setMobile(myUser.getMobile());
+                            sharedPreferencesUtil.setPassword(myUser.getPassword());
+                            User user = (User) o;
+                            BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(user.getObjectId(), user.getUsername(), user.getAvatar()));
+                            startActivity(new Intent(mContext, MainActivity.class));
 
-                    @Override
-                    public void onProgress(int progress, String status) {
-
-                    }
-
-                    @Override
-                    public void onError(int code, String message) {
-                        Log.d("main", "登陆聊天服务器失败！");
+                        } else {
+                            Toast(e.getMessage() + "(" + e.getErrorCode() + ")");
+                        }
                     }
                 });
 
-
             }
 
+
             @Override
-            public void onBizFailure(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
+            public void onBizFailure(Call<BaseResponse<MyUser>> call, Response<BaseResponse<MyUser>> response) {
                 Toast(response.body().getMessage());
 
             }

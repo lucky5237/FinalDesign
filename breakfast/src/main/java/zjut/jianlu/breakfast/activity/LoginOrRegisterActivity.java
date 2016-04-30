@@ -6,8 +6,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
-import com.hyphenate.chat.EMClient;
-
 import butterknife.Bind;
 import butterknife.OnClick;
 import zjut.jianlu.breakfast.R;
@@ -39,14 +37,6 @@ public class LoginOrRegisterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         sharedPreferencesUtil = SharedPreferencesUtil.getInstance(mContext);
         if (!TextUtils.isEmpty(sharedPreferencesUtil.getMobile()) && !TextUtils.isEmpty(sharedPreferencesUtil.getPassword())) {
-            //登录过的用户直接跳转首页
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    EMClient.getInstance().groupManager().loadAllGroups();
-                    EMClient.getInstance().chatManager().loadAllConversations();
-                }
-            }).start();
             startActivity(new Intent(mContext, MainActivity.class));
         }
 

@@ -17,8 +17,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -146,46 +144,21 @@ public class MainActivity extends BaseActivity {
                 new MyAlertDialog(MainActivity.this, "温馨提示", "是否确定要退出登录", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EMClient.getInstance().logout(true, new EMCallBack() {
-                            @Override
-                            public void onSuccess() {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        dismissMyDialog();
-                                        Log.d("jianlu", "成功登出");
-                                        SharedPreferencesUtil.getInstance(mContext).clear();
-                                        startActivity(new Intent(MainActivity.this, LoginOrRegisterActivity.class));
-                                        finish();
-                                    }
-                                });
-                            }
 
-                            @Override
-                            public void onError(int code, String message) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Log.d("jianlu", "登出失败");
-                                        dismissMyDialog();
-
-                                    }
-                                });
-
-
-                            }
-
-                            @Override
-                            public void onProgress(int i, String s) {
-
-                            }
-                        });
+                        dismissMyDialog();
+                        Log.d("jianlu", "成功登出");
+                        SharedPreferencesUtil.getInstance(mContext).clear();
+                        startActivity(new Intent(MainActivity.this, LoginOrRegisterActivity.class));
+                        finish();
                     }
+
+
                 }).show();
 
                 break;
             case R.id.iv_message:
                 startActivity(new Intent(MainActivity.this, MessageActivity.class));
+
                 break;
             default:
                 break;

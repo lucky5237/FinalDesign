@@ -19,7 +19,7 @@ import zjut.jianlu.breakfast.base.BaseRefreshableFragment;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
-import zjut.jianlu.breakfast.entity.bean.User;
+import zjut.jianlu.breakfast.entity.bean.MyUser;
 import zjut.jianlu.breakfast.entity.requestBody.UserRankBody;
 import zjut.jianlu.breakfast.service.UserService;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
@@ -33,7 +33,7 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
 
     private RankAdapter adapter;
 
-    private List<User> userList;
+    private List<MyUser> userList;
 
     public Integer userType;// 默认显示买家发出的悬赏金
 
@@ -55,7 +55,7 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        userList = new ArrayList<User>();
+        userList = new ArrayList<MyUser>();
         adapter = new RankAdapter(mContext, userList, userType);
         mListView.setAdapter(adapter);
         retrofit = MyApplication.getRetrofitInstance();
@@ -79,8 +79,8 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
 
     private void getBonusRank(Integer userType, Integer flag) {
         showMyDialog();
-        Call<BaseResponse<List<User>>> call = userService.getUserRank(new UserRankBody(SHOW_NUM, userType, flag));
-        call.enqueue(new BaseCallback<List<User>>() {
+        Call<BaseResponse<List<MyUser>>> call = userService.getUserRank(new UserRankBody(SHOW_NUM, userType, flag));
+        call.enqueue(new BaseCallback<List<MyUser>>() {
             @Override
             public void onFinally() {
                 dismissMyDialog();
@@ -93,7 +93,7 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
             }
 
             @Override
-            public void onBizSuccess(Call<BaseResponse<List<User>>> call, Response<BaseResponse<List<User>>> response) {
+            public void onBizSuccess(Call<BaseResponse<List<MyUser>>> call, Response<BaseResponse<List<MyUser>>> response) {
                 if (userList != null || userList.size() > 0) {
                     userList.clear();
                 }
@@ -105,7 +105,7 @@ public abstract class BaseRankFragment extends BaseRefreshableFragment {
             }
 
             @Override
-            public void onBizFailure(Call<BaseResponse<List<User>>> call, Response<BaseResponse<List<User>>> response) {
+            public void onBizFailure(Call<BaseResponse<List<MyUser>>> call, Response<BaseResponse<List<MyUser>>> response) {
                 Toast(response.body().getMessage());
             }
         });

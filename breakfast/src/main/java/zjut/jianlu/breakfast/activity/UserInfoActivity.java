@@ -22,15 +22,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.hyphenate.EMError;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,6 +36,7 @@ import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.listener.SaveListener;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -52,10 +49,12 @@ import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.entity.bean.User;
 import zjut.jianlu.breakfast.entity.requestBody.RegisterBody;
 import zjut.jianlu.breakfast.listener.OnWheelScrollListener;
 import zjut.jianlu.breakfast.service.UserService;
 import zjut.jianlu.breakfast.utils.CropImageUtil;
+import zjut.jianlu.breakfast.utils.LogUtil;
 import zjut.jianlu.breakfast.utils.PictureUtil;
 import zjut.jianlu.breakfast.widget.ActionSheetDialog;
 import zjut.jianlu.breakfast.widget.ActionSheetDialog.OnSheetItemClickListener;
@@ -171,8 +170,8 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
 
             @Override
             public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-
                 startActivity(new Intent(mContext, LoginActivity.class));
+
 
             }
 
@@ -319,39 +318,29 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
         if (mLocationClient != null && mLocationClient.isStarted()) {
             mLocationClient.stop();
         }
-        saveUserInfo();
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    // 调用sdk注册方法
-                    EMClient.getInstance().createAccount(mobile, password);
-
-                } catch (final HyphenateException e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            int errorCode=e.getErrorCode();
-                            if(errorCode== EMError.NETWORK_ERROR){
-                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.network_anomalies), Toast.LENGTH_SHORT).show();
-                            }else if(errorCode == EMError.USER_ALREADY_EXIST){
-                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.User_already_exists), Toast.LENGTH_SHORT).show();
-                            }else if(errorCode == EMError.USER_AUTHENTICATION_FAILED){
-                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.registration_failed_without_permission), Toast.LENGTH_SHORT).show();
-                            }else if(errorCode == EMError.USER_ILLEGAL_ARGUMENT){
-                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.illegal_user_name),Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registration_failed) + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
+        showMyDialog();
+        final User user = new User();
+        user.setUsername(mobile);
+        user.setPassword(password);
+        user.setAvatar(userName);
+        user.signUp(mContext, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                LogUtil.d("用户 " + userName + "注册成功");
+                saveUserInfo();
             }
 
-        }).start();
-        //
+            @Override
+            public void onFailure(int i, String s) {
+                LogUtil.d("用户 " + userName + "注册失败，" + s);
+                dismissMyDialog();
+
+            }
+        });
+
     }
 
     private void saveUserInfo() {
-        showMyDialog();
         Call<BaseResponse<String>> call = userService.register(new RegisterBody(mobile, password, userName,
                 mGenderSelected, mTypeSelected, TextUtils.isEmpty(address) ? "" : address, ""));
         call.enqueue(new BaseCallback<String>() {
@@ -374,6 +363,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             @Override
             public void onBizFailure(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 Toast(response.body().getMessage());
+                dismissMyDialog();
             }
         });
     }

@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.activity.MainActivity;
-import zjut.jianlu.breakfast.entity.bean.User;
+import zjut.jianlu.breakfast.entity.bean.MyUser;
 import zjut.jianlu.breakfast.listener.OnAvatarClickListener;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
 
@@ -27,10 +27,10 @@ import zjut.jianlu.breakfast.utils.BreakfastUtils;
 public class RankAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<User> userList;
+    private List<MyUser> userList;
     private Integer userType;
 
-    public RankAdapter(Context context, List<User> users, Integer userType) {
+    public RankAdapter(Context context, List<MyUser> users, Integer userType) {
         mContext = context;
         userList = users;
         this.userType = userType;
@@ -61,7 +61,7 @@ public class RankAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        User user = (User) getItem(position);
+        MyUser user = (MyUser) getItem(position);
         String genderChinese = user.getGender() == 1 ? "他" : "她";
         Picasso.with(mContext).load(BreakfastUtils.getAbsAvatarUrlPath(user.getUsername())).into(viewHolder.ivUserImage);
         viewHolder.ivUserImage.setOnClickListener(new OnAvatarClickListener(mContext, user.getUsername(), MainActivity.getInstance().getmLlytMainContainer()));

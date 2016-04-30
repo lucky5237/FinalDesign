@@ -29,8 +29,8 @@ import zjut.jianlu.breakfast.base.BaseCallback;
 import zjut.jianlu.breakfast.base.BaseResponse;
 import zjut.jianlu.breakfast.base.MyApplication;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.entity.bean.MyUser;
 import zjut.jianlu.breakfast.entity.bean.OrderComment;
-import zjut.jianlu.breakfast.entity.bean.User;
 import zjut.jianlu.breakfast.entity.requestBody.BaseUserBody;
 import zjut.jianlu.breakfast.entity.requestBody.OrderCommentListBody;
 import zjut.jianlu.breakfast.service.UserService;
@@ -67,7 +67,7 @@ public class UserDetailActivity extends BaseActivity {
     @Bind(R.id.tv_bonus_des)
     TextView mTvBonusDes;
 
-    private User user;
+    private MyUser user;
 
     private String mAvatarUrl;
 
@@ -122,8 +122,8 @@ public class UserDetailActivity extends BaseActivity {
 
     private void getUserInfo() {
         showMyDialog();
-        Call<BaseResponse<User>> call = service.getUserInfo(userId);
-        call.enqueue(new BaseCallback<User>() {
+        Call<BaseResponse<MyUser>> call = service.getUserInfo(userId);
+        call.enqueue(new BaseCallback<MyUser>() {
             @Override
             public void onFinally() {
                 LogUtil.d("userInfo end ");
@@ -136,7 +136,7 @@ public class UserDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onBizSuccess(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
+            public void onBizSuccess(Call<BaseResponse<MyUser>> call, Response<BaseResponse<MyUser>> response) {
                 user = response.body().getData();
                 setData();
                 getUserAveScore();
@@ -144,7 +144,7 @@ public class UserDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onBizFailure(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
+            public void onBizFailure(Call<BaseResponse<MyUser>> call, Response<BaseResponse<MyUser>> response) {
                 Toast(response.body().getMessage());
             }
         });

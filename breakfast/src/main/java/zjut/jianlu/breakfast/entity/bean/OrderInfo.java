@@ -14,9 +14,9 @@ public class OrderInfo implements Serializable {
 
     private String orderNumber;//订单号
 
-    private User clientUser;//下单用户
+    private MyUser clientUser;//下单用户
 
-    private User courierUser;//派送用户
+    private MyUser courierUser;//派送用户
 
     private Integer status;//订单状态
 
@@ -155,19 +155,19 @@ public class OrderInfo implements Serializable {
         this.createTs = createTs;
     }
 
-    public User getClientUser() {
+    public MyUser getClientUser() {
         return clientUser;
     }
 
-    public void setClientUser(User clientUser) {
+    public void setClientUser(MyUser clientUser) {
         this.clientUser = clientUser;
     }
 
-    public User getCourierUser() {
+    public MyUser getCourierUser() {
         return courierUser;
     }
 
-    public void setCourierUser(User courierUser) {
+    public void setCourierUser(MyUser courierUser) {
         this.courierUser = courierUser;
     }
 }

@@ -11,6 +11,9 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        aaptOptions.cruncherEnabled = false
+
+
     }
     buildTypes {
         release {
@@ -22,16 +25,21 @@ android {
         abortOnError false
     }
 
-}
 
-repositories {
-    flatDir {
-        dirs 'libs' //就是你放aar的目录地址
+    sourceSets {
+        main {
+            jniLibs.srcDir("jniLibs")
+
+        }
+
     }
-}
-configurations {
-    all*.exclude group: 'com.android.support', module: 'support-v4'
-}
+
+    repositories {
+        flatDir {
+            dirs 'libs' //就是你放aar的目录地址
+        }
+    }
+
 //task nativeLibsToJar(type: Zip, description: "create a jar archive of the native libs") {
 //    destinationDir file("$projectDir/libs")
 //    baseName "Native_Libs2"
@@ -44,25 +52,31 @@ configurations {
 //    compileTask -> compileTask.dependsOn(nativeLibsToJar)
 //}
 
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.github.satyan:sugar:1.4'
-    compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.github.satyan:sugar:1.4'
-    compile 'com.victor:lib:1.0.4'
-    compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'com.squareup.retrofit2:retrofit:2.0.1'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
-    compile 'com.facebook.stetho:stetho:1.3.1'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.hedgehog.ratingbar:app:1.0.4'
-    compile(name: 'PullToRefresh', ext: 'aar')
-    compile(name: 'TabViewPager', ext: 'aar')
-    compile(name: 'SMSSDK-2.0.2', ext: 'aar')
-    compile(name: 'easeui', ext: 'aar')
+    dependencies {
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        compile 'com.android.support:appcompat-v7:22.2.1'
+        compile 'com.squareup.picasso:picasso:2.5.2'
+        compile 'com.jakewharton:butterknife:7.0.1'
+        compile 'com.github.satyan:sugar:1.4'
+        compile 'com.google.code.gson:gson:2.3.1'
+        compile 'com.orhanobut:logger:1.4'
+        compile 'com.github.satyan:sugar:1.4'
+        compile 'com.android.support:recyclerview-v7:22.2.0'
+        compile 'com.victor:lib:1.0.4'
+        compile 'org.greenrobot:eventbus:3.0.0'
+        compile 'de.hdodenhof:circleimageview:2.0.0'
+        compile 'com.squareup.retrofit2:retrofit:2.0.1'
+        compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+        compile 'com.facebook.stetho:stetho:1.3.1'
+        compile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
+        compile 'com.android.support:multidex:1.0.1'
+        compile 'com.hedgehog.ratingbar:app:1.0.4'
+        compile 'cn.bmob.android:androidasync:2.1.6'
+        //bmob-sdk:3.4.6需要依赖okhttp（2.4.0）、okio（2.4.0）,而support-v4（23.2.1）和org.apache.http.legacy包是为了兼容Android6.0系统所需
+        compile 'cn.bmob.android:bmob-sdk:3.4.6'
+        compile(name: 'PullToRefresh', ext: 'aar')
+        compile(name: 'TabViewPager', ext: 'aar')
+        compile(name: 'SMSSDK-2.0.2', ext: 'aar')
+
+    }
 }

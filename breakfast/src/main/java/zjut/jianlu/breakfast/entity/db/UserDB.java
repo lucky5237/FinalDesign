@@ -2,7 +2,7 @@ package zjut.jianlu.breakfast.entity.db;
 
 import com.orm.SugarRecord;
 
-import zjut.jianlu.breakfast.entity.bean.User;
+import zjut.jianlu.breakfast.entity.bean.MyUser;
 
 /**
  * Created by jianlu on 16/3/9.
@@ -35,7 +35,7 @@ public class UserDB extends SugarRecord {
 
     }
 
-    public UserDB(User user) {
+    public UserDB(MyUser user) {
         userId = user.getId();
         mobile = user.getMobile();
         password = user.getPassword();

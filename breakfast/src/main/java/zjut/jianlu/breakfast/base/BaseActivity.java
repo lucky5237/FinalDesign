@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,6 +17,8 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,6 +160,30 @@ public abstract class BaseActivity extends FragmentActivity {
 
         return SharedPreferencesUtil.getInstance(mContext).getMobile();
 
+    }
+
+
+    /**
+     * 隐藏软键盘-一般是EditText.getWindowToken()
+     *
+     * @param token
+     */
+    public void hideSoftInput(IBinder token) {
+        if (token != null) {
+            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    /**
+     * Log日志
+     *
+     * @param msg
+     */
+    public void log(String msg) {
+        if (Config.DEBUG) {
+            Logger.i(msg);
+        }
     }
 
     public static UserDB getCurrentUser() {

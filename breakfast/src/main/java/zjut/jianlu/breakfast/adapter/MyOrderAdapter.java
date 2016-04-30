@@ -26,8 +26,8 @@ import zjut.jianlu.breakfast.activity.CommentActivity;
 import zjut.jianlu.breakfast.activity.MakeOrderActivity;
 import zjut.jianlu.breakfast.activity.UserDetailActivity;
 import zjut.jianlu.breakfast.constant.BreakfastConstant;
+import zjut.jianlu.breakfast.entity.bean.MyUser;
 import zjut.jianlu.breakfast.entity.bean.OrderInfo;
-import zjut.jianlu.breakfast.entity.bean.User;
 import zjut.jianlu.breakfast.entity.db.ConfirmFood;
 import zjut.jianlu.breakfast.enums.OrderStatus;
 import zjut.jianlu.breakfast.listener.ConfirmOnclickListener;
@@ -132,7 +132,7 @@ public class MyOrderAdapter extends BaseAdapter {
             viewHolder.ivAvatar.setImageResource(BreakfastUtils.getDrawableIdByName(mContext, "ic_question"));
 
         } else {
-            final User theOtherUser = userType == 0 ? orderinfo.getCourierUser() : orderinfo.getClientUser();
+            final MyUser theOtherUser = userType == 0 ? orderinfo.getCourierUser() : orderinfo.getClientUser();
             String avatarUrl = BreakfastUtils.getAbsAvatarUrlPath(theOtherUser.getUsername());
             Picasso.with(mContext).load(avatarUrl).into(viewHolder.ivAvatar);
             viewHolder.ivAvatar.setOnClickListener(new View.OnClickListener() {
