@@ -14,7 +14,9 @@ import zjut.jianlu.breakfast.adapter.OnRecyclerViewListener;
 import zjut.jianlu.breakfast.base.ParentWithNaviActivity;
 import zjut.jianlu.breakfast.entity.bmobDB.NewFriendManager;
 
-/**新朋友
+/**
+ * 新朋友
+ *
  * @author :smile
  * @project:NewFriendActivity
  * @date :2016-01-25-18:23
@@ -35,10 +37,6 @@ public class NewFriendActivity extends ParentWithNaviActivity {
         return "新朋友";
     }
 
-    @Override
-    public Object right() {
-        return R.drawable.base_action_bar_add_bg_selector;
-    }
 
     @Override
     public ParentWithNaviActivity.ToolBarListener setToolBarListener() {
@@ -50,7 +48,7 @@ public class NewFriendActivity extends ParentWithNaviActivity {
 
             @Override
             public void clickRight() {
-                startActivity(SearchUserActivity.class,null);
+
             }
         };
     }
@@ -70,7 +68,7 @@ public class NewFriendActivity extends ParentWithNaviActivity {
         setListener();
     }
 
-    private void setListener(){
+    private void setListener() {
         ll_root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -88,7 +86,7 @@ public class NewFriendActivity extends ParentWithNaviActivity {
         adapter.setOnRecyclerViewListener(new OnRecyclerViewListener() {
             @Override
             public void onItemClick(int position) {
-                log("点击："+position);
+                log("点击：" + position);
             }
 
             @Override
@@ -113,9 +111,9 @@ public class NewFriendActivity extends ParentWithNaviActivity {
     }
 
     /**
-      查询本地会话
+     * 查询本地会话
      */
-    public void query(){
+    public void query() {
         adapter.bindDatas(NewFriendManager.getInstance(this).getAllNewFriend());
         adapter.notifyDataSetChanged();
         sw_refresh.setRefreshing(false);

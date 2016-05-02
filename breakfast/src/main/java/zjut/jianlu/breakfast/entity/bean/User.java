@@ -12,12 +12,33 @@ public class User extends BmobUser {
 
     private String avatar;
 
-    public User(){}
+    private Integer type;
 
-    public User(NewFriend friend){
+    private Integer gender;
+
+    public User() {
+    }
+
+    public User(NewFriend friend) {
         setObjectId(friend.getUid());
         setUsername(friend.getName());
         setAvatar(friend.getAvatar());
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public String getAvatar() {

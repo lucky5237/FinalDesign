@@ -180,7 +180,7 @@ public class CheckMobileActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() == 11) {
-                    mBtnCaptcha.setBackgroundResource(R.drawable.index_login);
+                    mBtnCaptcha.setBackgroundResource(R.drawable.login_confirm_orange);
                     mBtnCaptcha.setEnabled(true);
                 } else {
                     mBtnCaptcha.setBackgroundResource(R.drawable.login_confirm_gray);
@@ -256,7 +256,7 @@ public class CheckMobileActivity extends BaseActivity {
         @Override
         public void onFinish() {
             mBtnCaptcha.setText("获取验证码");
-            mBtnCaptcha.setBackgroundResource(R.drawable.index_login);
+            mBtnCaptcha.setBackgroundResource(R.drawable.button_orange);
             mBtnCaptcha.setEnabled(true);
         }
 

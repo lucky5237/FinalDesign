@@ -140,7 +140,7 @@ public class NewFriendManager {
      * 获取所有未读未验证的好友请求
      * @return
      */
-    private List<NewFriend> getNoVerifyNewFriend(){
+    public List<NewFriend> getNoVerifyNewFriend(){
         NewFriendDao dao =  openReadableDb().getNewFriendDao();
         return dao.queryBuilder().where(NewFriendDao.Properties.Status.eq(Config.STATUS_VERIFY_NONE))
                 .build().list();

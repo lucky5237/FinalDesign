@@ -308,7 +308,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
             Toast("请先选择你的用户类型");
             return;
         }
-        if (mTypeSelected == 1) {
+        if (mTypeSelected == 0) {
             if (TextUtils.isEmpty(address)) {
                 Toast("请输入你的收货地址");
                 return;
@@ -323,6 +323,8 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
         user.setUsername(mobile);
         user.setPassword(password);
         user.setAvatar(userName);
+        user.setType(mTypeSelected);
+        user.setGender(mGenderSelected);
         user.signUp(mContext, new SaveListener() {
             @Override
             public void onSuccess() {
@@ -458,6 +460,7 @@ public class UserInfoActivity extends BaseActivity implements OnWheelScrollListe
                 sb.append("\ndescribe : ");
                 sb.append("网络定位成功");
             } else {
+
                 Toast(BreakfastConstant.NO_NET_MESSAGE);
                 if (mLocationClient.isStarted()) {
                     mLocationClient.stop();

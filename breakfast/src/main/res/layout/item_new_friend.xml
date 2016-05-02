@@ -61,15 +61,18 @@
         </LinearLayout>
 
         <Button
+            android:padding="10dp"
             android:id="@+id/btn_aggree"
             android:layout_gravity="center"
             style="@style/style_text_white"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_16"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/agree"
-            android:background="@drawable/btn_login_selector"
+            android:textSize="12sp"
+            android:background="@drawable/button_orange"
             />
 
     </LinearLayout>

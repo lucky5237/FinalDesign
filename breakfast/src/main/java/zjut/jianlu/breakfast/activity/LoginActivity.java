@@ -100,7 +100,7 @@ public class LoginActivity extends BaseActivity {
         call.enqueue(new BaseCallback<MyUser>() {
             @Override
             public void onFinally() {
-                dismissMyDialog();
+
             }
 
             @Override
@@ -110,18 +110,6 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onBizSuccess(Call<BaseResponse<MyUser>> call, final Response<BaseResponse<MyUser>> response) {
-
-//                if (UserDB.count(UserDB.class) > 0) {
-//                    UserDB.deleteAll(UserDB.class);
-//                }
-//                MyUser user = response.body().getData();
-//                UserDB userDB = new UserDB(user);
-//                userDB.save();
-//                sharedPreferencesUtil.setUserId(user.getId().intValue());
-//                sharedPreferencesUtil.setUserType(user.getType());
-//                sharedPreferencesUtil.setMobile(user.getMobile());
-//                sharedPreferencesUtil.setPassword(user.getPassword());
-//                startActivity(new Intent(mContext, MainActivity.class));
 
                 UserModel.getInstance().login(mobile, password, new LogInListener() {
 
@@ -140,10 +128,11 @@ public class LoginActivity extends BaseActivity {
                             sharedPreferencesUtil.setPassword(myUser.getPassword());
                             User user = (User) o;
                             BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(user.getObjectId(), user.getUsername(), user.getAvatar()));
+                            dismissMyDialog();
                             startActivity(new Intent(mContext, MainActivity.class));
 
                         } else {
-                            Toast(e.getMessage() + "(" + e.getErrorCode() + ")");
+                            Toast(e.getLocalizedMessage());
                         }
                     }
                 });

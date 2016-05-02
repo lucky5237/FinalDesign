@@ -12,7 +12,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/dp20"
         android:text="温馨提示"
-        android:textColor="@color/red"
+        android:textColor="@color/orange"
         android:textSize="25sp" />
 
     <TextView
@@ -35,13 +35,13 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/dp20"
             android:layout_weight="1"
-            android:background="@drawable/shape_border_blue"
+            android:background="@drawable/button_white"
             android:paddingBottom="10dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingTop="10dp"
             android:text="取消"
-            android:textColor="@color/top_menu_title_color"
+            android:textColor="@color/orange"
             android:textSize="@dimen/font_xl" />
 
         <Button
@@ -49,11 +49,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/shape_border_blue"
+            android:background="@drawable/button_orange"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="确定"
-            android:textColor="@color/top_menu_title_color"
+            android:textColor="@color/white"
             android:textSize="@dimen/font_xl" />
     </LinearLayout>
 

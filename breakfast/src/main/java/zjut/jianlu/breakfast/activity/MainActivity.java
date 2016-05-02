@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -26,18 +27,35 @@ import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.core.ConnectionStatus;
+import cn.bmob.newim.event.MessageEvent;
+import cn.bmob.newim.event.OfflineMessageEvent;
+import cn.bmob.newim.listener.ConnectListener;
+import cn.bmob.newim.listener.ConnectStatusChangeListener;
+import cn.bmob.newim.listener.ObseverListener;
+import cn.bmob.newim.notification.BmobNotificationManager;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zjut.jianlu.breakfast.R;
 import zjut.jianlu.breakfast.base.BaseActivity;
+import zjut.jianlu.breakfast.entity.bean.User;
+import zjut.jianlu.breakfast.entity.bmobDB.NewFriendManager;
 import zjut.jianlu.breakfast.entity.db.ShoppingCartDB;
 import zjut.jianlu.breakfast.entity.event.ChangeIndexEvent;
+import zjut.jianlu.breakfast.entity.event.RefreshEvent;
 import zjut.jianlu.breakfast.entity.event.UpdateBadgeNumEvent;
+import zjut.jianlu.breakfast.entity.model.UserModel;
+import zjut.jianlu.breakfast.fragment.ContactFragment;
+import zjut.jianlu.breakfast.fragment.ConversationFragment;
 import zjut.jianlu.breakfast.fragment.ShopCartFragment;
 import zjut.jianlu.breakfast.fragment.home.ClientHomePageFragment;
 import zjut.jianlu.breakfast.fragment.home.CourierHomePageFragment;
 import zjut.jianlu.breakfast.fragment.order.MyOrderFragment;
 import zjut.jianlu.breakfast.fragment.rank.RankFragment;
 import zjut.jianlu.breakfast.utils.BreakfastUtils;
+import zjut.jianlu.breakfast.utils.IMMLeaks;
 import zjut.jianlu.breakfast.utils.SharedPreferencesUtil;
 import zjut.jianlu.breakfast.widget.MyAlertDialog;
 import zjut.jianlu.breakfast.widget.MyBadgeView;
@@ -45,25 +63,45 @@ import zjut.jianlu.breakfast.widget.MyBadgeView;
 /**
  * Created by jianlu on 16/3/12.
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ObseverListener {
 
     private int mCurrentIndex = 0; // 当前选中的索引
     private Fragment mHomePageFragment;
     private RankFragment mRankFragment;
     private MyOrderFragment mOrderFragment;
     private ShopCartFragment mShopCartFragment;
+    private ConversationFragment mConversationFragment;
+    private ContactFragment mContactFragment;
     private FragmentManager mTransitionManager;
-    private MyBadgeView badgeView;
+    private MyBadgeView mCartbadgeView;
+    private MyBadgeView mMessagebadgeView;
+    private MyBadgeView mFriendsbadgeView;
+    private RadioButton[] radioButtons;
+
     private static final int MAINACTIVITY_REQUEST_CODE = 1;
     public static final int HOME_INDEX = 0;
     public static final int RANK_INDEX = 3;
     public static final int ORDER_INDEX = 1;
     public static final int CART_INDEX = 2;
+    public static final int MESSAGE_INDEX = 4;
+    public static final int FRIEND_INDEX = 5;
+
+
     private long mExitTime;
     @Bind(R.id.tv_topbar)
     TextView mTvTopBar;
+    @Bind(R.id.btn_home)
+    RadioButton mRbtnHome;
+    @Bind(R.id.btn_rank)
+    RadioButton mRbtnRank;
+    @Bind(R.id.btn_order)
+    RadioButton mRbtnOrder;
     @Bind(R.id.btn_cart)
     RadioButton mRbtnCart;
+    @Bind(R.id.btn_message)
+    RadioButton mRbtnMessage;
+    @Bind(R.id.btn_friend)
+    RadioButton mRbtnFriend;
     @Bind(R.id.main_cotainer)
     LinearLayout mLlytMainContainer;
     @Bind(R.id.drawer_layout)
@@ -80,8 +118,8 @@ public class MainActivity extends BaseActivity {
     LinearLayout mLlytPassword;
     @Bind(R.id.llyt_logout)
     LinearLayout mLlytLogout;
-    @Bind(R.id.iv_message)
-    ImageView mIvMessage;
+    @Bind(R.id.iv_search_friend)
+    ImageView mIvSearchFriend;
 
 
     private MyAlertDialog dialog;
@@ -92,13 +130,11 @@ public class MainActivity extends BaseActivity {
 
     private static MainActivity instance;
 
-    private String[] data = {"menu1", "menu2", "menu3", "menu4"};
-
     private FragmentTransaction mTransaction;
     private Fragment[] fragments;
 
-    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart, R.id.llyt_me, R.id.llyt_profile,
-            R.id.llyt_password, R.id.llyt_logout, R.id.iv_user_image, R.id.iv_message})
+    @OnClick({R.id.btn_home, R.id.btn_rank, R.id.btn_order, R.id.btn_cart, R.id.btn_message, R.id.btn_friend, R.id.llyt_me, R.id.llyt_profile,
+            R.id.llyt_password, R.id.llyt_logout, R.id.iv_user_image, R.id.iv_search_friend})
     public void onclick(View view) {
         FragmentTransaction transation = mTransitionManager.beginTransaction();
         switch (view.getId()) {
@@ -124,6 +160,14 @@ public class MainActivity extends BaseActivity {
                 mTvTopBar.setText("购物车");
                 showFragment(CART_INDEX, transation);
                 break;
+            case R.id.btn_message:
+                mTvTopBar.setText("消息");
+                showFragment(MESSAGE_INDEX, transation);
+                break;
+            case R.id.btn_friend:
+                mTvTopBar.setText("好友");
+                showFragment(FRIEND_INDEX, transation);
+                break;
             case R.id.llyt_me:
             case R.id.iv_user_image:
                 Intent intent = new Intent(this, UserDetailActivity.class);
@@ -140,26 +184,23 @@ public class MainActivity extends BaseActivity {
                 mDrawerLayout.closeDrawers();
                 break;
             case R.id.llyt_logout:
-                showMyDialog();
                 new MyAlertDialog(MainActivity.this, "温馨提示", "是否确定要退出登录", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        dismissMyDialog();
+                        showMyDialog();
+                        UserModel.getInstance().logout();
+                        //可断开连接
+                        BmobIM.getInstance().disConnect();
                         Log.d("jianlu", "成功登出");
                         SharedPreferencesUtil.getInstance(mContext).clear();
+                        dismissMyDialog();
                         startActivity(new Intent(MainActivity.this, LoginOrRegisterActivity.class));
                         finish();
                     }
-
-
                 }).show();
-
                 break;
-            case R.id.iv_message:
-                startActivity(new Intent(MainActivity.this, MessageActivity.class));
-
-                break;
+            case R.id.iv_search_friend:
+                startActivity(new Intent(mContext, SearchUserActivity.class));
             default:
                 break;
         }
@@ -183,6 +224,8 @@ public class MainActivity extends BaseActivity {
         mCurrentIndex = index;
         switch (index) {
             case HOME_INDEX:
+                resetTabDrawble(HOME_INDEX);
+                mIvSearchFriend.setVisibility(View.GONE);
                 if (null != mRankFragment) {
                     transaction.hide(mRankFragment);
                 }
@@ -203,8 +246,16 @@ public class MainActivity extends BaseActivity {
                 } else {
                     transaction.show(mHomePageFragment);
                 }
+                if (null != mConversationFragment) {
+                    transaction.hide(mConversationFragment);
+                }
+                if (null != mContactFragment) {
+                    transaction.hide(mContactFragment);
+                }
                 break;
             case ORDER_INDEX:
+                resetTabDrawble(ORDER_INDEX);
+                mIvSearchFriend.setVisibility(View.GONE);
                 if (null != mRankFragment) {
                     transaction.hide(mRankFragment);
                 }
@@ -220,8 +271,16 @@ public class MainActivity extends BaseActivity {
                 } else {
                     transaction.show(mOrderFragment);
                 }
+                if (null != mConversationFragment) {
+                    transaction.hide(mConversationFragment);
+                }
+                if (null != mContactFragment) {
+                    transaction.hide(mContactFragment);
+                }
                 break;
             case RANK_INDEX:
+                resetTabDrawble(RANK_INDEX);
+                mIvSearchFriend.setVisibility(View.GONE);
                 if (null != mHomePageFragment) {
                     transaction.hide(mHomePageFragment);
                 }
@@ -237,8 +296,16 @@ public class MainActivity extends BaseActivity {
                 } else {
                     transaction.show(mRankFragment);
                 }
+                if (null != mConversationFragment) {
+                    transaction.hide(mConversationFragment);
+                }
+                if (null != mContactFragment) {
+                    transaction.hide(mContactFragment);
+                }
                 break;
             case CART_INDEX:
+                resetTabDrawble(CART_INDEX);
+                mIvSearchFriend.setVisibility(View.GONE);
                 if (null != mRankFragment) {
                     transaction.hide(mRankFragment);
                 }
@@ -254,8 +321,73 @@ public class MainActivity extends BaseActivity {
                 } else {
                     transaction.show(mShopCartFragment);
                 }
+                if (null != mConversationFragment) {
+                    transaction.hide(mConversationFragment);
+                }
+                if (null != mContactFragment) {
+                    transaction.hide(mContactFragment);
+                }
+                break;
+            case MESSAGE_INDEX:
+                resetTabDrawble(MESSAGE_INDEX);
+                mIvSearchFriend.setVisibility(View.GONE);
+                if (null != mRankFragment) {
+                    transaction.hide(mRankFragment);
+                }
+                if (null != mOrderFragment) {
+                    transaction.hide(mOrderFragment);
+                }
+                if (null != mHomePageFragment) {
+                    transaction.hide(mHomePageFragment);
+                }
+                if (null != mShopCartFragment) {
+                    transaction.hide(mShopCartFragment);
+                }
+                if (null == mConversationFragment) {
+                    mConversationFragment = new ConversationFragment();
+                    transaction.add(R.id.flyt_container, mConversationFragment);
+                } else {
+                    transaction.show(mConversationFragment);
+                }
+                if (null != mContactFragment) {
+                    transaction.hide(mContactFragment);
+                }
+                break;
+            case FRIEND_INDEX:
+                resetTabDrawble(FRIEND_INDEX);
+                mIvSearchFriend.setVisibility(View.VISIBLE);
+                if (null != mRankFragment) {
+                    transaction.hide(mRankFragment);
+                }
+                if (null != mOrderFragment) {
+                    transaction.hide(mOrderFragment);
+                }
+                if (null != mHomePageFragment) {
+                    transaction.hide(mHomePageFragment);
+                }
+                if (null != mShopCartFragment) {
+                    transaction.hide(mShopCartFragment);
+                }
+                if (null != mConversationFragment) {
+                    transaction.hide(mConversationFragment);
+                }
+                if (null == mContactFragment) {
+                    mContactFragment = new ContactFragment();
+                    transaction.add(R.id.flyt_container, mContactFragment);
+                } else {
+                    transaction.show(mContactFragment);
+                }
                 break;
 
+        }
+    }
+
+    /**
+     * 重置底部drawable
+     */
+    private void resetTabDrawble(int index) {
+        for (int i = 0; i < radioButtons.length; i++) {
+            radioButtons[i].setChecked(i == index ? true : false);
         }
     }
 
@@ -268,13 +400,76 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         instance = this;
         EventBus.getDefault().register(this);
+        if (getCurrentUserType() == 1) {
+            mRbtnCart.setVisibility(View.GONE);
+        } else {
+            mRbtnCart.setVisibility(View.VISIBLE);
+        }
+
+        radioButtons = new RadioButton[]{mRbtnHome, mRbtnOrder, mRbtnCart, mRbtnRank, mRbtnMessage, mRbtnFriend};
         mTransitionManager = getSupportFragmentManager();
         onTabSelected(mCurrentIndex);
-        badgeView = new MyBadgeView(this);
-        badgeView.setTargetView(mRbtnCart);
-        badgeView.setBadgeCount(getBadgeViewCount());
+        if (getCurrentUserType() == 0) {
+            mCartbadgeView = new MyBadgeView(this);
+            mCartbadgeView.setTargetView(mRbtnCart);
+            mCartbadgeView.setBadgeCount(getBadgeViewCount());
+        }
+        mMessagebadgeView = new MyBadgeView(this);
+        mMessagebadgeView.setTargetView(mRbtnMessage);
+        mMessagebadgeView.setBadgeCount((int) BmobIM.getInstance().getAllUnReadCount());
+        mFriendsbadgeView = new MyBadgeView(this);
+        mFriendsbadgeView.setTargetView(mRbtnFriend);
+        mFriendsbadgeView.setBadgeCount(NewFriendManager.getInstance(this).getNoVerifyNewFriend().size());
         mTvUserName.setText(getCurrentUser().getUsername());
-        Picasso.with(this).load(BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername())).into(mIvAvatar);
+        Picasso.with(this).load(BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername())).placeholder(R.mipmap.head).into(mIvAvatar);
+        User user = BmobUser.getCurrentUser(this, User.class);
+        BmobIM.connect(user.getObjectId(), new ConnectListener() {
+            @Override
+            public void done(String uid, BmobException e) {
+                if (e == null) {
+                    Logger.i("connect success");
+                } else {
+                    Logger.e(e.getErrorCode() + "/" + e.getMessage());
+                }
+            }
+        });
+        //监听连接状态，也可通过BmobIM.getInstance().getCurrentStatus()来获取当前的长连接状态
+        BmobIM.getInstance().setOnConnectStatusChangeListener(new ConnectStatusChangeListener() {
+            @Override
+            public void onChange(ConnectionStatus status) {
+                Logger.d("" + status.getMsg());
+            }
+        });
+        //解决leancanary提示InputMethodManager内存泄露的问题
+        IMMLeaks.fixFocusedViewLeak(getApplication());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkRedPoint();
+        //添加观察者-用于是否显示通知消息
+        BmobNotificationManager.getInstance(this).addObserver(this);
+        //进入应用后，通知栏应取消
+        BmobNotificationManager.getInstance(this).cancelNotification();
+    }
+
+    private void checkRedPoint() {
+        if (mMessagebadgeView != null) {
+            mMessagebadgeView.setBadgeCount((int) BmobIM.getInstance().getAllUnReadCount());
+        }
+        if (mFriendsbadgeView != null) {
+            mFriendsbadgeView.setBadgeCount(NewFriendManager.getInstance(this).getNoVerifyNewFriend().size());
+
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //移除观察者
+        BmobNotificationManager.getInstance(this).removeObserver(this);
     }
 
     private int getBadgeViewCount() {
@@ -289,6 +484,41 @@ public class MainActivity extends BaseActivity {
             dialog.dismiss();
         }
         EventBus.getDefault().unregister(this);
+        //清理导致内存泄露的资源
+        BmobIM.getInstance().clear();
+        //完全退出应用时需调用clearObserver来清除观察者
+        BmobNotificationManager.getInstance(this).clearObserver();
+    }
+
+    /**
+     * 注册消息接收事件
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onEventMainThread(MessageEvent event) {
+        checkRedPoint();
+    }
+
+    /**
+     * 注册离线消息接收事件
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onEventMainThread(OfflineMessageEvent event) {
+        checkRedPoint();
+    }
+
+    /**
+     * 注册自定义消息接收事件
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onEventMainThread(RefreshEvent event) {
+        log("---主页接收到自定义消息---");
+        checkRedPoint();
     }
 
     @Subscribe
@@ -359,9 +589,9 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe
     public void updateBadgeView(UpdateBadgeNumEvent event) {
-        if (badgeView != null) {
-            int newNumber = badgeView.getBadgeCount() + event.getNum();
-            badgeView.setBadgeCount(newNumber < 0 ? 0 : newNumber);
+        if (mCartbadgeView != null) {
+            int newNumber = mCartbadgeView.getBadgeCount() + event.getNum();
+            mCartbadgeView.setBadgeCount(newNumber < 0 ? 0 : newNumber);
         }
         if (mShopCartFragment == null) {
             mShopCartFragment = new ShopCartFragment();
@@ -394,7 +624,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MAINACTIVITY_REQUEST_CODE) {
-            Picasso.with(this).load(BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername())).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE).into(mIvAvatar);
+            Picasso.with(this).load(BreakfastUtils.getAbsAvatarUrlPath(getCurrentUser().getUsername())).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.mipmap.head).into(mIvAvatar);
         }
 
 

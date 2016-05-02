@@ -15,7 +15,7 @@ public class BreakfastConstant {
     public static final String BUY_FOOD_PRICE = "foodprice";
     public static final String BUY_FOOD_AMOUNT = "footamount";
     public static final String BUY_FOOD_BONUS = "footbonus";
-        public static final String HOST = "http://192.168.155.3:";//johnson
+        public static final String HOST = "http://192.168.155.2:";//johnson
 //    public static final String HOST = "http://10.0.2.2:";//本地
 //    public static final String HOST = "http://10.0.3.2:";//Genymotion
 

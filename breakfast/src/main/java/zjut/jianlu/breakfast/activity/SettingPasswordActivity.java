@@ -2,7 +2,6 @@ package zjut.jianlu.breakfast.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -83,12 +82,28 @@ public class SettingPasswordActivity extends BaseActivity {
 
                         @Override
                         public void onBizSuccess(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    startActivity(new Intent(mContext, LoginActivity.class));
-                                }
-                            }, 1000);
+
+//                            User user = BmobUser.getCurrentUser(mContext, User.class);
+//                            user.setPassword(mEtPasswordContent);
+//                            user.update(mContext, new UpdateListener() {
+//                                @Override
+//                                public void onSuccess() {
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            startActivity(new Intent(mContext, LoginActivity.class));
+//                                        }
+//                                    }, 1000);
+//                                }
+//
+//                                @Override
+//                                public void onFailure(int i, String s) {
+//
+//                                    Toast("密码更新失败-" + s);
+//
+//                                }
+//                            });
+
                         }
 
                         @Override
@@ -97,7 +112,6 @@ public class SettingPasswordActivity extends BaseActivity {
 
                         }
                     });
-
 
 
                 } else {//注册时候设置密码的

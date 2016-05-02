@@ -13,7 +13,7 @@ import zjut.jianlu.breakfast.R;
 public class MyBadgeView extends BadgeView {
     public MyBadgeView(Context context) {
         super(context);
-        setBackgroundResource(R.mipmap.ic_red);
+        setBackgroundResource(R.mipmap.ic_message_tip);
         setTextColor(Color.WHITE);
         setTextSize(8);
     }

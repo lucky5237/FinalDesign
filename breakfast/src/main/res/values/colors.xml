@@ -14,6 +14,8 @@
     <color name="color_black">#000000</color>
 
     <color name="text_blue">#3199E0</color>
+    <color name="text_orange">#FF6F00</color>
+
     <color name="alertdialog_line">#c6c6c6</color>
     <color name="actionsheet_gray">#8F8F8F</color>
     <color name="actionsheet_blue">#037BFF</color>

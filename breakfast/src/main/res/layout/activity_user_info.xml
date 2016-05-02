@@ -43,6 +43,8 @@
                 />
 
             <EditText
+                android:layout_marginRight="50dp"
+                android:gravity="right|center_vertical"
                 android:id="@+id/et_username"
                 style="@style/login_editText_style"
                 android:hint="取一个可爱的昵称吧"
@@ -253,7 +255,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/login_confirm_blue"
+            android:background="@drawable/login_confirm_orange"
             android:gravity="center"
             android:text="保存"
             android:textColor="@color/color_white"

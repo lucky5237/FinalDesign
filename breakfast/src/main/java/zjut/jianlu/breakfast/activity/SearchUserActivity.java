@@ -22,7 +22,9 @@ import zjut.jianlu.breakfast.entity.bean.User;
 import zjut.jianlu.breakfast.entity.model.BaseModel;
 import zjut.jianlu.breakfast.entity.model.UserModel;
 
-/**搜索好友
+/**
+ * 搜索好友
+ *
  * @author :smile
  * @project:SearchUserActivity
  * @date :2016-01-25-18:23
@@ -50,7 +52,7 @@ public class SearchUserActivity extends ParentWithNaviActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_user);
         initNaviView();
-        adapter =new SearchUserAdapter();
+        adapter = new SearchUserAdapter();
         layoutManager = new LinearLayoutManager(this);
         rc_view.setLayoutManager(layoutManager);
         rc_view.setAdapter(adapter);
@@ -78,14 +80,14 @@ public class SearchUserActivity extends ParentWithNaviActivity {
     }
 
     @OnClick(R.id.btn_search)
-    public void onSearchClick(View view){
+    public void onSearchClick(View view) {
         sw_refresh.setRefreshing(true);
         query();
     }
 
-    public void query(){
-        String name =et_find_name.getText().toString();
-        if(TextUtils.isEmpty(name)){
+    public void query() {
+        String name = et_find_name.getText().toString();
+        if (TextUtils.isEmpty(name)) {
             toast("请填写用户名");
             sw_refresh.setRefreshing(false);
             return;

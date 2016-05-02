@@ -34,7 +34,9 @@ import zjut.jianlu.breakfast.entity.bean.User;
 import zjut.jianlu.breakfast.entity.event.RefreshEvent;
 import zjut.jianlu.breakfast.entity.model.UserModel;
 
-/**联系人界面
+/**
+ * 联系人界面
+ *
  * @author :smile
  * @project:ContactFragment
  * @date :2016-04-27-14:23
@@ -45,6 +47,8 @@ public class ContactFragment extends ParentWithNaviFragment {
     RecyclerView rc_view;
     @Bind(R.id.sw_refresh)
     SwipeRefreshLayout sw_refresh;
+    @Bind(R.id.ll)
+    View mLlytTopbar;
     ContactAdapter adapter;
     LinearLayoutManager layoutManager;
 
@@ -68,16 +72,17 @@ public class ContactFragment extends ParentWithNaviFragment {
 
             @Override
             public void clickRight() {
-                startActivity(SearchUserActivity.class,null);
+                startActivity(SearchUserActivity.class, null);
             }
         };
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView =inflater.inflate(R.layout.fragment_conversation, container, false);
-        initNaviView();
+        rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
+//        initNaviView();
         ButterKnife.bind(this, rootView);
+        mLlytTopbar.setVisibility(View.GONE);
         adapter = new ContactAdapter();
         rc_view.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -87,7 +92,7 @@ public class ContactFragment extends ParentWithNaviFragment {
         return rootView;
     }
 
-    private void setListener(){
+    private void setListener() {
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -137,7 +142,7 @@ public class ContactFragment extends ParentWithNaviFragment {
                 return true;
             }
         });
-}
+    }
 
     @Override
     public void onResume() {
@@ -158,20 +163,22 @@ public class ContactFragment extends ParentWithNaviFragment {
         super.onStop();
     }
 
-    /**注册自定义消息接收事件
+    /**
+     * 注册自定义消息接收事件
+     *
      * @param event
      */
     @Subscribe
-    public void onEventMainThread(RefreshEvent event){
+    public void onEventMainThread(RefreshEvent event) {
         //重新刷新列表
         log("---接收到自定义消息---");
         adapter.notifyDataSetChanged();
     }
 
     /**
-      查询本地会话
+     * 查询本地会话
      */
-    public void query(){
+    public void query() {
         UserModel.getInstance().queryFriends(new FindListener<Friend>() {
             @Override
             public void onSuccess(List<Friend> list) {

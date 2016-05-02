@@ -3,9 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
-    android:background="@drawable/top_bar"
+    android:background="@color/orange"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="visible">
 
     <View
         android:id="@+id/v_top"
@@ -13,6 +14,7 @@
         android:layout_height="0dp" />
 
     <RelativeLayout
+        android:id="@+id/rlyt_im_topbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_title"
         android:gravity="center_vertical"

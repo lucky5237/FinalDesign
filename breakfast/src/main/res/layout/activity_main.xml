@@ -9,7 +9,6 @@
         android:id="@+id/main_cotainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/activity_background_gray"
         android:orientation="vertical">
 
         <RelativeLayout style="@style/topbar_layout_style">
@@ -18,14 +17,15 @@
                 android:id="@+id/tv_topbar"
                 style="@style/topbar_text_style"
                 android:text="首页" />
+
             <ImageView
-                android:id="@+id/iv_message"
+                android:id="@+id/iv_search_friend"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_margin="10dp"
-                android:src="@mipmap/ic_chat"
-                />
+                android:layout_margin="12dp"
+                android:src="@drawable/base_action_bar_add_bg_selector"
+                android:visibility="visible" />
 
 
         </RelativeLayout>
@@ -35,7 +35,8 @@
             android:id="@+id/flyt_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@color/activity_background_gray">
 
         </FrameLayout>
 
@@ -68,20 +69,38 @@
                     android:gravity="center_horizontal"
                     android:paddingLeft="0dp"
                     android:text="首页"
-                    android:textColor="@drawable/selector_bottom_text" />
+                    android:textColor="@drawable/selector_bottom_text"
+                    android:textSize="12sp" />
+
 
                 <RadioButton
-                    android:id="@+id/btn_order"
+                    android:id="@+id/btn_message"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:button="@null"
                     android:drawablePadding="5dp"
-                    android:drawableTop="@drawable/selector_order_btn"
+                    android:drawableTop="@drawable/selector_message_btn"
                     android:gravity="center_horizontal"
                     android:paddingLeft="0dp"
-                    android:text="订单"
-                    android:textColor="@drawable/selector_bottom_text" />
+                    android:text="消息"
+                    android:textColor="@drawable/selector_bottom_text"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/btn_friend"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/selector_friend_btn"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="0dp"
+                    android:text="好友"
+                    android:textColor="@drawable/selector_bottom_text"
+                    android:textSize="12sp" />
+
 
                 <RadioButton
                     android:id="@+id/btn_cart"
@@ -94,7 +113,22 @@
                     android:gravity="center_horizontal"
                     android:paddingLeft="0dp"
                     android:text="购物车"
-                    android:textColor="@drawable/selector_bottom_text" />
+                    android:textColor="@drawable/selector_bottom_text"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/btn_order"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/selector_order_btn"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="0dp"
+                    android:text="订单"
+                    android:textColor="@drawable/selector_bottom_text"
+                    android:textSize="12sp" />
 
                 <RadioButton
                     android:id="@+id/btn_rank"
@@ -107,7 +141,9 @@
                     android:gravity="center_horizontal"
                     android:paddingLeft="0dp"
                     android:text="榜单"
-                    android:textColor="@drawable/selector_bottom_text" />
+                    android:textColor="@drawable/selector_bottom_text"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
             </RadioGroup>
 

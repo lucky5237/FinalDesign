@@ -83,7 +83,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/login_confirm_blue"
+            android:background="@drawable/login_confirm_orange"
             />
 
         <LinearLayout
@@ -98,7 +98,7 @@
                 android:id="@+id/tv_forget_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_blue"
+                android:textColor="@color/text_orange"
                 android:text="忘记密码?"
                 android:clickable="true"
                 />
