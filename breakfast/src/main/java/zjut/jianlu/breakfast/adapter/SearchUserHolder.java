@@ -31,7 +31,7 @@ public class SearchUserHolder extends BaseViewHolder {
   public void bindData(Object o) {
     final User user =(User)o;
     ViewUtil.setAvatar(user.getAvatar(), R.mipmap.head, avatar);
-    name.setText(user.getUsername());
+    name.setText(user.getAvatar());
     btn_add.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {//查看个人详情

@@ -58,12 +58,14 @@ import zjut.jianlu.breakfast.adapter.OnRecyclerViewListener;
 import zjut.jianlu.breakfast.base.ParentWithNaviActivity;
 import zjut.jianlu.breakfast.utils.Util;
 
-/**聊天界面
+/**
+ * 聊天界面
+ *
  * @author :smile
  * @project:ChatActivity
  * @date :2016-01-25-18:23
  */
-public class ChatActivity extends ParentWithNaviActivity implements ObseverListener,MessageListHandler {
+public class ChatActivity extends ParentWithNaviActivity implements ObseverListener, MessageListHandler {
 
     @Bind(R.id.ll_chat)
     LinearLayout ll_chat;
@@ -113,25 +115,25 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
 
     @Override
     protected String title() {
-        return c.getConversationTitle();
+        return c.getConversationIcon();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        c= BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) getBundle().getSerializable("c"));
+        c = BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) getBundle().getSerializable("c"));
         initNaviView();
         initSwipeLayout();
         initVoiceView();
         initBottomView();
     }
 
-    private void initSwipeLayout(){
+    private void initSwipeLayout() {
         sw_refresh.setEnabled(true);
         layoutManager = new LinearLayoutManager(this);
         rc_view.setLayoutManager(layoutManager);
-        adapter = new ChatAdapter(this,c);
+        adapter = new ChatAdapter(this, c);
         rc_view.setAdapter(adapter);
         ll_chat.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -154,7 +156,7 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
         adapter.setOnRecyclerViewListener(new OnRecyclerViewListener() {
             @Override
             public void onItemClick(int position) {
-                Logger.i(""+position);
+                Logger.i("" + position);
             }
 
             @Override
@@ -167,11 +169,11 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
         });
     }
 
-    private void initBottomView(){
+    private void initBottomView() {
         edit_msg.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_DOWN||event.getAction()==MotionEvent.ACTION_UP){
+                if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
                     scrollToBottom();
                 }
                 return false;
@@ -207,6 +209,7 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
 
     /**
      * 初始化语音布局
+     *
      * @param
      * @return void
      */
@@ -218,20 +221,21 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
 
     /**
      * 初始化语音动画资源
-     * @Title: initVoiceAnimRes
+     *
      * @param
      * @return void
+     * @Title: initVoiceAnimRes
      */
     private void initVoiceAnimRes() {
-        drawable_Anims = new Drawable[] {
+        drawable_Anims = new Drawable[]{
                 getResources().getDrawable(R.mipmap.chat_icon_voice2),
                 getResources().getDrawable(R.mipmap.chat_icon_voice3),
                 getResources().getDrawable(R.mipmap.chat_icon_voice4),
                 getResources().getDrawable(R.mipmap.chat_icon_voice5),
-                getResources().getDrawable(R.mipmap.chat_icon_voice6) };
+                getResources().getDrawable(R.mipmap.chat_icon_voice6)};
     }
 
-    private void initRecordManager(){
+    private void initRecordManager() {
         // 语音相关管理器
         recordManager = BmobRecordManager.getInstance(this);
         // 设置音量大小监听--在这里开发者可以自己实现：当剩余10秒情况下的给用户的提示，类似微信的语音那样
@@ -268,6 +272,7 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
 
     /**
      * 长按说话
+     *
      * @author smile
      * @date 2014-7-1 下午6:10:16
      */
@@ -311,7 +316,7 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
                             int recordTime = recordManager.stopRecording();
                             if (recordTime > 1) {
                                 // 发送语音文件
-                                sendVoiceMessage(recordManager.getRecordFilePath(c.getConversationId()),recordTime);
+                                sendVoiceMessage(recordManager.getRecordFilePath(c.getConversationId()), recordTime);
                             } else {// 录音时间过短，则提示录音过短的提示
                                 layout_record.setVisibility(View.GONE);
                                 showShortToast().show();
@@ -331,8 +336,9 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
 
     /**
      * 显示录音时间过短的Toast
-     * @Title: showShortToast
+     *
      * @return void
+     * @Title: showShortToast
      */
     private Toast showShortToast() {
         if (toast == null) {
@@ -347,7 +353,7 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     }
 
     @OnClick(R.id.edit_msg)
-    public void onEditClick(View view){
+    public void onEditClick(View view) {
         if (layout_more.getVisibility() == View.VISIBLE) {
             layout_add.setVisibility(View.GONE);
             layout_emo.setVisibility(View.GONE);
@@ -356,7 +362,7 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     }
 
     @OnClick(R.id.btn_chat_emo)
-    public void onEmoClick(View view){
+    public void onEmoClick(View view) {
         if (layout_more.getVisibility() == View.GONE) {
             showEditState(true);
         } else {
@@ -370,7 +376,7 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     }
 
     @OnClick(R.id.btn_chat_add)
-    public void onAddClick(View view){
+    public void onAddClick(View view) {
         if (layout_more.getVisibility() == View.GONE) {
             layout_more.setVisibility(View.VISIBLE);
             layout_add.setVisibility(View.VISIBLE);
@@ -385,8 +391,9 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
             }
         }
     }
+
     @OnClick(R.id.btn_chat_voice)
-    public void onVoiceClick(View view){
+    public void onVoiceClick(View view) {
         edit_msg.setVisibility(View.GONE);
         layout_more.setVisibility(View.GONE);
         btn_chat_voice.setVisibility(View.GONE);
@@ -396,34 +403,36 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     }
 
     @OnClick(R.id.btn_chat_keyboard)
-    public void onKeyClick(View view){
+    public void onKeyClick(View view) {
         showEditState(false);
     }
 
     @OnClick(R.id.btn_chat_send)
-    public void onSendClick(View view){
+    public void onSendClick(View view) {
         sendMessage();
     }
 
     @OnClick(R.id.tv_picture)
-    public void onPictureClick(View view){
+    public void onPictureClick(View view) {
 //        sendLocalImageMessage();
 //        sendOtherMessage();
         sendVideoMessage();
     }
+
     @OnClick(R.id.tv_camera)
-    public void onCameraClick(View view){
+    public void onCameraClick(View view) {
         sendRemoteImageMessage();
     }
 
     @OnClick(R.id.tv_location)
-    public void onLocationClick(View view){
+    public void onLocationClick(View view) {
         sendLocationMessage();
     }
 
     /**
      * 根据是否点击笑脸来显示文本输入框的状态
-     * @param  isEmo 用于区分文字和表情
+     *
+     * @param isEmo 用于区分文字和表情
      * @return void
      */
     private void showEditState(boolean isEmo) {
@@ -458,16 +467,16 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     /**
      * 发送文本消息
      */
-    private void sendMessage(){
-        String text=edit_msg.getText().toString();
-        if(TextUtils.isEmpty(text.trim())){
+    private void sendMessage() {
+        String text = edit_msg.getText().toString();
+        if (TextUtils.isEmpty(text.trim())) {
             toast("请输入内容");
             return;
         }
-        BmobIMTextMessage msg =new BmobIMTextMessage();
+        BmobIMTextMessage msg = new BmobIMTextMessage();
         msg.setContent(text);
         //可设置额外信息
-        Map<String,Object> map =new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("level", "1");//随意增加信息
         msg.setExtraMap(map);
         c.sendMessage(msg, listener);
@@ -476,8 +485,8 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     /**
      * 直接发送远程图片地址
      */
-    public void sendRemoteImageMessage(){
-        BmobIMImageMessage image =new BmobIMImageMessage();
+    public void sendRemoteImageMessage() {
+        BmobIMImageMessage image = new BmobIMImageMessage();
         image.setRemoteUrl("http://img.lakalaec.com/ad/57ab6dc2-43f2-4087-81e2-b5ab5681642d.jpg");
         c.sendMessage(image, listener);
     }
@@ -485,9 +494,9 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     /**
      * 发送本地图片地址
      */
-    public void sendLocalImageMessage(){
+    public void sendLocalImageMessage() {
         //正常情况下，需要调用系统的图库或拍照功能获取到图片的本地地址，开发者只需要将本地的文件地址传过去就可以发送文件类型的消息
-        BmobIMImageMessage image =new BmobIMImageMessage("/storage/emulated/0/bimagechooser/IMG_20160302_172003.jpg");
+        BmobIMImageMessage image = new BmobIMImageMessage("/storage/emulated/0/bimagechooser/IMG_20160302_172003.jpg");
         c.sendMessage(image, listener);
 //        //因此也可以使用BmobIMFileMessage来发送文件消息
 //        BmobIMFileMessage file =new BmobIMFileMessage("文件地址");
@@ -496,15 +505,16 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
 
     /**
      * 发送语音消息
-     * @Title: sendVoiceMessage
-     * @param  local
-     * @param  length
+     *
+     * @param local
+     * @param length
      * @return void
+     * @Title: sendVoiceMessage
      */
     private void sendVoiceMessage(String local, int length) {
-        BmobIMAudioMessage audio =new BmobIMAudioMessage(local);
+        BmobIMAudioMessage audio = new BmobIMAudioMessage(local);
         //可设置额外信息-开发者设置的额外信息，需要开发者自己从extra中取出来
-        Map<String,Object> map =new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("from", "优酷");
         audio.setExtraMap(map);
         //设置语音文件时长：可选
@@ -515,18 +525,18 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     /**
      * 发送视频文件
      */
-    private void sendVideoMessage(){
-        BmobIMVideoMessage video =new BmobIMVideoMessage("/storage/sdcard0/bimagechooser/11.png");
+    private void sendVideoMessage() {
+        BmobIMVideoMessage video = new BmobIMVideoMessage("/storage/sdcard0/bimagechooser/11.png");
         c.sendMessage(video, listener);
     }
 
     /**
      * 发送地理位置
      */
-    public void sendLocationMessage(){
+    public void sendLocationMessage() {
         //测试数据，真实数据需要从地图SDK中获取
-        BmobIMLocationMessage location =new BmobIMLocationMessage("广州番禺区",23.5,112.0);
-        Map<String,Object> map =new HashMap<>();
+        BmobIMLocationMessage location = new BmobIMLocationMessage("广州番禺区", 23.5, 112.0);
+        Map<String, Object> map = new HashMap<>();
         map.put("from", "百度地图");
         location.setExtraMap(map);
         c.sendMessage(location, listener);
@@ -536,13 +546,13 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     /**
      * 消息发送监听器
      */
-    public MessageSendListener listener =new MessageSendListener() {
+    public MessageSendListener listener = new MessageSendListener() {
 
         @Override
         public void onProgress(int value) {
             super.onProgress(value);
             //文件类型的消息才有进度值
-            Logger.i("onProgress："+value);
+            Logger.i("onProgress：" + value);
         }
 
         @Override
@@ -564,10 +574,12 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
         }
     };
 
-    /**首次加载，可设置msg为null，下拉刷新的时候，默认取消息表的第一个msg作为刷新的起始时间点，默认按照消息时间的降序排列
+    /**
+     * 首次加载，可设置msg为null，下拉刷新的时候，默认取消息表的第一个msg作为刷新的起始时间点，默认按照消息时间的降序排列
+     *
      * @param msg
      */
-    public void queryMessages(BmobIMMessage msg){
+    public void queryMessages(BmobIMMessage msg) {
         c.queryMessages(msg, 10, new MessagesQueryListener() {
             @Override
             public void done(List<BmobIMMessage> list, BmobException e) {
@@ -592,7 +604,7 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     public void onMessageReceive(List<MessageEvent> list) {
         Logger.i("聊天页面接收到消息：" + list.size());
         //当注册页面消息监听时候，有消息（包含离线消息）到来时会回调该方法
-        for (int i=0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             addMessage2Chat(list.get(i));
         }
     }
@@ -619,20 +631,22 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
 //        }
 //    }
 
-    /**添加消息到聊天界面中
+    /**
+     * 添加消息到聊天界面中
+     *
      * @param event
      */
-    private void addMessage2Chat(MessageEvent event){
-        BmobIMMessage msg =event.getMessage();
-        if(c!=null && event!=null && c.getConversationId().equals(event.getConversation().getConversationId()) //如果是当前会话的消息
-                && !msg.isTransient()){//并且不为暂态消息
-            if(adapter.findPosition(msg)<0){//如果未添加到界面中
+    private void addMessage2Chat(MessageEvent event) {
+        BmobIMMessage msg = event.getMessage();
+        if (c != null && event != null && c.getConversationId().equals(event.getConversation().getConversationId()) //如果是当前会话的消息
+                && !msg.isTransient()) {//并且不为暂态消息
+            if (adapter.findPosition(msg) < 0) {//如果未添加到界面中
                 adapter.addMessage(msg);
                 //更新该会话下面的已读状态
                 c.updateReceiveStatus(msg);
             }
             scrollToBottom();
-        }else{
+        } else {
             Logger.i("不是与当前聊天对象的消息");
         }
     }
@@ -667,11 +681,11 @@ public class ChatActivity extends ParentWithNaviActivity implements ObseverListe
     /**
      * 添加未读的通知栏消息到聊天界面
      */
-    private void addUnReadMessage(){
+    private void addUnReadMessage() {
         List<MessageEvent> cache = BmobNotificationManager.getInstance(this).getNotificationCacheList();
-        if(cache.size()>0){
-            int size =cache.size();
-            for(int i=0;i<size;i++){
+        if (cache.size() > 0) {
+            int size = cache.size();
+            for (int i = 0; i < size; i++) {
                 MessageEvent event = cache.get(i);
                 addMessage2Chat(event);
             }

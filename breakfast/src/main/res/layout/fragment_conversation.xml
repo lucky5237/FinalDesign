@@ -4,19 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/base_bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <include android:id="@+id/ll" layout="@layout/include_navi"/>
+    <include
+        android:id="@+id/ll"
+        layout="@layout/include_navi" />
+
+    <include layout="@layout/no_message" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/sw_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rc_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

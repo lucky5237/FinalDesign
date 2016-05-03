@@ -29,7 +29,7 @@ public class ContactHolder extends BaseViewHolder {
       //会话图标
       ViewUtil.setAvatar(user==null?null:user.getAvatar(), R.mipmap.head, iv_recent_avatar);
       //会话标题
-      tv_recent_name.setText(user==null?"未知":user.getUsername());
+      tv_recent_name.setText(user==null?"未知":user.getAvatar());
   }
 
 }

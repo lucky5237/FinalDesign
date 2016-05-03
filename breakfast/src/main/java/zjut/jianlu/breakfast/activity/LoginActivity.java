@@ -3,6 +3,7 @@ package zjut.jianlu.breakfast.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -100,7 +101,12 @@ public class LoginActivity extends BaseActivity {
         call.enqueue(new BaseCallback<MyUser>() {
             @Override
             public void onFinally() {
-
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissMyDialog();
+                    }
+                }, 1000);
             }
 
             @Override
@@ -128,7 +134,6 @@ public class LoginActivity extends BaseActivity {
                             sharedPreferencesUtil.setPassword(myUser.getPassword());
                             User user = (User) o;
                             BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(user.getObjectId(), user.getUsername(), user.getAvatar()));
-                            dismissMyDialog();
                             startActivity(new Intent(mContext, MainActivity.class));
 
                         } else {

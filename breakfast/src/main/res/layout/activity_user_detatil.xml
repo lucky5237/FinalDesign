@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:hedgehog="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_cotainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main_cotainer"
     android:orientation="vertical">
 
     <RelativeLayout style="@style/topbar_layout_style">
@@ -31,36 +31,47 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="140dp"
+            android:background="@color/white"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
 
                 >
 
                 <de.hdodenhof.circleimageview.CircleImageView
+
                     android:id="@+id/iv_user_image"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@mipmap/ic_man"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/head"
                     app:civ_border_color="@color/color_topic_gray"
                     app:civ_border_width="2dp"
 
                     />
 
+
                 <TextView
                     android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="username"
                     android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/iv_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_gender_man" />
 
 
             </LinearLayout>
@@ -69,12 +80,13 @@
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
-                android:background="@color/gray" />
+                android:background="@color/gray"
+                android:visibility="gone" />
 
             <LinearLayout
-                android:layout_gravity="right"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="right"
                 android:layout_marginLeft="10dp"
                 android:orientation="vertical">
 
@@ -89,7 +101,8 @@
                         android:id="@+id/tv_order_num_des"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="总下单数：" />
+                        android:text="总下单数："
+                        android:textColor="@color/gray" />
 
                     <TextView
                         android:id="@+id/tv_order_num"
@@ -113,14 +126,14 @@
                         android:id="@+id/tv_bonus_des"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="发出的悬赏金总额：" />
+                        android:text="发出的悬赏金总额："
+                        android:textColor="@color/gray" />
 
                     <TextView
                         android:id="@+id/tv_bonus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:textColor="@color/orange"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -135,7 +148,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="综合评分：" />
+                        android:text="综合评分："
+                        android:textColor="@color/gray" />
 
                     <com.hedgehog.ratingbar.RatingBar
                         android:id="@+id/ratingbar"
@@ -149,12 +163,11 @@
                         hedgehog:starImageSize="20dp" />
 
                     <TextView
-                        android:ems="4"
                         android:id="@+id/tv_score"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:textColor="@color/orange"
+                        android:ems="4"
                         android:textSize="16sp" />
 
 
@@ -166,35 +179,39 @@
 
         </LinearLayout>
 
-        <include layout="@layout/view_line_divider"></include>
+        <View style="@style/divider_style" />
+
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:gravity="center"
             android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="用户评论" />
+                android:text="用户评论"
+                android:textColor="@color/gray"
+                android:textSize="16sp" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#F2F2F2" />
+        <View style="@style/divider_style" />
 
 
         <ListView
             android:id="@+id/lv_comment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:visibility="visible">
 
 
         </ListView>
-        <include layout="@layout/no_comments"/>
+
+        <include layout="@layout/no_comments" />
 
 
     </LinearLayout>

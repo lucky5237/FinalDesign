@@ -56,7 +56,7 @@
             style="@style/style_text_black"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="@string/add_name" />
+            android:text="用户名" />
 
         <TextView
             android:id="@+id/tv_mobile"

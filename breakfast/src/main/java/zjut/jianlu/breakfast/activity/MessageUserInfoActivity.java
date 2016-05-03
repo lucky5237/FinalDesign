@@ -34,6 +34,8 @@ public class MessageUserInfoActivity extends ParentWithNaviActivity {
     ImageView iv_avator;
     @Bind(R.id.tv_name)
     TextView tv_name;
+    @Bind(R.id.tv_mobile)
+    TextView tv_mobile;
 
     @Bind(R.id.btn_add_friend)
     Button btn_add_friend;
@@ -42,6 +44,7 @@ public class MessageUserInfoActivity extends ParentWithNaviActivity {
 
     User user;
     BmobIMUserInfo info;
+
     @Override
     protected String title() {
         return "个人资料";
@@ -52,41 +55,42 @@ public class MessageUserInfoActivity extends ParentWithNaviActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_user_info);
         initNaviView();
-        user=(User)getBundle().getSerializable("u");
-        if(user.getObjectId().equals(getCurrentUid())){
+        user = (User) getBundle().getSerializable("u");
+        if (user.getObjectId().equals(getCurrentUid())) {
             btn_add_friend.setVisibility(View.GONE);
             btn_chat.setVisibility(View.GONE);
-        }else{
+        } else {
             btn_add_friend.setVisibility(View.VISIBLE);
             btn_chat.setVisibility(View.VISIBLE);
         }
         //构造聊天方的用户信息:传入用户id、用户名和用户头像三个参数
-        info = new BmobIMUserInfo(user.getObjectId(),user.getUsername(),user.getAvatar());
+        info = new BmobIMUserInfo(user.getObjectId(), user.getUsername(), user.getAvatar());
         ViewUtil.setAvatar(user.getAvatar(), R.mipmap.head, iv_avator);
         tv_name.setText(user.getUsername());
+        tv_mobile.setText(user.getAvatar());
     }
 
     @OnClick(R.id.btn_add_friend)
-    public void onAddClick(View view){
+    public void onAddClick(View view) {
         sendAddFriendMessage();
     }
 
     /**
      * 发送添加好友的请求
      */
-    private void sendAddFriendMessage(){
+    private void sendAddFriendMessage() {
         //启动一个会话，如果isTransient设置为true,则不会创建在本地会话表中创建记录，
         //设置isTransient设置为false,则会在本地数据库的会话列表中先创建（如果没有）与该用户的会话信息，且将用户信息存储到本地的用户表中
-        BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info, true,null);
+        BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info, true, null);
         //这个obtain方法才是真正创建一个管理消息发送的会话
         BmobIMConversation conversation = BmobIMConversation.obtain(BmobIMClient.getInstance(), c);
-        AddFriendMessage msg =new AddFriendMessage();
-        User currentUser = BmobUser.getCurrentUser(this,User.class);
+        AddFriendMessage msg = new AddFriendMessage();
+        User currentUser = BmobUser.getCurrentUser(this, User.class);
         msg.setContent("很高兴认识你，可以加个好友吗?");//给对方的一个留言信息
-        Map<String,Object> map =new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("name", currentUser.getUsername());//发送者姓名，这里只是举个例子，其实可以不需要传发送者的信息过去
-        map.put("avatar",currentUser.getAvatar());//发送者的头像
-        map.put("uid",currentUser.getObjectId());//发送者的uid
+        map.put("avatar", currentUser.getAvatar());//发送者的头像
+        map.put("uid", currentUser.getObjectId());//发送者的uid
         msg.setExtraMap(map);
         conversation.sendMessage(msg, new MessageSendListener() {
             @Override
@@ -101,9 +105,9 @@ public class MessageUserInfoActivity extends ParentWithNaviActivity {
     }
 
     @OnClick(R.id.btn_chat)
-    public void onChatClick(View view){
+    public void onChatClick(View view) {
         //启动一个会话，设置isTransient设置为false,则会在本地数据库的会话列表中先创建（如果没有）与该用户的会话信息，且将用户信息存储到本地的用户表中
-        BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info,false,null);
+        BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info, false, null);
         Bundle bundle = new Bundle();
         bundle.putSerializable("c", c);
         startActivity(ChatActivity.class, bundle, false);

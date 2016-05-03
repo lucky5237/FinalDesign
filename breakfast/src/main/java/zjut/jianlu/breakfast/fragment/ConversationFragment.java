@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,6 +26,7 @@ import zjut.jianlu.breakfast.adapter.ConversationAdapter;
 import zjut.jianlu.breakfast.adapter.OnRecyclerViewListener;
 import zjut.jianlu.breakfast.base.ParentWithNaviActivity;
 import zjut.jianlu.breakfast.base.ParentWithNaviFragment;
+import zjut.jianlu.breakfast.entity.event.UpdateMessageEvent;
 
 /**
  * 会话界面
@@ -39,6 +41,8 @@ public class ConversationFragment extends ParentWithNaviFragment {
     RecyclerView rc_view;
     @Bind(R.id.sw_refresh)
     SwipeRefreshLayout sw_refresh;
+    @Bind(R.id.no_message)
+    RelativeLayout mRlytNoMessage;
     ConversationAdapter adapter;
     LinearLayoutManager layoutManager;
     View mTopView;
@@ -112,8 +116,12 @@ public class ConversationFragment extends ParentWithNaviFragment {
             public boolean onItemLongClick(int position) {
                 //以下两种方式均可以删除会话
 //                BmobIM.getInstance().deleteConversation(adapter.getItem(position).getConversationId());
+
                 BmobIM.getInstance().deleteConversation(adapter.getItem(position));
                 adapter.remove(position);
+                sw_refresh.setRefreshing(true);
+                query();
+
                 return true;
             }
         });
@@ -152,6 +160,17 @@ public class ConversationFragment extends ParentWithNaviFragment {
         sw_refresh.setRefreshing(false);
     }
 
+    @Subscribe
+    public void updateMessageEvent(UpdateMessageEvent event) {
+        if (event.isHaveMessage()) {//有消息
+            sw_refresh.setVisibility(View.VISIBLE);
+            mRlytNoMessage.setVisibility(View.GONE);
+        } else {
+            sw_refresh.setVisibility(View.GONE);
+            mRlytNoMessage.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
      * 注册离线消息接收事件
      *
@@ -160,6 +179,7 @@ public class ConversationFragment extends ParentWithNaviFragment {
     @Subscribe
     public void onEventMainThread(OfflineMessageEvent event) {
         //重新刷新列表
+
         adapter.bindDatas(BmobIM.getInstance().loadAllConversation());
         adapter.notifyDataSetChanged();
     }

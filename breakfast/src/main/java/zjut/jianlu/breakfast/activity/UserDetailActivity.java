@@ -46,8 +46,6 @@ public class UserDetailActivity extends BaseActivity {
     ImageView mIvBack;
     @Bind(R.id.iv_user_image)
     CircleImageView mIvUserImage;
-    @Bind(R.id.tv_user_name)
-    TextView mTvUserName;
     @Bind(R.id.tv_order_num)
     TextView mTvOrderNum;
     @Bind(R.id.tv_bonus)
@@ -66,7 +64,10 @@ public class UserDetailActivity extends BaseActivity {
     TextView mTvOrderNumDes;
     @Bind(R.id.tv_bonus_des)
     TextView mTvBonusDes;
-
+    @Bind(R.id.iv_gender)
+    ImageView mIvGender;
+    @Bind(R.id.tv_user_name)
+    TextView mTvUserName;
     private MyUser user;
 
     private String mAvatarUrl;
@@ -110,11 +111,11 @@ public class UserDetailActivity extends BaseActivity {
         mLvComment.setAdapter(adapter);
         mRatingbar.setStarHalfDrawable(getResources().getDrawable(R.mipmap.ic_half_star));
         mRatingbar.setmClickable(false);
-        if (userType == 1){
+        if (userType == 1) {
             mTvOrderNumDes.setText("总接单数：");
             mTvBonusDes.setText("获取的悬赏金总额：");
         }
-            getUserInfo();
+        getUserInfo();
 
 
     }
@@ -199,10 +200,9 @@ public class UserDetailActivity extends BaseActivity {
         mTvUserName.setText(user.getUsername());
         mTvBonus.setText(String.valueOf(user.getBonus()));
         mTvOrderNum.setText(user.getOrderNum().toString());
+        mIvGender.setImageResource(user.getGender() == 1 ? R.mipmap.ic_gender_man : R.mipmap.ic_gender_women);
         mAvatarUrl = BreakfastUtils.getAbsAvatarUrlPath(user.getUsername());
-        Picasso.with(mContext).load(mAvatarUrl).into(mIvUserImage);
-//        mTvScore.setText(String.valueOf(userInfo.getAveScore()));
-//        mRatingbar.setStar(userInfo.getAveScore());
+        Picasso.with(mContext).load(mAvatarUrl).placeholder(R.mipmap.head).into(mIvUserImage);
     }
 
     private void getUserAveScore() {
