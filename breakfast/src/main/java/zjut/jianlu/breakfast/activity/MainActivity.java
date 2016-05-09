@@ -405,6 +405,11 @@ public class MainActivity extends BaseActivity implements ObseverListener {
         } else {
             mRbtnCart.setVisibility(View.VISIBLE);
         }
+        if (getCurrentUserType() == 1) {
+            mRbtnRank.setVisibility(View.VISIBLE);
+        } else {
+            mRbtnRank.setVisibility(View.GONE);
+        }
 
         radioButtons = new RadioButton[]{mRbtnHome, mRbtnOrder, mRbtnCart, mRbtnRank, mRbtnMessage, mRbtnFriend};
         mTransitionManager = getSupportFragmentManager();
@@ -548,14 +553,14 @@ public class MainActivity extends BaseActivity implements ObseverListener {
                                 mOrderFragment.getMyWaitDeliveryFragment().getMyorder();
                                 mOrderFragment.getMyWaitConfirmFragment().getMyorder();
                                 mOrderFragment.getMyWaitConfirmFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
-                                mOrderFragment.getMtabPageIndicator().setCurrentItem(2);
+                                mOrderFragment.getMtabPageIndicator().setCurrentItem(mOrderFragment.getmFragmentList().size() - 3);
 
                                 break;
                             case 3://确认收货
                                 mOrderFragment.getMyWaitConfirmFragment().getMyorder();
                                 mOrderFragment.getMyFinishOrderFragment().getMyorder();
                                 mOrderFragment.getMyFinishOrderFragment().getmListView().getRefreshableView().setSelection(0);//调回顶部
-                                mOrderFragment.getMtabPageIndicator().setCurrentItem(4);
+                                mOrderFragment.getMtabPageIndicator().setCurrentItem(mOrderFragment.getmFragmentList().size() - 2);
 
                                 break;
                             case 4://取消订单

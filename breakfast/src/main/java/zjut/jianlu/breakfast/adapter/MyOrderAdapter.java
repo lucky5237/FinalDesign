@@ -21,7 +21,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import zjut.jianlu.breakfast.R;
-import zjut.jianlu.breakfast.activity.ChatActivity;
 import zjut.jianlu.breakfast.activity.CommentActivity;
 import zjut.jianlu.breakfast.activity.MakeOrderActivity;
 import zjut.jianlu.breakfast.activity.UserDetailActivity;
@@ -166,181 +165,182 @@ public class MyOrderAdapter extends BaseAdapter {
                     viewHolder.btnLeft.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(mContext, ChatActivity.class);
-                            intent.putExtra("userId", orderinfo.getCourierUser().getMobile());
-                            mContext.startActivity(intent);
+                            Intent intentCall = new Intent(Intent.ACTION_CALL);
+                            intentCall.setData(Uri.parse("tel:" + orderinfo.getCourierUser().getMobile()));
+                            mContext.startActivity(intentCall);
                         }
                     });
-                };
-                    if (userType == 1) {
-                        viewHolder.btnLeft.setText(COURIER_CANCEL_ORDER);
-                        viewHolder.btnRight.setText(Start_DELIVERY);
-                        viewHolder.btnLeft.setVisibility(View.VISIBLE);
-                        viewHolder.btnLeft.setOnClickListener(new ConfirmOnclickListener(mContext, CALL_DIALOG_MESSAGE + orderinfo.getClientUser().getMobile()) {
+                }
+                ;
+                if (userType == 1) {
+                    viewHolder.btnLeft.setText(COURIER_CANCEL_ORDER);
+                    viewHolder.btnRight.setText(Start_DELIVERY);
+                    viewHolder.btnLeft.setVisibility(View.VISIBLE);
+                    viewHolder.btnLeft.setOnClickListener(new ConfirmOnclickListener(mContext, CALL_DIALOG_MESSAGE + orderinfo.getClientUser().getMobile()) {
+                        @Override
+                        public void onConfirm() {
+                            Intent intentCall = new Intent(Intent.ACTION_CALL);
+                            intentCall.setData(Uri.parse("tel:" + orderinfo.getClientUser().getMobile()));
+                            mContext.startActivity(intentCall);
+                        }
+                    });
+                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                            OrderStatus.WAIT_CONFIRM.getCode(), START_DELIVERY_CONFIRM_MESSGAE));
+                }
+                break;
+            case 2://待收货
+                viewHolder.btnRight.setVisibility(View.GONE);
+                viewHolder.btnLeft.setVisibility(View.GONE);
+                if (userType == 0) {
+                    viewHolder.btnRight.setText(CONFIRM_ORDER);
+                    viewHolder.btnRight.setVisibility(View.VISIBLE);
+                    viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
+                            OrderStatus.FINISH.getCode(), RECEIVE_CONFIRM_MESSAGE));
+                }
+                if (userType == 1) {
+                    viewHolder.btnRight.setText(COURIER_CONFIRM_ORDER);
+                    viewHolder.btnRight.setVisibility(View.VISIBLE);
+                    viewHolder.btnRight.setOnClickListener(new ConfirmOnclickListener(mContext, CALL_DIALOG_MESSAGE + orderinfo.getClientUser().getMobile()) {
+                        @Override
+                        public void onConfirm() {
+                            Intent intentCall = new Intent(Intent.ACTION_CALL);
+                            intentCall.setData(Uri.parse("tel:" + orderinfo.getClientUser().getMobile()));
+                            mContext.startActivity(intentCall);
+                        }
+                    });
+                }
+                break;
+            case 3://已完成  包括已评论和未评论
+                if (userType == 0) {
+                    if (orderinfo.getIsClientCommented() == 0) {//买家未评论
+                        viewHolder.btnRight.setVisibility(View.VISIBLE);
+                        viewHolder.btnRight.setText(COMMENT_ORDER);
+                        viewHolder.tvStatus.setText(ORDER_NO_COMMENT);
+                        viewHolder.btnRight.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
                             @Override
-                            public void onConfirm() {
-                                Intent intentCall = new Intent(Intent.ACTION_CALL);
-                                intentCall.setData(Uri.parse("tel:" + orderinfo.getClientUser().getMobile()));
-                                mContext.startActivity(intentCall);
+                            public void onClick(View v) {
+                                Intent intent = new Intent(mContext, CommentActivity.class);
+                                OrderInfo orderInfos = (OrderInfo) getItem(position);
+                                String otherUserName = userType == 0 ? orderInfos.getCourierUser().getUsername() : orderInfos.getClientUser().getUsername();
+                                Long otherUserId = userType == 0 ? orderInfos.getCourierUser().getId() : orderInfos.getClientUser().getId();
+                                intent.putExtra("orderId", orderInfos.getId());
+                                intent.putExtra("otherUserId", otherUserId);
+                                intent.putExtra("otherUserName", otherUserName);
+                                mContext.startActivity(intent);
                             }
-                        });
-                        viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
-                                OrderStatus.WAIT_CONFIRM.getCode(), START_DELIVERY_CONFIRM_MESSGAE));
+                        }));
+                    } else {
+                        viewHolder.tvStatus.setText(ORDER_HAD_COMMENT);
+                        viewHolder.btnRight.setVisibility(View.VISIBLE);
+                        viewHolder.btnRight.setText(VIEW_MY_COMMENT);
+                        viewHolder.btnRight.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(mContext, UserDetailActivity.class);
+                                intent.putExtra("userId", orderinfo.getCourierUser().getId().intValue());
+                                intent.putExtra("userType", orderinfo.getCourierUser().getType());
+                                intent.putExtra("orderId", orderinfo.getId());
+                                mContext.startActivity(intent);
+                            }
+                        }));
+
                     }
-                    break;
-                    case 2://待收货
-                        viewHolder.btnRight.setVisibility(View.GONE);
-                        viewHolder.btnLeft.setVisibility(View.GONE);
-                        if (userType == 0) {
-                            viewHolder.btnRight.setText(CONFIRM_ORDER);
-                            viewHolder.btnRight.setVisibility(View.VISIBLE);
-                            viewHolder.btnRight.setOnClickListener(new UpdateOrderStatusListener(mContext, orderId,
-                                    OrderStatus.FINISH.getCode(), RECEIVE_CONFIRM_MESSAGE));
-                        }
-                        if (userType == 1) {
-                            viewHolder.btnRight.setText(COURIER_CONFIRM_ORDER);
-                            viewHolder.btnRight.setVisibility(View.VISIBLE);
-                            viewHolder.btnRight.setOnClickListener(new ConfirmOnclickListener(mContext, CALL_DIALOG_MESSAGE + orderinfo.getClientUser().getMobile()) {
-                                @Override
-                                public void onConfirm() {
-                                    Intent intentCall = new Intent(Intent.ACTION_CALL);
-                                    intentCall.setData(Uri.parse("tel:" + orderinfo.getClientUser().getMobile()));
-                                    mContext.startActivity(intentCall);
-                                }
-                            });
-                        }
-                        break;
-                    case 3://已完成  包括已评论和未评论
-                        if (userType == 0) {
-                            if (orderinfo.getIsClientCommented() == 0) {//买家未评论
-                                viewHolder.btnRight.setVisibility(View.VISIBLE);
-                                viewHolder.btnRight.setText(COMMENT_ORDER);
-                                viewHolder.tvStatus.setText(ORDER_NO_COMMENT);
-                                viewHolder.btnRight.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(mContext, CommentActivity.class);
-                                        OrderInfo orderInfos = (OrderInfo) getItem(position);
-                                        String otherUserName = userType == 0 ? orderInfos.getCourierUser().getUsername() : orderInfos.getClientUser().getUsername();
-                                        Long otherUserId = userType == 0 ? orderInfos.getCourierUser().getId() : orderInfos.getClientUser().getId();
-                                        intent.putExtra("orderId", orderInfos.getId());
-                                        intent.putExtra("otherUserId", otherUserId);
-                                        intent.putExtra("otherUserName", otherUserName);
-                                        mContext.startActivity(intent);
-                                    }
-                                }));
-                            } else {
-                                viewHolder.tvStatus.setText(ORDER_HAD_COMMENT);
-                                viewHolder.btnRight.setVisibility(View.VISIBLE);
-                                viewHolder.btnRight.setText(VIEW_MY_COMMENT);
-                                viewHolder.btnRight.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(mContext, UserDetailActivity.class);
-                                        intent.putExtra("userId", orderinfo.getCourierUser().getId().intValue());
-                                        intent.putExtra("userType", orderinfo.getCourierUser().getType());
-                                        intent.putExtra("orderId", orderinfo.getId());
-                                        mContext.startActivity(intent);
-                                    }
-                                }));
-
-                            }
-                        }
-
-                        if (userType == 1) {
-                            if (orderinfo.getIsCourierCommented() == 0) {//卖家未评论
-                                viewHolder.btnRight.setVisibility(View.VISIBLE);
-                                viewHolder.btnRight.setText(COMMENT_ORDER);
-                                viewHolder.tvStatus.setText(ORDER_NO_COMMENT);
-                                viewHolder.btnRight.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(mContext, CommentActivity.class);
-                                        OrderInfo orderInfos = (OrderInfo) getItem(position);
-                                        String otherUserName = userType == 0 ? orderInfos.getCourierUser().getUsername() : orderInfos.getClientUser().getUsername();
-                                        Long otherUserId = userType == 0 ? orderInfos.getCourierUser().getId() : orderInfos.getClientUser().getId();
-                                        intent.putExtra("orderId", orderInfos.getId());
-                                        intent.putExtra("otherUserId", otherUserId);
-                                        intent.putExtra("otherUserName", otherUserName);
-                                        mContext.startActivity(intent);
-                                    }
-                                }));
-                            } else {
-                                viewHolder.tvStatus.setText(ORDER_HAD_COMMENT);
-                                viewHolder.btnRight.setVisibility(View.VISIBLE);
-                                viewHolder.btnRight.setText(VIEW_MY_COMMENT);
-                                viewHolder.btnRight.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(mContext, UserDetailActivity.class);
-                                        intent.putExtra("userId", orderinfo.getClientUser().getId().intValue());
-                                        intent.putExtra("userType", orderinfo.getClientUser().getType());
-                                        intent.putExtra("orderId", orderinfo.getId());
-                                        mContext.startActivity(intent);
-                                    }
-                                }));
-                            }
-                        }
-
-                        viewHolder.btnLeft.setVisibility(View.GONE);
-                        if (userType == 0) {
-                            viewHolder.btnLeft.setText(ONEMORE_ORDER);
-                            viewHolder.btnLeft.setVisibility(View.VISIBLE);
-                            viewHolder.btnLeft.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(mContext, MakeOrderActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putInt("from", 2);
-                                    OrderInfo orderInfos = (OrderInfo) getItem(position);
-                                    mBuyFoodList = orderInfos.getOrderdetails();
-                                    bundle.putSerializable("foodList", mBuyFoodList);
-                                    bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, orderInfos.getAmount());
-                                    intent.putExtras(bundle);
-                                    mContext.startActivity(intent);
-                                }
-                            }));
-                        }
-
-                        break;
-
-                    case 4://已取消
-                        viewHolder.btnRight.setVisibility(View.GONE);
-                        viewHolder.btnLeft.setVisibility(View.GONE);
-                        break;
-
                 }
 
-                return convertView;
+                if (userType == 1) {
+                    if (orderinfo.getIsCourierCommented() == 0) {//卖家未评论
+                        viewHolder.btnRight.setVisibility(View.VISIBLE);
+                        viewHolder.btnRight.setText(COMMENT_ORDER);
+                        viewHolder.tvStatus.setText(ORDER_NO_COMMENT);
+                        viewHolder.btnRight.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(mContext, CommentActivity.class);
+                                OrderInfo orderInfos = (OrderInfo) getItem(position);
+                                String otherUserName = userType == 0 ? orderInfos.getCourierUser().getUsername() : orderInfos.getClientUser().getUsername();
+                                Long otherUserId = userType == 0 ? orderInfos.getCourierUser().getId() : orderInfos.getClientUser().getId();
+                                intent.putExtra("orderId", orderInfos.getId());
+                                intent.putExtra("otherUserId", otherUserId);
+                                intent.putExtra("otherUserName", otherUserName);
+                                mContext.startActivity(intent);
+                            }
+                        }));
+                    } else {
+                        viewHolder.tvStatus.setText(ORDER_HAD_COMMENT);
+                        viewHolder.btnRight.setVisibility(View.VISIBLE);
+                        viewHolder.btnRight.setText(VIEW_MY_COMMENT);
+                        viewHolder.btnRight.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(mContext, UserDetailActivity.class);
+                                intent.putExtra("userId", orderinfo.getClientUser().getId().intValue());
+                                intent.putExtra("userType", orderinfo.getClientUser().getType());
+                                intent.putExtra("orderId", orderinfo.getId());
+                                mContext.startActivity(intent);
+                            }
+                        }));
+                    }
+                }
+
+                viewHolder.btnLeft.setVisibility(View.GONE);
+                if (userType == 0) {
+                    viewHolder.btnLeft.setText(ONEMORE_ORDER);
+                    viewHolder.btnLeft.setVisibility(View.VISIBLE);
+                    viewHolder.btnLeft.setOnClickListener(new OrderClickListener(position, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mContext, MakeOrderActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("from", 2);
+                            OrderInfo orderInfos = (OrderInfo) getItem(position);
+                            mBuyFoodList = orderInfos.getOrderdetails();
+                            bundle.putSerializable("foodList", mBuyFoodList);
+                            bundle.putFloat(BreakfastConstant.BUY_FOOD_AMOUNT, orderInfos.getAmount());
+                            intent.putExtras(bundle);
+                            mContext.startActivity(intent);
+                        }
+                    }));
+                }
+
+                break;
+
+            case 4://已取消
+                viewHolder.btnRight.setVisibility(View.GONE);
+                viewHolder.btnLeft.setVisibility(View.GONE);
+                break;
+
         }
 
+        return convertView;
+    }
 
-        static class ViewHolder {
-            @Bind(R.id.iv_deliver_gender)
-            ImageView ivDeliverGender;
-            @Bind(R.id.tv_status)
-            TextView tvStatus;
-            @Bind(R.id.iv_delete)
-            ImageView ivDelete;
-            @Bind(R.id.tv_food_name)
-            TextView tvFoodName;
-            @Bind(R.id.tv_time)
-            TextView tvTime;
-            @Bind(R.id.tv_money)
-            TextView tvMoney;
-            @Bind(R.id.tv_plus)
-            TextView tvPlus;
-            @Bind(R.id.tv_bonus)
-            TextView tvBonus;
-            @Bind(R.id.btn_left)
-            Button btnLeft;
-            @Bind(R.id.btn_right)
-            Button btnRight;
-            @Bind(R.id.iv_avatar)
-            ImageView ivAvatar;
 
-            ViewHolder(View view) {
-                ButterKnife.bind(this, view);
-            }
+    static class ViewHolder {
+        @Bind(R.id.iv_deliver_gender)
+        ImageView ivDeliverGender;
+        @Bind(R.id.tv_status)
+        TextView tvStatus;
+        @Bind(R.id.iv_delete)
+        ImageView ivDelete;
+        @Bind(R.id.tv_food_name)
+        TextView tvFoodName;
+        @Bind(R.id.tv_time)
+        TextView tvTime;
+        @Bind(R.id.tv_money)
+        TextView tvMoney;
+        @Bind(R.id.tv_plus)
+        TextView tvPlus;
+        @Bind(R.id.tv_bonus)
+        TextView tvBonus;
+        @Bind(R.id.btn_left)
+        Button btnLeft;
+        @Bind(R.id.btn_right)
+        Button btnRight;
+        @Bind(R.id.iv_avatar)
+        ImageView ivAvatar;
+
+        ViewHolder(View view) {
+            ButterKnife.bind(this, view);
         }
     }
+}

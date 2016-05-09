@@ -127,7 +127,7 @@
             android:id="@+id/btn_commit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/index_login"
+            android:background="@drawable/button_orange"
             android:padding="10dp"
             android:text="提交评论"
             android:textColor="@color/white" />

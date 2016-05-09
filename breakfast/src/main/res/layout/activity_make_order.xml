@@ -138,7 +138,6 @@
             style="@style/font_gray_xl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@mipmap/ic_up"
             android:gravity="center_vertical"
             android:padding="10dp"
             android:text="商品清单"
@@ -220,7 +219,8 @@
                     android:button="@drawable/selector_order_rbtn_button"
                     android:text="在线支付"
                     android:textColor="@drawable/selector_order_rbtn_color"
-                    android:textSize="@dimen/font_m" />
+                    android:textSize="@dimen/font_m"
+                    android:visibility="gone" />
 
                 <RadioButton
                     android:id="@+id/rbtn_online_pay"
@@ -230,7 +230,8 @@
                     android:button="@drawable/selector_order_rbtn_button"
                     android:text="网银支付"
                     android:textColor="@drawable/selector_order_rbtn_color"
-                    android:textSize="@dimen/font_m" />
+                    android:textSize="@dimen/font_m"
+                    android:visibility="gone" />
 
             </RadioGroup>
         </LinearLayout>
